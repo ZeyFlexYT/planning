@@ -3024,13 +3024,15 @@
             const apiMsg = data?.error?.message || `Erreur HTTP ${response.status}`;
             lastError = new Error(apiMsg);
 
-            // GESTION DU 403 FORBIDDEN ET 404 INDISPONIBLE :
-            // Si la clé de l'utilisateur n'a pas accès à un modèle expérimental/gros (403),
-            // ou si le modèle n'est pas trouvé (404), ou paramètre non supporté (400),
-            // ON NE PLANTE PAS : on bascule immédiatement sur le modèle suivant de la hiérarchie !
-            if (response.status === 403 || response.status === 404 || response.status === 400) {
+            // GESTION DU 503 (SURCHARGE / HIGH DEMAND), 429 (RATE LIMIT), 403 (FORBIDDEN) ET 404 (INDISPONIBLE) :
+            // Si le modèle est surchargé chez Google, indisponible, restreint ou s'il rencontre un pic de trafic,
+            // ON NE PLANTE PLUS : on bascule immédiatement sur le modèle suivant de la hiérarchie !
+            const isRetryableStatus = [400, 403, 404, 429, 500, 502, 503, 504].includes(response.status);
+            const isHighDemandMsg = /demand|overload|capacity|unavailable|resource_exhausted|quota/i.test(apiMsg);
+
+            if (isRetryableStatus || isHighDemandMsg) {
               if (response.status === 403) hadPermissionIssue = true;
-              console.warn(`[Gemini API] Modèle ${model} non accessible (${response.status} : ${apiMsg}). Bascule vers le modèle suivant...`);
+              console.warn(`[Gemini API] Modèle ${model} indisponible ou surchargé (${response.status} : ${apiMsg}). Bascule vers le modèle suivant...`);
               continue;
             }
 
@@ -3046,10 +3048,21 @@
           return generatedText;
         } catch (err) {
           lastError = err;
-          // Si l'erreur mentionne un rejet de modèle ou de droits, on tente le suivant
-          const errMsg = err.message || "";
-          if (errMsg.includes("403") || errMsg.includes("404") || errMsg.includes("not found") || errMsg.includes("permission") || errMsg.includes("Forbidden")) {
-            hadPermissionIssue = true;
+          // Si l'erreur mentionne un rejet de modèle, de droits ou de surcharge réseau, on tente le suivant
+          const errMsg = (err.message || "").toLowerCase();
+          const shouldFallback = errMsg.includes("403") || 
+                                 errMsg.includes("404") || 
+                                 errMsg.includes("503") || 
+                                 errMsg.includes("429") || 
+                                 errMsg.includes("not found") || 
+                                 errMsg.includes("permission") || 
+                                 errMsg.includes("demand") || 
+                                 errMsg.includes("overload") || 
+                                 errMsg.includes("unavailable") || 
+                                 errMsg.includes("forbidden");
+
+          if (shouldFallback) {
+            if (errMsg.includes("403") || errMsg.includes("permission")) hadPermissionIssue = true;
             continue;
           }
           throw err;
