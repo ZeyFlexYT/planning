@@ -1283,7 +1283,7 @@
         <p>
           <span id="scheduleSubtitleText" contenteditable="false" spellcheck="false" title="Modifiable en mode édition">BTS - CIEL 1ère année</span>
           •
-          <span style="color:#818cf8; font-weight:600;">✨ Cliquez sur un cours pour réviser ou accéder au CNED</span>
+          <span style="color:#818cf8; font-weight:600;">✨ Cliquez sur un cours pour accéder au CNED</span>
         </p>
       </div>
     </header>
@@ -1344,17 +1344,7 @@
     let isAuthInProgress = false;
     let mobileActiveDay = 'all';
     let draggedSlotInfo = null;
-    let attachedFile = null;
     let isCustomColorActive = false;
-
-    // Clé d'API Gemini : laissée vide dans le code pour éviter toute fuite sur GitHub
-    const DEFAULT_GEMINI_API_KEY = "";
-    
-    function getGeminiApiKey() {
-      const schedKey = currentSchedule?.preferences?.geminiApiKey;
-      const localKey = (typeof localStorage !== 'undefined') ? localStorage.getItem('bts_ciel_gemini_api_key') : null;
-      return (schedKey && schedKey.trim()) || (localKey && localKey.trim()) || DEFAULT_GEMINI_API_KEY;
-    }
 
     const DEFAULT_CNED_URLS = {
       bloc1: "https://eformation.cned.fr/course/view.php?id=19096&section=1",
@@ -1373,7 +1363,6 @@
       },
       preferences: {
         isDarkMode: true,
-        geminiApiKey: DEFAULT_GEMINI_API_KEY,
         cnedUrls: { ...DEFAULT_CNED_URLS }
       },
       events: [],
@@ -1917,7 +1906,7 @@
             const isAcademic = slot.subjectKey && slot.theme !== "empty" && slot.theme !== "quartier-libre" && slot.theme !== "pause";
             if (isAcademic) {
               cardBox.classList.add("clickable-slot");
-              cardBox.title = "Cliquez pour réviser ou accéder au cours CNED";
+              cardBox.title = "Cliquez pour accéder au cours CNED";
               cardBox.onclick = () => openSubjectTutor(slot.title, slot.time, dayData.label, slot.subjectKey);
             }
           }
@@ -2598,52 +2587,7 @@
       persistSchedule();
     }
 
-    function saveCustomGeminiKey() {
-      const input = document.getElementById("customGeminiKeyInput");
-      if (!input) return;
-      const keyVal = input.value.trim().replace(/^["']|["']$/g, '');
-      if (!currentSchedule.preferences) currentSchedule.preferences = {};
-      currentSchedule.preferences.geminiApiKey = keyVal || DEFAULT_GEMINI_API_KEY;
-      if (typeof localStorage !== 'undefined') {
-        if (keyVal) localStorage.setItem('bts_ciel_gemini_api_key', keyVal);
-        else localStorage.removeItem('bts_ciel_gemini_api_key');
-      }
-      persistSchedule();
-      showToast("Clé API Gemini enregistrée !", "✨");
-    }
-
-    function toggleInlineKeyInput() {
-      const drawer = document.getElementById("inlineKeyInputDrawer");
-      if (drawer) {
-        drawer.style.display = drawer.style.display === "none" ? "block" : "none";
-      }
-    }
-
-    function saveInlineKey() {
-      const input = document.getElementById("inlineKeyInput");
-      if (!input) return;
-      const keyVal = input.value.trim().replace(/^["']|["']$/g, '');
-      if (!keyVal) {
-        showToast("Veuillez coller votre clé API Gemini", "⚠️");
-        return;
-      }
-      if (!currentSchedule.preferences) currentSchedule.preferences = {};
-      currentSchedule.preferences.geminiApiKey = keyVal;
-      if (typeof localStorage !== 'undefined') {
-        localStorage.setItem('bts_ciel_gemini_api_key', keyVal);
-      }
-      persistSchedule();
-
-      const statusSpan = document.getElementById("tutorApiKeyStatus");
-      if (statusSpan) {
-        statusSpan.innerHTML = `<span style="color:#34d399; font-weight:700;">Active (${keyVal.slice(0, 6)}...)</span>`;
-      }
-      toggleInlineKeyInput();
-      showToast("Clé Gemini activée avec succès !", "🔑");
-    }
-
     function openSettingsModal() {
-      const currentKey = getGeminiApiKey();
       const modalHtml = `
         <div style="display:flex; flex-direction:column; gap:20px;">
           <div>
@@ -2662,27 +2606,6 @@
                 <input type="checkbox" id="darkThemeSwitch" ${isDarkMode ? 'checked' : ''} onchange="window.setDarkMode(this.checked)">
                 <span class="slider"></span>
               </label>
-            </div>
-          </div>
-
-          <!-- Configuration Clé API Gemini -->
-          <div>
-            <h4 style="font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:#818cf8; margin-bottom:10px;">
-              Intelligence Artificielle Gemini
-            </h4>
-            <div style="background:rgba(30,41,59,0.55); border:1px solid rgba(129,140,248,0.25); border-radius:12px; padding:14px 16px;">
-              <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
-                <span style="font-size:20px;">🤖</span>
-                <strong style="font-size:14px;">Clé d'API Gemini (Génération de fiches)</strong>
-              </div>
-              <p style="font-size:12px; opacity:0.85; margin-bottom:10px;">
-                Collez votre clé API ici. Elle sera enregistrée dans votre espace privé Firestore sans jamais apparaître sur GitHub.
-              </p>
-              <div style="display:flex; gap:8px;">
-                <input type="password" id="customGeminiKeyInput" value="${currentKey}" placeholder="Collez votre clé AIzaSy... ou AQ..." style="flex:1; padding:8px 12px; border-radius:8px; border:1px solid rgba(129,140,248,0.3); background:rgba(15,23,42,0.8); color:inherit; font-size:12.5px; font-family:monospace;">
-                <button type="button" class="btn-ai-secondary" onclick="const f=document.getElementById('customGeminiKeyInput'); f.type = f.type==='password'?'text':'password';" title="Afficher/Masquer">👁️</button>
-                <button type="button" class="btn-ai-magic" onclick="window.saveCustomGeminiKey()">Enregistrer</button>
-              </div>
             </div>
           </div>
 
@@ -2764,7 +2687,7 @@
         </div>
       `;
 
-      openModal("Paramètres", "Affichage, IA & Sauvegardes", modalHtml);
+      openModal("Paramètres", "Affichage & Sauvegardes", modalHtml);
     }
 
     function showFirebaseDiagnostic() {
@@ -2810,110 +2733,34 @@
       const subjectKey = getSubjectKey(subjectName, rawSubjectKey);
       const cnedUrls = (currentSchedule.preferences && currentSchedule.preferences.cnedUrls) || DEFAULT_CNED_URLS;
       const cnedUrl = (subjectKey && cnedUrls[subjectKey]) || "https://eformation.cned.fr/";
-      attachedFile = null;
-      const currentKey = getGeminiApiKey();
 
       const modalHtml = `
         <div style="display:flex; flex-direction:column; gap:18px;">
-          <!-- Clé API Gemini de l'utilisateur -->
-          <div id="tutorApiKeyInlineBox" style="background:rgba(99,102,241,0.1); border:1px solid rgba(129,140,248,0.3); padding:10px 14px; border-radius:12px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-            <div style="display:flex; align-items:center; gap:8px;">
-              <span style="font-size:18px;">🔑</span>
-              <div>
-                <strong style="font-size:13px;">Clé API Gemini :</strong>
-                <span id="tutorApiKeyStatus" style="font-size:12.5px; margin-left:4px;">
-                  ${currentKey ? `<span style="color:#34d399; font-weight:700;">Active (${currentKey.slice(0, 6)}...)</span>` : `<span style="color:#f87171; font-weight:700;">Non configurée</span>`}
-                </span>
-              </div>
-            </div>
-            <button type="button" class="btn-ai-secondary" style="font-size:11.5px; padding:4px 10px;" onclick="window.toggleInlineKeyInput()">
-              ${currentKey ? 'Changer de clé' : 'Saisir ma clé personnelle'}
-            </button>
-          </div>
-
-          <div id="inlineKeyInputDrawer" style="display:none; background:rgba(15,23,42,0.85); padding:12px 14px; border-radius:12px; border:1px solid rgba(129,140,248,0.35);">
-            <label style="font-size:12px; font-weight:700; display:block; margin-bottom:6px; color:#c7d2fe;">
-              Collez votre clé API Gemini (créée gratuitement sur <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" style="color:#818cf8; text-decoration:underline;">aistudio.google.com</a>) :
-            </label>
-            <div style="display:flex; gap:8px;">
-              <input type="password" id="inlineKeyInput" value="${currentKey}" placeholder="Ex: AIzaSy... ou AQ.Ab8..." style="flex:1; padding:8px 12px; border-radius:8px; border:1px solid rgba(129,140,248,0.3); background:rgba(30,41,59,0.9); color:inherit; font-size:13px; font-family:monospace;">
-              <button type="button" class="btn-ai-magic" style="padding:8px 14px; font-size:12.5px;" onclick="window.saveInlineKey()">Enregistrer</button>
-            </div>
-            <span style="font-size:11px; opacity:0.8; display:block; margin-top:6px; color:#94a3b8;">
-              Votre clé reste privée sur votre navigateur et Firestore. Elle ne sera jamais partagée avec d'autres utilisateurs.
-            </span>
-          </div>
-
-          <div style="background:rgba(99,102,241,0.12); border:1px solid rgba(129,140,248,0.3); padding:14px 18px; border-radius:14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+          <div style="background:rgba(99,102,241,0.12); border:1px solid rgba(129,140,248,0.3); padding:18px 20px; border-radius:14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px;">
             <div>
-              <strong style="font-size:14px; display:block;">Plateforme de cours CNED</strong>
-              <span style="font-size:12px; opacity:0.85;">Accès direct au module ${subjectName}</span>
+              <strong style="font-size:15px; display:block; margin-bottom:4px;">Plateforme de cours CNED</strong>
+              <span style="font-size:12.5px; opacity:0.85;">Accès direct à la section de cours pour <strong>${subjectName}</strong></span>
             </div>
-            <div style="display:flex; gap:8px;">
-              <a href="${cnedUrl}" target="_blank" rel="noopener noreferrer" class="btn-ai-magic" style="text-decoration:none; padding:8px 14px; font-size:13px;">
+            <div style="display:flex; gap:10px;">
+              <a href="${cnedUrl}" target="_blank" rel="noopener noreferrer" class="btn-ai-magic" style="text-decoration:none; padding:10px 18px; font-size:13.5px; display:inline-flex; align-items:center; gap:8px;">
                 🚀 Ouvrir page CNED
               </a>
-              <button class="btn-ai-secondary" style="font-size:12px; padding:6px 10px;" onclick="window.toggleEditCnedUrl('${subjectKey}')">
+              <button class="btn-ai-secondary" style="font-size:12.5px; padding:8px 12px;" onclick="window.toggleEditCnedUrl('${subjectKey}')">
                 ✏️ Modifier lien
               </button>
             </div>
           </div>
 
-          <div id="editCnedContainer" style="display:none; background:rgba(30,41,59,0.5); padding:12px; border-radius:10px; border:1px solid rgba(255,255,255,0.1);">
-            <label style="font-size:12px; display:block; margin-bottom:6px; font-weight:700;">Adresse URL directe CNED :</label>
+          <div id="editCnedContainer" style="display:none; background:rgba(30,41,59,0.5); padding:14px; border-radius:12px; border:1px solid rgba(255,255,255,0.1);">
+            <label style="font-size:12.5px; display:block; margin-bottom:8px; font-weight:700;">Adresse URL directe CNED pour cette matière :</label>
             <div style="display:flex; gap:8px;">
-              <input type="text" id="cnedCustomUrlInput" value="${cnedUrl}" style="flex:1; padding:8px 10px; border-radius:8px; border:1px solid rgba(129,140,248,0.4); background:rgba(15,23,42,0.8); color:inherit; font-size:13px;">
-              <button class="btn-ai-magic" style="padding:8px 14px; font-size:13px;" onclick="window.saveCnedUrl('${subjectKey}')">Enregistrer</button>
+              <input type="text" id="cnedCustomUrlInput" value="${cnedUrl}" style="flex:1; padding:9px 12px; border-radius:8px; border:1px solid rgba(129,140,248,0.4); background:rgba(15,23,42,0.8); color:inherit; font-size:13px;">
+              <button class="btn-ai-magic" style="padding:9px 16px; font-size:13px;" onclick="window.saveCnedUrl('${subjectKey}')">Enregistrer</button>
             </div>
           </div>
 
-          <div id="dropZoneContainer" style="border:2px dashed #818cf8; border-radius:14px; padding:20px; text-align:center; background:rgba(99,102,241,0.06);">
-            <div style="font-size:28px; margin-bottom:6px;">📑</div>
-            <strong style="font-size:14.5px; display:block; margin-bottom:4px; color:#c7d2fe;">Document source du cours (Obligatoire)</strong>
-            <p style="font-size:12.5px; opacity:0.85; margin-bottom:12px; max-width:540px; margin-left:auto; margin-right:auto;">
-              Pour garantir une exactitude parfaite, l'IA se basera <strong>exclusivement sur le contenu de votre fichier</strong> (PDF, polycopié, photo de cours).
-            </p>
-            <input type="file" id="tutorFileInput" accept=".pdf,.png,.jpg,.jpeg,.webp,.txt,.c,.cpp,.py,.h,.md" style="display:none;" onchange="window.handleTutorFileSelect(event)">
-            <button type="button" class="btn-ai-magic" onclick="document.getElementById('tutorFileInput').click()">
-              📂 Choisir mon document sur le PC
-            </button>
-            
-            <div id="fileAttachedInfo" style="margin-top:14px; padding:10px 14px; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); border-radius:10px; display:none; align-items:center; justify-content:space-between;">
-              <div style="display:flex; align-items:center; gap:8px; text-align:left;">
-                <span style="font-size:18px;">✅</span>
-                <div>
-                  <div id="fileAttachedName" style="font-weight:700; font-size:13px; color:#6ee7b7;">Fichier chargé</div>
-                  <div id="fileAttachedSize" style="font-size:11.5px; opacity:0.8;">Taille</div>
-                </div>
-              </div>
-              <button type="button" onclick="window.removeAttachedFile()" class="btn-ai-secondary" style="font-size:11.5px; padding:4px 8px; color:#f87171; border-color:rgba(248,113,113,0.3);">
-                ✕ Retirer
-              </button>
-            </div>
-          </div>
-
-          <div>
-            <label style="display:block; font-size:12.5px; font-weight:700; margin-bottom:6px;">Consigne particulière (optionnelle) :</label>
-            <input type="text" id="tutorPromptInput" placeholder="Ex: Faire une fiche de révision, extraire les formules clés..." style="width:100%; padding:10px 12px; border-radius:8px; border:1px solid rgba(129,140,248,0.3); background:rgba(15,23,42,0.8); color:inherit; font-size:13.5px;">
-          </div>
-
-          <div id="tutorGeneratingStatus" style="display:none; align-items:center; gap:10px; color:#818cf8; font-weight:600; font-size:13.5px;">
-            <div style="width:20px; height:20px; border:3px solid rgba(99,102,241,0.2); border-radius:50%; border-top-color:#6366f1; animation:spin 0.8s linear infinite;"></div>
-            <span id="tutorStatusMessage">Lecture et analyse stricte du document...</span>
-          </div>
-
-          <div id="tutorResultContainer" style="display:none; background:rgba(15,23,42,0.6); padding:16px; border-radius:12px; border:1px solid rgba(255,255,255,0.1); max-height:400px; overflow-y:auto; line-height:1.7;"></div>
-
-          <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid rgba(255,255,255,0.08); padding-top:14px; flex-wrap:wrap; gap:8px;">
+          <div style="display:flex; justify-content:flex-end; border-top:1px solid rgba(255,255,255,0.08); padding-top:14px;">
             <button onclick="window.closeAiModal()" class="btn-ai-secondary">Fermer</button>
-            <div style="display:flex; gap:8px; align-items:center;">
-              <button id="btnDownloadPdf" class="btn-ai-secondary" style="display:none; color:#38bdf8; border-color:rgba(56,189,248,0.4);" onclick="window.downloadTutorPdf()">
-                📥 Télécharger en PDF
-              </button>
-              <button class="btn-ai-magic" onclick="window.generateDocumentCourse('${subjectName}', '${dayName}', '${slotTime}')">
-                ✨ Générer fiche d'après mon fichier
-              </button>
-            </div>
           </div>
         </div>
       `;
@@ -2942,289 +2789,6 @@
       persistSchedule();
       toggleEditCnedUrl();
       showToast("Lien CNED mis à jour !", "🔗");
-    }
-
-    function handleTutorFileSelect(event) {
-      const file = event.target.files?.[0];
-      if (!file) return;
-      attachedFile = file;
-
-      const infoBox = document.getElementById("fileAttachedInfo");
-      const nameLabel = document.getElementById("fileAttachedName");
-      const sizeLabel = document.getElementById("fileAttachedSize");
-
-      if (infoBox && nameLabel && sizeLabel) {
-        nameLabel.textContent = file.name;
-        sizeLabel.textContent = `${(file.size / 1024).toFixed(1)} Ko - Prêt`;
-        infoBox.style.display = "flex";
-      }
-      showToast(`Document « ${file.name} » chargé`, "📄");
-    }
-
-    function removeAttachedFile() {
-      attachedFile = null;
-      const fileInput = document.getElementById("tutorFileInput");
-      if (fileInput) fileInput.value = "";
-      const infoBox = document.getElementById("fileAttachedInfo");
-      if (infoBox) infoBox.style.display = "none";
-      showToast("Document retiré", "🗑️");
-    }
-
-    function readFileAsBase64(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => {
-          const res = reader.result;
-          const commaIndex = res.indexOf(',');
-          resolve(commaIndex !== -1 ? res.substring(commaIndex + 1) : res);
-        };
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      });
-    }
-
-    async function callGeminiApi(payload, apiKey, onModelChange = null) {
-      const cleanKey = (apiKey || "").trim().replace(/^["']|["']$/g, '');
-      if (!cleanKey) {
-        throw new Error("Clé API Gemini non configurée.");
-      }
-
-      // Liste hiérarchique commençant par gemini-3.5-flash
-      const candidateModels = [
-        "gemini-3.5-flash",
-        "gemini-3-flash-preview",
-        "gemini-2.5-flash",
-        "gemini-2.0-flash",
-        "gemini-1.5-pro",
-        "gemini-1.5-flash",
-        "gemini-1.5-flash-8b"
-      ];
-
-      let lastError = null;
-      let hadPermissionIssue = false;
-
-      for (const model of candidateModels) {
-        try {
-          if (onModelChange) onModelChange(model);
-
-          const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(cleanKey)}`;
-          const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(payload)
-          });
-
-          const data = await response.json();
-
-          if (!response.ok) {
-            const apiMsg = data?.error?.message || `Erreur HTTP ${response.status}`;
-            lastError = new Error(apiMsg);
-
-            // GESTION DU 503 (SURCHARGE / HIGH DEMAND), 429 (RATE LIMIT), 403 (FORBIDDEN) ET 404 (INDISPONIBLE) :
-            // Si le modèle est surchargé chez Google, indisponible, restreint ou s'il rencontre un pic de trafic,
-            // ON NE PLANTE PLUS : on bascule immédiatement sur le modèle suivant de la hiérarchie !
-            const isRetryableStatus = [400, 403, 404, 429, 500, 502, 503, 504].includes(response.status);
-            const isHighDemandMsg = /demand|overload|capacity|unavailable|resource_exhausted|quota/i.test(apiMsg);
-
-            if (isRetryableStatus || isHighDemandMsg) {
-              if (response.status === 403) hadPermissionIssue = true;
-              console.warn(`[Gemini API] Modèle ${model} indisponible ou surchargé (${response.status} : ${apiMsg}). Bascule vers le modèle suivant...`);
-              continue;
-            }
-
-            throw lastError;
-          }
-
-          const generatedText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-          if (!generatedText) {
-            throw new Error("L'IA n'a retourné aucun texte.");
-          }
-
-          console.info(`[Gemini API] Succès de la génération avec le modèle : ${model}`);
-          return generatedText;
-        } catch (err) {
-          lastError = err;
-          // Si l'erreur mentionne un rejet de modèle, de droits ou de surcharge réseau, on tente le suivant
-          const errMsg = (err.message || "").toLowerCase();
-          const shouldFallback = errMsg.includes("403") || 
-                                 errMsg.includes("404") || 
-                                 errMsg.includes("503") || 
-                                 errMsg.includes("429") || 
-                                 errMsg.includes("not found") || 
-                                 errMsg.includes("permission") || 
-                                 errMsg.includes("demand") || 
-                                 errMsg.includes("overload") || 
-                                 errMsg.includes("unavailable") || 
-                                 errMsg.includes("forbidden");
-
-          if (shouldFallback) {
-            if (errMsg.includes("403") || errMsg.includes("permission")) hadPermissionIssue = true;
-            continue;
-          }
-          throw err;
-        }
-      }
-
-      if (hadPermissionIssue) {
-        throw new Error("Accès refusé (403) sur tous les modèles : vérifiez que l'API 'Generative Language' est bien active sur votre compte ou générez une clé sans restriction sur https://aistudio.google.com/app/apikey");
-      }
-
-      throw lastError || new Error("Échec de la communication avec l'API Gemini.");
-    }
-
-    async function generateDocumentCourse(subjectName, dayName, slotTime) {
-      const customInstruction = document.getElementById("tutorPromptInput")?.value?.trim() || "";
-      const statusEl = document.getElementById("tutorGeneratingStatus");
-      const statusMsg = document.getElementById("tutorStatusMessage");
-      const resultEl = document.getElementById("tutorResultContainer");
-      const pdfBtn = document.getElementById("btnDownloadPdf");
-
-      if (pdfBtn) pdfBtn.style.display = "none";
-
-      const currentKey = getGeminiApiKey();
-      if (!currentKey) {
-        if (resultEl) {
-          resultEl.innerHTML = `
-            <div style="background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.4); border-radius:10px; padding:14px; color:#fca5a5;">
-              <strong style="display:block; margin-bottom:4px; font-size:14px;">⚠️ Clé API Gemini non configurée</strong>
-              <p style="font-size:13px; margin:0 0 10px 0;">
-                Chaque utilisateur doit renseigner sa propre clé d'API (gratuite en 30s sur Google AI Studio).
-              </p>
-              <button class="btn-ai-magic" onclick="window.toggleInlineKeyInput()" style="font-size:12.5px; padding:6px 12px;">
-                🔑 Saisir ma clé maintenant
-              </button>
-            </div>
-          `;
-          resultEl.style.display = "block";
-        }
-        showToast("Veuillez renseigner votre clé API", "🔑");
-        toggleInlineKeyInput();
-        return;
-      }
-
-      if (!attachedFile) {
-        if (resultEl) {
-          resultEl.innerHTML = `
-            <div style="background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.4); border-radius:10px; padding:14px; color:#fca5a5;">
-              <strong style="display:block; margin-bottom:4px; font-size:14px;">⚠️ Aucun document n'a été sélectionné</strong>
-              <p style="font-size:13px; margin:0;">
-                Veuillez cliquer sur <strong>« 📂 Choisir mon document »</strong> pour charger votre support réel (PDF, images, etc.).
-              </p>
-            </div>
-          `;
-          resultEl.style.display = "block";
-        }
-        showToast("Veuillez sélectionner un document", "⚠️");
-        return;
-      }
-
-      if (statusEl) statusEl.style.display = "flex";
-      if (statusMsg) statusMsg.textContent = "Lecture et analyse de votre fichier...";
-      if (resultEl) resultEl.style.display = "none";
-
-      const parts = [];
-      const isTextType = attachedFile.type.startsWith("text/") || 
-                         attachedFile.name.endsWith(".txt") || 
-                         attachedFile.name.endsWith(".c") || 
-                         attachedFile.name.endsWith(".cpp") || 
-                         attachedFile.name.endsWith(".h") || 
-                         attachedFile.name.endsWith(".py") || 
-                         attachedFile.name.endsWith(".md");
-
-      try {
-        if (isTextType) {
-          const textContent = await attachedFile.text();
-          parts.push({
-            text: `DOCUMENT SOURCE :\n\"\"\"\n${textContent.slice(0, 50000)}\n\"\"\"`
-          });
-        } else {
-          const base64Data = await readFileAsBase64(attachedFile);
-          let mimeType = attachedFile.type || "application/pdf";
-          if (attachedFile.name.endsWith(".png")) mimeType = "image/png";
-          else if (attachedFile.name.endsWith(".jpg") || attachedFile.name.endsWith(".jpeg")) mimeType = "image/jpeg";
-
-          parts.push({
-            inlineData: { mimeType: mimeType, data: base64Data }
-          });
-        }
-
-        const userPrompt = `Analyse ce document pour "${subjectName}" (${dayName}, ${slotTime}).
-${customInstruction ? `Demande : "${customInstruction}"` : 'Fais une fiche de révision technique synthétique, claire et directe.'}
-
-RÈGLES STRICTES :
-1. Base-toi uniquement sur le document joint. N'invente rien.
-2. Tout ce qui n'est pas dans le fichier ne doit pas être mentionné.
-3. Aucun bavardage oral ("Bonjour", "Voici"). Structure en HTML propre (<h4>, <p>, <ul>, <li>, <code>, <strong>).`;
-
-        parts.push({ text: userPrompt });
-
-        const payload = {
-          contents: [{ parts: parts }],
-          systemInstruction: {
-            parts: [{ text: "Tu es un synthétiseur technique rigoureux. Tu extrais UNIQUEMENT et STRICTEMENT les notions présentes dans le document fourni. Aucun bavardage oral." }]
-          }
-        };
-
-        const text = await callGeminiApi(payload, currentKey, (modelName) => {
-          if (statusMsg) statusMsg.textContent = `Génération avec ${modelName}...`;
-        });
-
-        if (statusEl) statusEl.style.display = "none";
-        if (resultEl) {
-          resultEl.innerHTML = text.replace(/```html/gi, '').replace(/```/g, '');
-          resultEl.style.display = "block";
-          if (pdfBtn) pdfBtn.style.display = "inline-flex";
-        }
-      } catch (err) {
-        if (statusEl) statusEl.style.display = "none";
-        if (resultEl) {
-          resultEl.innerHTML = `
-            <div style="background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.4); border-radius:10px; padding:14px; color:#fca5a5;">
-              <strong style="display:block; margin-bottom:4px; font-size:14px;">⚠️ Erreur lors de l'appel à Gemini</strong>
-              <p style="font-size:13px; margin:0; line-height:1.5;">${err.message}</p>
-              <div style="margin-top:10px;">
-                <button type="button" class="btn-ai-secondary" onclick="window.toggleInlineKeyInput()" style="font-size:12px; padding:4px 10px;">
-                  🔑 Vérifier ou modifier ma clé
-                </button>
-              </div>
-            </div>
-          `;
-          resultEl.style.display = "block";
-        }
-      }
-    }
-
-    function downloadTutorPdf() {
-      const resultEl = document.getElementById("tutorResultContainer");
-      if (!resultEl || !resultEl.innerHTML.trim()) return;
-
-      const printWindow = window.open("", "_blank");
-      if (!printWindow) {
-        showToast("Autorisez les fenêtres pop-up pour imprimer", "⚠️");
-        return;
-      }
-
-      printWindow.document.write(`
-        <!DOCTYPE html>
-        <html lang="fr">
-        <head>
-          <meta charset="UTF-8">
-          <title>Fiche de révision BTS CIEL</title>
-          <style>
-            body { font-family: sans-serif; color: #0f172a; padding: 24px; line-height: 1.6; }
-            h4 { color: #4338ca; }
-            code { background: #f1f5f9; padding: 2px 4px; border-radius: 4px; font-family: monospace; }
-          </style>
-        </head>
-        <body>
-          <div>${resultEl.innerHTML}</div>
-          <script>window.onload = function() { window.print(); }<\/script>
-        </body>
-        </html>
-      `);
-      printWindow.document.close();
     }
 
     function exportJsonBackup() {
@@ -3376,10 +2940,6 @@ RÈGLES STRICTES :
     window.openSubjectTutor = openSubjectTutor;
     window.toggleEditCnedUrl = toggleEditCnedUrl;
     window.saveCnedUrl = saveCnedUrl;
-    window.handleTutorFileSelect = handleTutorFileSelect;
-    window.removeAttachedFile = removeAttachedFile;
-    window.generateDocumentCourse = generateDocumentCourse;
-    window.downloadTutorPdf = downloadTutorPdf;
     window.exportJsonBackup = exportJsonBackup;
     window.exportSchedulePng = exportSchedulePng;
     window.triggerImportFile = triggerImportFile;
@@ -3394,9 +2954,6 @@ RÈGLES STRICTES :
     window.setSelectedEventIcon = setSelectedEventIcon;
     window.addAgendaEvent = addAgendaEvent;
     window.deleteAgendaEvent = deleteAgendaEvent;
-    window.saveCustomGeminiKey = saveCustomGeminiKey;
-    window.toggleInlineKeyInput = toggleInlineKeyInput;
-    window.saveInlineKey = saveInlineKey;
 
     window.addEventListener("DOMContentLoaded", async () => {
       document.body.classList.toggle("dark-theme", isDarkMode);
