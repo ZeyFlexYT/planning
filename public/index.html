@@ -5,14 +5,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Planning Hebdomadaire - BTS CIEL 1ère année</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous"></script>
+
   <style>
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+    }
+
+    :root {
+      --bg-light: #eef2f7;
+      --card-bg-light: #f8fafc;
+      --text-main-light: #0f172a;
+      --text-sub-light: #475569;
+      --board-bg-light: #ffffff;
+      --board-border-light: #e2e8f0;
+      --slot-empty-light: #f1f5f9;
+      
+      --accent-indigo: #6366f1;
+      --accent-violet: #8b5cf6;
+      --accent-cyan: #06b6d4;
     }
 
     body {
@@ -22,14 +37,13 @@
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      padding: 24px 16px;
+      padding: 24px 16px 60px 16px;
       color: #0f172a;
       background-color: #f1f5f9;
       transition: background-color 0.4s ease, color 0.4s ease;
       overflow-x: hidden;
     }
 
-    /* Thème Sombre Glassy Cosmique par défaut */
     body.dark-theme {
       background: radial-gradient(circle at 15% 20%, #1e1b4b 0%, #0b0f19 50%, #030712 100%);
       background-attachment: fixed;
@@ -55,7 +69,6 @@
       100% { opacity: 1; transform: scale(1.05); }
     }
 
-    /* Barre d'outils */
     .action-bar {
       width: 100%;
       max-width: 1460px;
@@ -189,6 +202,94 @@
       border-radius: 10px;
     }
 
+    .btn-google-auth {
+      background: #ffffff;
+      color: #374151;
+      border: 1px solid #d1d5db;
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+
+    body.dark-theme .btn-google-auth {
+      background: rgba(30, 41, 59, 0.85);
+      color: #f1f5f9;
+      border-color: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .btn-google-auth:hover {
+      background: #f9fafb;
+      transform: translateY(-1px);
+    }
+
+    body.dark-theme .btn-google-auth:hover {
+      background: rgba(51, 65, 85, 0.9);
+      border-color: #818cf8;
+    }
+
+    .user-profile-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      padding: 4px 10px 4px 4px;
+      border-radius: 20px;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #1e293b;
+    }
+
+    body.dark-theme .user-profile-badge {
+      background: rgba(30, 41, 59, 0.7);
+      border-color: rgba(255, 255, 255, 0.15);
+      color: #f1f5f9;
+    }
+
+    .user-avatar-img {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .user-avatar-fallback {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: #6366f1;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .btn-google-logout {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      padding: 2px;
+      border-radius: 4px;
+      transition: color 0.15s;
+    }
+
+    .btn-google-logout:hover {
+      color: #ef4444;
+    }
+
     .sync-badge {
       display: inline-flex;
       align-items: center;
@@ -200,6 +301,7 @@
       border-radius: 20px;
       font-size: 11.5px;
       font-weight: 600;
+      transition: all 0.2s;
     }
 
     body.dark-theme .sync-badge {
@@ -239,12 +341,6 @@
       border-color: #fecaca;
     }
 
-    body.dark-theme .sync-badge.error {
-      background: rgba(153, 27, 27, 0.35);
-      color: #fca5a5;
-      border-color: rgba(239, 68, 68, 0.4);
-    }
-
     .user-id-tag {
       font-size: 11px;
       color: #64748b;
@@ -261,7 +357,6 @@
       border-color: rgba(255, 255, 255, 0.08);
     }
 
-    /* Titres éditables */
     body.edit-mode #scheduleMainTitle,
     body.edit-mode #scheduleSubtitleText {
       outline: 2px dashed rgba(129, 140, 248, 0.65) !important;
@@ -269,10 +364,10 @@
       border-radius: 8px;
       cursor: text;
       transition: all 0.2s ease;
-      background: rgba(99, 102, 241, 0.25) !important;
-      padding: 2px 8px;
-      -webkit-text-fill-color: #ffffff !important;
-      color: #ffffff !important;
+      background: rgba(99, 102, 241, 0.18) !important;
+      padding: 2px 6px;
+      -webkit-text-fill-color: #f8fafc !important;
+      color: #f8fafc !important;
       background-clip: border-box !important;
       -webkit-background-clip: border-box !important;
     }
@@ -282,6 +377,12 @@
       -webkit-text-fill-color: #0f172a !important;
       color: #0f172a !important;
       background: rgba(99, 102, 241, 0.08) !important;
+    }
+
+    body.edit-mode #scheduleMainTitle:focus,
+    body.edit-mode #scheduleSubtitleText:focus {
+      outline: 2px solid #818cf8 !important;
+      background: rgba(99, 102, 241, 0.28) !important;
     }
 
     .title-edit-hint {
@@ -303,7 +404,6 @@
       display: inline-block;
     }
 
-    /* Conteneur du Planning */
     .board-container {
       width: 100%;
       max-width: 1460px;
@@ -360,26 +460,6 @@
       color: #94a3b8;
     }
 
-    .menu-icon {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-      align-items: flex-end;
-      padding-top: 6px;
-    }
-
-    .menu-icon span {
-      display: block;
-      height: 3px;
-      background-color: #94a3b8;
-      border-radius: 4px;
-    }
-
-    .menu-icon span:nth-child(1) { width: 34px; }
-    .menu-icon span:nth-child(2) { width: 24px; }
-    .menu-icon span:nth-child(3) { width: 14px; }
-
-    /* Grille et colonnes */
     .schedule-grid {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
@@ -533,7 +613,6 @@
       background: linear-gradient(to right, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
     }
 
-    /* Matières Mode Clair (Pastel doux) */
     body:not(.dark-theme) .card-box.theme-bloc1 { background-color: #dbeafe; border-color: #bfdbfe; }
     body:not(.dark-theme) .card-box.theme-bloc1 .card-title { color: #1e3a8a; font-weight: 700; }
 
@@ -563,7 +642,6 @@
 
     body:not(.dark-theme) .card-box.theme-empty { background-color: #f8fafc; border: 1px dashed #cbd5e1; opacity: 0.7; }
 
-    /* Matières Mode Sombre Glassy */
     body.dark-theme .card-box.theme-bloc1 { background: linear-gradient(135deg, rgba(30, 58, 138, 0.45) 0%, rgba(15, 23, 42, 0.65) 100%); border-color: rgba(96, 165, 250, 0.4); box-shadow: 0 4px 16px rgba(37, 99, 235, 0.15); }
     body.dark-theme .card-box.theme-bloc1 .card-title { color: #93c5fd; text-shadow: 0 0 10px rgba(147, 197, 253, 0.4); }
 
@@ -593,25 +671,13 @@
 
     body.dark-theme .card-box.theme-empty { background: rgba(15, 23, 42, 0.25); border: 1px dashed rgba(255, 255, 255, 0.1); }
 
-    /* Cartes personnalisées avec dégradé */
-    body.dark-theme .card-box.theme-custom {
-      background: var(--slot-dark-bg, linear-gradient(135deg, rgba(99, 102, 241, 0.38) 0%, rgba(15, 23, 42, 0.72) 100%)) !important;
-      border-color: var(--slot-dark-border, rgba(129, 140, 248, 0.45)) !important;
-      box-shadow: 0 4px 16px var(--slot-dark-glow, rgba(99, 102, 241, 0.25)) !important;
+    .card-box.clickable-slot {
+      cursor: pointer;
     }
-    body.dark-theme .card-box.theme-custom .card-title {
-      color: var(--slot-dark-text, #c7d2fe) !important;
-      text-shadow: 0 0 12px var(--slot-dark-glow, rgba(129, 140, 248, 0.4)) !important;
-      font-weight: 700;
-    }
-
-    body:not(.dark-theme) .card-box.theme-custom {
-      background: var(--slot-light-bg, #e0e7ff) !important;
-      border-color: var(--slot-light-border, #c7d2fe) !important;
-    }
-    body:not(.dark-theme) .card-box.theme-custom .card-title {
-      color: var(--slot-light-text, #3730a3) !important;
-      font-weight: 700 !important;
+    .card-box.clickable-slot:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+      border-color: #818cf8;
     }
 
     body.edit-mode .card-box {
@@ -713,16 +779,6 @@
       color: #818cf8;
     }
 
-    .card-box.clickable-slot {
-      cursor: pointer;
-    }
-    .card-box.clickable-slot:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-      border-color: #818cf8;
-    }
-
-    /* Modal Universel (Fermé par défaut !) */
     .ai-modal-backdrop {
       position: fixed;
       inset: 0;
@@ -730,17 +786,18 @@
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
       z-index: 999;
-      display: none;
+      display: flex;
       align-items: center;
       justify-content: center;
       padding: 16px;
       opacity: 0;
+      pointer-events: none;
       transition: opacity 0.25s ease;
     }
 
     .ai-modal-backdrop.active {
-      display: flex;
       opacity: 1;
+      pointer-events: auto;
     }
 
     .ai-modal-card {
@@ -843,7 +900,6 @@
       border-color: #818cf8;
     }
 
-    /* Switch toggle */
     .toggle-switch {
       position: relative;
       display: inline-block;
@@ -902,7 +958,6 @@
       border-color: rgba(255, 255, 255, 0.08);
     }
 
-    /* Toast Notification */
     .ai-toast {
       position: fixed;
       bottom: 24px;
@@ -929,7 +984,6 @@
       opacity: 1;
     }
 
-    /* Support Mobile */
     .mobile-day-bar {
       display: none;
       width: 100%;
@@ -994,22 +1048,23 @@
           <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path>
           <path d="m15 5 4 4"></path>
         </svg>
-        <span id="editModeBtnLabel">Éditer le planning</span>
+        <span id="editModeBtnLabel">Modifier le planning</span>
       </button>
 
       <span class="edit-mode-indicator">
         <span>● Mode Édition : Glissez-déposez ou cliquez sur un créneau</span>
       </span>
 
-      <button class="btn-action-sm" onclick="window.openAgendaModal()" title="Gérer mes examens, oraux et échéances importantes">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <!-- Bouton Agenda & Examens -->
+      <button class="btn-action-sm" onclick="window.openAgendaModal()" title="Consulter l'agenda et ajouter des examens ou échéances">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
           <line x1="16" y1="2" x2="16" y2="6"></line>
           <line x1="8" y1="2" x2="8" y2="6"></line>
           <line x1="3" y1="10" x2="21" y2="10"></line>
         </svg>
-        Agenda & Examens
-        <span id="agendaBadgeCount" style="display:none; background:#818cf8; color:#ffffff; font-size:11px; padding:1px 6px; border-radius:10px; font-weight:800;">0</span>
+        Agenda &amp; Examens
+        <span id="agendaCountBadge" style="display:none; background:#8b5cf6; color:#ffffff; font-size:10.5px; font-weight:800; padding:1px 6px; border-radius:10px;">0</span>
       </button>
 
       <button class="btn-action-sm" onclick="window.openHoursCalculator()" title="Consulter la répartition et le total des heures de cours">
@@ -1046,6 +1101,19 @@
         </svg>
       </button>
 
+      <!-- Conteneur d'authentification Google -->
+      <div id="authContainer">
+        <button class="btn-google-auth" onclick="window.loginWithGoogle()">
+          <svg width="15" height="15" viewBox="0 0 24 24">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+          </svg>
+          Connexion Google
+        </button>
+      </div>
+
       <div id="syncBadge" class="sync-badge saved" style="cursor:pointer;" onclick="window.showFirebaseDiagnostic()" title="Cliquez pour voir le diagnostic Firebase">
         <span id="syncDot">●</span>
         <span id="syncText">Synchronisé en ligne</span>
@@ -1076,17 +1144,11 @@
           <span style="color:#818cf8; font-weight:600;">✨ Cliquez sur un cours pour réviser ou accéder au CNED</span>
         </p>
       </div>
-      <div class="menu-icon" aria-hidden="true">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
     </header>
 
     <main class="schedule-grid" id="schedule-grid-container"></main>
   </div>
 
-  <!-- Modal Universel (Fermé au chargement) -->
   <div id="aiModal" class="ai-modal-backdrop" onclick="if(event.target === this) window.closeAiModal()">
     <div class="ai-modal-card">
       <div class="ai-modal-header">
@@ -1095,7 +1157,7 @@
             ✨
           </div>
           <div>
-            <h3 id="modalTitle" style="font-size:16.5px; font-weight:700;">Titre Modal</h3>
+            <h3 id="modalTitle" style="font-size:16.5px; font-weight:700;">Titre</h3>
             <p id="modalSubtitle" style="font-size:12px; opacity:0.8;">Sous-titre</p>
           </div>
         </div>
@@ -1107,50 +1169,44 @@
 
   <input type="file" id="importFileInput" accept=".json" style="display:none;" onchange="window.handleFileImport(event)">
 
-  <!-- Toast Notification -->
   <div id="aiToast" class="ai-toast">
     <span id="toastIcon">✨</span>
-    <span id="toastMsg">Message</span>
+    <span id="toastMsg">Notification</span>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import { getAuth, signInAnonymously, signInWithCustomToken, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-    import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    import { 
+      getAuth, 
+      signInAnonymously, 
+      signInWithCustomToken, 
+      GoogleAuthProvider, 
+      signInWithPopup, 
+      signOut, 
+      onAuthStateChanged 
+    } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { 
+      getFirestore, 
+      doc, 
+      setDoc, 
+      onSnapshot 
+    } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-    const appId = typeof __app_id !== 'undefined' ? __app_id : 'bts-ciel-schedule';
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
     let db = null;
     let auth = null;
     let currentUser = null;
     let userId = null;
     let isStorageReady = false;
-    let unsubscribeSchedule = null;
-    const googleProvider = new GoogleAuthProvider();
+    let isEditMode = false;
+    let isDarkMode = true;
+    let mobileActiveDay = 'all';
+    let draggedSlotInfo = null;
+    let attachedFile = null;
+    let isCustomColorActive = false;
 
     const apiKey = "";
     const GEMINI_TEXT_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
-
-    let isDarkMode = true;
-    let isEditMode = false;
-    let draggedSlotInfo = null;
-    let mobileActiveDay = 'all';
-    let attachedFile = null;
-    let isCustomColorActive = false;
-    let selectedEventIcon = '🎓';
-    let lastCloudError = null;
-
-    const EVENT_ICONS = ['🎓', '📝', '💻', '🗣️', '⚠️', '📌', '📚', '🎯', '🏆', '⚡'];
-
-    // Configuration Firebase intégrée pour le projet privateplanning
-    const BUILTIN_FIREBASE_CONFIG = {
-      apiKey: "AIzaSyAQDUVcR-oXmkCc3YJ92oDlYJUm4W6NqXw",
-      authDomain: "privateplanning.firebaseapp.com",
-      projectId: "privateplanning",
-      storageBucket: "privateplanning.firebasestorage.app",
-      messagingSenderId: "222000696296",
-      appId: "1:222000696296:web:20c57ea21df59a9564325d",
-      measurementId: "G-YDK5RNG5ZQ"
-    };
 
     const DEFAULT_CNED_URLS = {
       bloc1: "https://eformation.cned.fr/course/view.php?id=19096&section=1",
@@ -1162,17 +1218,87 @@
       anglais: "https://eformation.cned.fr/course/view.php?id=2223&section=1"
     };
 
+    const defaultScheduleData = {
+      meta: {
+        title: "Planning Hebdomadaire",
+        subtitle: "BTS - CIEL 1ère année"
+      },
+      preferences: {
+        isDarkMode: true,
+        cnedUrls: { ...DEFAULT_CNED_URLS }
+      },
+      events: [],
+      lundi: {
+        label: "LUNDI",
+        slots: [
+          { time: "9h - 9h30", title: "Quartier libre", theme: "quartier-libre" },
+          { time: "9h30 - 12h", title: "Bloc 1", theme: "bloc1", subjectKey: "bloc1" },
+          { time: "12h - 13h", title: "Pause repas", theme: "pause" },
+          { time: "13h - 14h", title: "Anglais", theme: "anglais", subjectKey: "anglais" },
+          { time: "14h - X", title: "Quartier libre", theme: "quartier-libre" },
+          { time: "", title: "", theme: "empty" },
+          { time: "", title: "", theme: "empty" }
+        ]
+      },
+      mardi: {
+        label: "MARDI",
+        slots: [
+          { time: "X - 12h", title: "Quartier libre", theme: "quartier-libre" },
+          { time: "12h - 13h", title: "Pause repas", theme: "pause" },
+          { time: "13h - 16h", title: "Culture générale", theme: "culture", subjectKey: "culture" },
+          { time: "16h - 17h", title: "Pause goûter / jeux", theme: "pause" },
+          { time: "17h - 19h", title: "Mathématiques", theme: "maths", subjectKey: "maths" },
+          { time: "19h - 21h", title: "Bloc 2", theme: "bloc2", subjectKey: "bloc2" },
+          { time: "21h - X", title: "Quartier libre", theme: "quartier-libre" }
+        ]
+      },
+      mercredi: {
+        label: "MERCREDI",
+        slots: [
+          { time: "7h - 7h30", title: "Quartier libre", theme: "quartier-libre" },
+          { time: "7h30 - 12h", title: "Physique", theme: "physique", subjectKey: "physique" },
+          { time: "12h - 13h", title: "Pause repas", theme: "pause" },
+          { time: "13h - 16h", title: "Physique", theme: "physique", subjectKey: "physique" },
+          { time: "16h - 17h", title: "Pause goûter / jeux", theme: "pause" },
+          { time: "17h - 20h", title: "Mathématiques", theme: "maths", subjectKey: "maths" },
+          { time: "20h - X", title: "Quartier libre", theme: "quartier-libre" }
+        ]
+      },
+      jeudi: {
+        label: "JEUDI",
+        slots: [
+          { time: "X - 16h30", title: "Quartier libre", theme: "quartier-libre" },
+          { time: "16h30 - 20h", title: "Bloc 1", theme: "bloc1", subjectKey: "bloc1" },
+          { time: "20h - X", title: "Quartier libre", theme: "quartier-libre" },
+          { time: "", title: "", theme: "empty" },
+          { time: "", title: "", theme: "empty" },
+          { time: "", title: "", theme: "empty" },
+          { time: "", title: "", theme: "empty" }
+        ]
+      },
+      vendredi: {
+        label: "VENDREDI",
+        slots: [
+          { time: "X - 14h30", title: "Quartier libre", theme: "quartier-libre" },
+          { time: "14h30 - 18h", title: "Bloc 1", theme: "bloc1", subjectKey: "bloc1" },
+          { time: "18h - X", title: "Quartier libre", theme: "quartier-libre" },
+          { time: "", title: "", theme: "empty" },
+          { time: "", title: "", theme: "empty" },
+          { time: "", title: "", theme: "empty" },
+          { time: "", title: "", theme: "empty" }
+        ]
+      }
+    };
+
+    let currentSchedule = JSON.parse(JSON.stringify(defaultScheduleData));
+
     function hexToRgb(hex) {
       let cleanHex = hex.replace('#', '');
       if (cleanHex.length === 3) {
         cleanHex = cleanHex.split('').map(c => c + c).join('');
       }
       const num = parseInt(cleanHex, 16);
-      return {
-        r: (num >> 16) & 255,
-        g: (num >> 8) & 255,
-        b: num & 255
-      };
+      return { r: (num >> 16) & 255, g: (num >> 8) & 255, b: num & 255 };
     }
 
     function hexToRgba(hex, alpha) {
@@ -1221,80 +1347,6 @@
       return { darkBg, darkBorder, darkGlow, darkText, lightBg, lightBorder, lightText };
     }
 
-    const defaultScheduleData = {
-      "meta": {
-        "title": "Planning Hebdomadaire",
-        "subtitle": "BTS - CIEL 1ère année"
-      },
-      "preferences": {
-        "isDarkMode": true,
-        "cnedUrls": DEFAULT_CNED_URLS
-      },
-      "events": [],
-      "lundi": {
-        "label": "LUNDI",
-        "slots": [
-          { "time": "9h - 9h30", "title": "Quartier libre", "theme": "quartier-libre" },
-          { "time": "9h30 - 12h", "title": "Bloc 1", "theme": "bloc1", "subjectKey": "bloc1" },
-          { "time": "12h - 13h", "title": "Pause repas", "theme": "pause" },
-          { "time": "13h - 14h", "title": "Anglais", "theme": "anglais", "subjectKey": "anglais" },
-          { "time": "14h - X", "title": "Quartier libre", "theme": "quartier-libre" },
-          { "time": "", "title": "", "theme": "empty" },
-          { "time": "", "title": "", "theme": "empty" }
-        ]
-      },
-      "mardi": {
-        "label": "MARDI",
-        "slots": [
-          { "time": "X - 12h", "title": "Quartier libre", "theme": "quartier-libre" },
-          { "time": "12h - 13h", "title": "Pause repas", "theme": "pause" },
-          { "time": "13h - 16h", "title": "Culture générale", "theme": "culture", "subjectKey": "culture" },
-          { "time": "16h - 17h", "title": "Pause goûter / jeux", "theme": "pause" },
-          { "time": "17h - 19h", "title": "Mathématiques", "theme": "maths", "subjectKey": "maths" },
-          { "time": "19h - 21h", "title": "Bloc 2", "theme": "bloc2", "subjectKey": "bloc2" },
-          { "time": "21h - X", "title": "Quartier libre", "theme": "quartier-libre" }
-        ]
-      },
-      "mercredi": {
-        "label": "MERCREDI",
-        "slots": [
-          { "time": "7h - 7h30", "title": "Quartier libre", "theme": "quartier-libre" },
-          { "time": "7h30 - 12h", "title": "Physique", "theme": "physique", "subjectKey": "physique" },
-          { "time": "12h - 13h", "title": "Pause repas", "theme": "pause" },
-          { "time": "13h - 16h", "title": "Physique", "theme": "physique", "subjectKey": "physique" },
-          { "time": "16h - 17h", "title": "Pause goûter / jeux", "theme": "pause" },
-          { "time": "17h - 20h", "title": "Mathématiques", "theme": "maths", "subjectKey": "maths" },
-          { "time": "20h - X", "title": "Quartier libre", "theme": "quartier-libre" }
-        ]
-      },
-      "jeudi": {
-        "label": "JEUDI",
-        "slots": [
-          { "time": "X - 16h30", "title": "Quartier libre", "theme": "quartier-libre" },
-          { "time": "16h30 - 20h", "title": "Bloc 1", "theme": "bloc1", "subjectKey": "bloc1" },
-          { "time": "20h - X", "title": "Quartier libre", "theme": "quartier-libre" },
-          { "time": "", "title": "", "theme": "empty" },
-          { "time": "", "title": "", "theme": "empty" },
-          { "time": "", "title": "", "theme": "empty" },
-          { "time": "", "title": "", "theme": "empty" }
-        ]
-      },
-      "vendredi": {
-        "label": "VENDREDI",
-        "slots": [
-          { "time": "X - 14h30", "title": "Quartier libre", "theme": "quartier-libre" },
-          { "time": "14h30 - 18h", "title": "Bloc 1", "theme": "bloc1", "subjectKey": "bloc1" },
-          { "time": "18h - X", "title": "Quartier libre", "theme": "quartier-libre" },
-          { "time": "", "title": "", "theme": "empty" },
-          { "time": "", "title": "", "theme": "empty" },
-          { "time": "", "title": "", "theme": "empty" },
-          { "time": "", "title": "", "theme": "empty" }
-        ]
-      }
-    };
-
-    let currentSchedule = JSON.parse(JSON.stringify(defaultScheduleData));
-
     function stripUndefined(obj) {
       if (Array.isArray(obj)) return obj.map(stripUndefined);
       if (obj !== null && typeof obj === 'object') {
@@ -1324,78 +1376,23 @@
       setTimeout(() => toast.classList.remove("show"), 3500);
     }
 
-    async function persistSchedule() {
-      if (!currentSchedule.preferences) currentSchedule.preferences = {};
-      currentSchedule.preferences.isDarkMode = isDarkMode;
-
-      if (!isStorageReady || !db || !userId || !currentUser) {
-        updateSyncIndicator("saving", "En attente du Cloud...");
-        return;
-      }
-
-      updateSyncIndicator("saving", "Sauvegarde Cloud...");
-      try {
-        const scheduleRef = doc(db, 'artifacts', appId, 'users', userId, 'schedules', 'weekly');
-        await setDoc(scheduleRef, {
-          schedule: stripUndefined(currentSchedule),
-          lastUpdated: Date.now()
-        });
-        lastCloudError = null;
-        updateSyncIndicator("saved", "Synchronisé en ligne (Firestore)");
-      } catch (err) {
-        console.error("Erreur sauvegarde Cloud Firestore :", err);
-        lastCloudError = err;
-        const msg = parseFirebaseError(err);
-        updateSyncIndicator("error", msg);
-        showToast(msg, "⚠️");
-      }
-    }
-
-    function parseFirebaseError(err) {
-      if (!err) return "Erreur inconnue";
-      const code = err.code || err.message || String(err);
-      if (code.includes("operation-not-allowed")) {
-        return "Auth Anonyme désactivée";
-      }
-      if (code.includes("permission-denied")) {
-        return "Règles Firestore refusées";
-      }
-      if (code.includes("unauthorized-domain")) {
-        return "Domaine non autorisé (Google)";
-      }
-      if (code.includes("popup-blocked")) {
-        return "Pop-up bloquée par le navigateur";
-      }
-      if (code.includes("popup-closed-by-user")) {
-        return "Fenêtre fermée avant connexion";
-      }
-      if (code.includes("not-found")) {
-        return "Base Firestore introuvable";
-      }
-      return code.slice(0, 28);
-    }
-
     function updateAuthUI() {
-      const container = document.getElementById("authContainer");
-      if (!container) return;
+      const authContainer = document.getElementById("authContainer");
+      if (!authContainer) return;
 
-      const isGoogleUser = currentUser && !currentUser.isAnonymous;
-
-      if (isGoogleUser) {
-        const name = currentUser.displayName || currentUser.email || "Utilisateur";
+      if (currentUser && !currentUser.isAnonymous) {
+        const name = currentUser.displayName || currentUser.email?.split('@')[0] || "Étudiant";
         const photo = currentUser.photoURL;
-        const initial = name.charAt(0).toUpperCase();
 
-        container.innerHTML = `
-          <div class="user-profile-badge" title="Connecté en tant que ${name} (${currentUser.email || ''})">
-            ${photo ? `
-              <img src="${photo}" class="user-avatar-img" alt="${name}" onerror="this.outerHTML='<div class=\\'user-avatar-fallback\\'>${initial}</div>'">
-            ` : `
-              <div class="user-avatar-fallback">${initial}</div>
-            `}
-            <span style="max-width:110px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${name.split(' ')[0]}</span>
+        authContainer.innerHTML = `
+          <div class="user-profile-badge" title="Connecté en tant que ${currentUser.email || name}">
+            ${photo 
+              ? `<img src="${photo}" class="user-avatar-img" alt="Avatar" referrerpolicy="no-referrer">` 
+              : `<div class="user-avatar-fallback">${name.charAt(0).toUpperCase()}</div>`
+            }
+            <span>${name}</span>
             <button class="btn-google-logout" onclick="window.logoutGoogle()" title="Se déconnecter">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
                 <polyline points="16 17 21 12 16 7"></polyline>
                 <line x1="21" y1="12" x2="9" y2="12"></line>
@@ -1404,15 +1401,15 @@
           </div>
         `;
       } else {
-        container.innerHTML = `
-          <button id="btnGoogleLogin" class="btn-google-auth" onclick="window.loginWithGoogle()" title="Connectez-vous avec Google pour synchroniser votre planning">
+        authContainer.innerHTML = `
+          <button class="btn-google-auth" onclick="window.loginWithGoogle()">
             <svg width="15" height="15" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
               <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
               <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
               <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
             </svg>
-            <span>Connexion Google</span>
+            Connexion Google
           </button>
         `;
       }
@@ -1425,78 +1422,79 @@
       }
       try {
         updateSyncIndicator("saving", "Connexion Google...");
-        const result = await signInWithPopup(auth, googleProvider);
+        const provider = new GoogleAuthProvider();
+        const result = await signInWithPopup(auth, provider);
         currentUser = result.user;
         userId = currentUser.uid;
-
+        
         const userTag = document.getElementById("userIdDisplay");
         if (userTag) userTag.textContent = `ID: ${userId}`;
-
+        
         updateAuthUI();
-        showToast(`Bienvenue, ${currentUser.displayName || 'Étudiant'} !`, "👋");
-        await attachScheduleListener();
+        showToast(`Connecté avec succès : ${currentUser.displayName || currentUser.email}`, "🎉");
+        
+        // Recharger le planning Firestore associé au compte Google
+        listenToUserSchedule();
       } catch (err) {
         console.error("Erreur connexion Google :", err);
-        lastCloudError = err;
-        const msg = parseFirebaseError(err);
-        updateSyncIndicator("error", msg);
-
-        if (err.code === "auth/unauthorized-domain") {
-          openModal("Domaine non autorisé", "Configuration Firebase requise", `
-            <div style="font-size:13.5px; line-height:1.6;">
-              <p style="margin-bottom:12px;">Google refuse la connexion car l'adresse de votre site n'est pas inscrite dans la liste blanche de Firebase.</p>
-              <div style="background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.3); padding:12px; border-radius:10px; margin-bottom:14px;">
-                <strong>Pour débloquer :</strong><br>
-                1. Ouvrez votre <a href="https://console.firebase.google.com/project/privateplanning/authentication/settings" target="_blank" style="color:#38bdf8; font-weight:700;">Console Firebase > Authentication > Paramètres</a>.<br>
-                2. Dans l'onglet <strong>Domaines autorisés</strong>, cliquez sur <strong>Ajouter un domaine</strong>.<br>
-                3. Ajoutez l'adresse de votre hébergement (ex: <code>localhost</code> ou votre nom de domaine).
-              </div>
-              <div style="display:flex; justify-content:flex-end;">
-                <button onclick="window.closeAiModal()" class="btn-ai-secondary">Fermer</button>
-              </div>
-            </div>
-          `);
-        } else {
-          showToast(msg, "⚠️");
-        }
+        updateSyncIndicator("saved", "Synchronisé en ligne");
+        showToast("Erreur lors de la connexion Google : " + err.message, "❌");
       }
     }
 
     async function logoutGoogle() {
       if (!auth) return;
       try {
-        if (unsubscribeSchedule) {
-          unsubscribeSchedule();
-          unsubscribeSchedule = null;
-        }
         await signOut(auth);
         showToast("Déconnexion réussie", "👋");
-        // Reconnexion anonyme de secours
-        await signInAnonymously(auth);
+        // Reconnecter automatiquement en session anonyme
+        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+          await signInWithCustomToken(auth, __initial_auth_token);
+        } else {
+          await signInAnonymously(auth);
+        }
         currentUser = auth.currentUser;
-        userId = currentUser?.uid;
-
+        userId = currentUser?.uid || crypto.randomUUID();
         const userTag = document.getElementById("userIdDisplay");
         if (userTag) userTag.textContent = `ID: ${userId}`;
-
         updateAuthUI();
-        await attachScheduleListener();
+        listenToUserSchedule();
       } catch (err) {
         console.error("Erreur déconnexion :", err);
-        showToast("Erreur lors de la déconnexion", "⚠️");
       }
     }
 
-    async function attachScheduleListener() {
-      if (!db || !userId) return;
+    async function persistSchedule() {
+      if (!currentSchedule.preferences) currentSchedule.preferences = {};
+      currentSchedule.preferences.isDarkMode = isDarkMode;
 
-      if (unsubscribeSchedule) {
-        unsubscribeSchedule();
-        unsubscribeSchedule = null;
+      if (!isStorageReady || !db || !userId) {
+        updateSyncIndicator("saved", "Prêt (en attente serveur)");
+        return;
       }
 
+      updateSyncIndicator("saving", "Sauvegarde...");
+      try {
+        const scheduleRef = doc(db, 'artifacts', appId, 'users', userId, 'schedules', 'weekly');
+        await setDoc(scheduleRef, {
+          schedule: stripUndefined(currentSchedule),
+          lastUpdated: Date.now()
+        });
+        updateSyncIndicator("saved", "Synchronisé en ligne");
+      } catch (err) {
+        console.warn("Erreur sauvegarde Firestore :", err);
+        updateSyncIndicator("error", "Erreur synchronisation");
+      }
+    }
+
+    let unsubscribeFirestore = null;
+
+    function listenToUserSchedule() {
+      if (!db || !userId) return;
+      if (unsubscribeFirestore) unsubscribeFirestore();
+
       const scheduleRef = doc(db, 'artifacts', appId, 'users', userId, 'schedules', 'weekly');
-      unsubscribeSchedule = onSnapshot(scheduleRef, (snapshot) => {
+      unsubscribeFirestore = onSnapshot(scheduleRef, (snapshot) => {
         if (snapshot.exists()) {
           const data = snapshot.data();
           if (data && data.schedule) {
@@ -1508,134 +1506,64 @@
             updateHeaderTitles();
             renderSchedule();
             updateAgendaBadge();
-            lastCloudError = null;
-            updateSyncIndicator("saved", "Synchronisé en ligne (Firestore)");
+            updateSyncIndicator("saved", "Synchronisé en ligne");
           }
         } else {
-          // Si premier chargement sous ce compte Google, on persiste le planning actuel
           persistSchedule();
         }
       }, (error) => {
-        console.error("Erreur écoute Cloud :", error);
-        lastCloudError = error;
-        updateSyncIndicator("error", parseFirebaseError(error));
+        console.warn("Erreur snapshot Firestore :", error);
+        updateSyncIndicator("error", "Erreur Firestore");
       });
     }
 
-    function showFirebaseDiagnostic() {
-      const errDetail = lastCloudError ? (lastCloudError.code || lastCloudError.message || JSON.stringify(lastCloudError)) : "Aucune erreur enregistrée";
-      const modalHtml = `
-        <div style="display:flex; flex-direction:column; gap:16px;">
-          <div style="background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.3); border-radius:12px; padding:14px;">
-            <strong style="color:#fca5a5; font-size:14px; display:block; margin-bottom:4px;">Code d'erreur retourné :</strong>
-            <code style="background:rgba(0,0,0,0.4); padding:4px 8px; border-radius:6px; font-size:12.5px; color:#f87171; display:block; word-break:break-all;">
-              ${errDetail}
-            </code>
-          </div>
-
-          <div>
-            <h4 style="font-size:13.5px; font-weight:700; color:#818cf8; margin-bottom:8px;">💡 Les 3 vérifications à faire dans votre console Firebase :</h4>
-            <ol style="padding-left:18px; display:flex; flex-direction:column; gap:10px; font-size:13px; line-height:1.6;">
-              <li>
-                <strong>1. Activer l'Authentification Anonyme :</strong><br>
-                Allez dans <a href="https://console.firebase.google.com/project/privateplanning/authentication/providers" target="_blank" style="color:#38bdf8;">Authentication > Sign-in method</a> > cliquez sur <strong>Anonyme</strong> > cochez <strong>Activer</strong> > <strong>Enregistrer</strong>.
-              </li>
-              <li>
-                <strong>2. Créer la base Cloud Firestore :</strong><br>
-                Allez dans <a href="https://console.firebase.google.com/project/privateplanning/firestore" target="_blank" style="color:#38bdf8;">Firestore Database</a>. Si le bouton <em>« Créer une base de données »</em> est visible, cliquez dessus et validez l'emplacement.
-              </li>
-              <li>
-                <strong>3. Régler les règles de sécurité Firestore :</strong><br>
-                Dans l'onglet <strong>Règles (Rules)</strong> de Firestore, collez :<br>
-                <code style="background:rgba(15,23,42,0.8); padding:4px 8px; border-radius:6px; display:block; margin-top:4px;">
-                  rules_version = '2';<br>
-                  service cloud.firestore {<br>
-                  &nbsp;&nbsp;match /databases/{database}/documents {<br>
-                  &nbsp;&nbsp;&nbsp;&nbsp;match /{document=**} {<br>
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;allow read, write: if request.auth != null;<br>
-                  &nbsp;&nbsp;&nbsp;&nbsp;}<br>
-                  &nbsp;&nbsp;}<br>
-                  }
-                </code>
-              </li>
-            </ol>
-          </div>
-
-          <div style="display:flex; justify-content:flex-end; border-top:1px solid rgba(255,255,255,0.08); padding-top:12px;">
-            <button onclick="window.closeAiModal()" class="btn-ai-secondary">Fermer</button>
-          </div>
-        </div>
-      `;
-      openModal("Diagnostic Connexion Firestore", "Projet privateplanning", modalHtml);
-    }
-
-    async function resolveFirebaseConfig() {
-      if (typeof __firebase_config !== 'undefined' && __firebase_config) {
-        try {
-          return typeof __firebase_config === 'string' ? JSON.parse(__firebase_config) : __firebase_config;
-        } catch (e) {
-          console.warn("Erreur parsing config :", e);
-        }
-      }
-
-      try {
-        const res = await fetch('/__/firebase/init.json');
-        if (res.ok) {
-          const autoConfig = await res.json();
-          if (autoConfig && autoConfig.apiKey) {
-            return autoConfig;
-          }
-        }
-      } catch (e) {}
-
-      return BUILTIN_FIREBASE_CONFIG;
-    }
-
     async function initCloudPersistence() {
-      const config = await resolveFirebaseConfig();
-      if (!config || !config.apiKey) {
-        updateSyncIndicator("error", "Config Cloud manquante");
-        const userTag = document.getElementById("userIdDisplay");
-        if (userTag) userTag.textContent = "Cloud indisponible";
-        return;
-      }
-
+      const userTag = document.getElementById("userIdDisplay");
       try {
-        updateSyncIndicator("saving", "Connexion Firestore...");
-        const app = initializeApp(config);
+        updateSyncIndicator("saving", "Connexion...");
+        
+        let firebaseConfig = null;
+        if (typeof __firebase_config !== 'undefined') {
+          firebaseConfig = JSON.parse(__firebase_config);
+        } else {
+          // Configuration Firebase par défaut
+          firebaseConfig = {
+            apiKey: "AIzaSyAQDUVcR-oXmkCc3YJ92oDlYJUm4W6NqXw",
+            authDomain: "privateplanning.firebaseapp.com",
+            projectId: "privateplanning",
+            storageBucket: "privateplanning.firebasestorage.app",
+            messagingSenderId: "222000696296",
+            appId: "1:222000696296:web:20c57ea21df59a9564325d"
+          };
+        }
+
+        const app = initializeApp(firebaseConfig);
         db = getFirestore(app);
         auth = getAuth(app);
 
-        // Écoute en continu de l'état d'authentification Google/Anonyme
-        onAuthStateChanged(auth, async (user) => {
+        onAuthStateChanged(auth, (user) => {
           currentUser = user;
-          userId = user ? user.uid : null;
-
-          const userTag = document.getElementById("userIdDisplay");
-          if (userTag) userTag.textContent = userId ? `ID: ${userId}` : "ID: Non connecté";
-
-          updateAuthUI();
-
           if (user) {
+            userId = user.uid;
+            if (userTag) userTag.textContent = `ID: ${userId}`;
             isStorageReady = true;
-            await attachScheduleListener();
+            updateAuthUI();
+            listenToUserSchedule();
           } else {
-            // Reconnexion anonyme de secours si non connecté
-            try {
-              await signInAnonymously(auth);
-            } catch (e) {
-              console.warn("Connexion anonyme fallback :", e);
-            }
+            updateAuthUI();
           }
         });
 
         if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
           await signInWithCustomToken(auth, __initial_auth_token);
+        } else {
+          await signInAnonymously(auth);
         }
+
       } catch (err) {
-        console.error("Échec Cloud Firestore :", err);
-        lastCloudError = err;
-        updateSyncIndicator("error", parseFirebaseError(err));
+        console.warn("Échec cloud :", err);
+        updateSyncIndicator("error", "Erreur réseau");
+        if (userTag) userTag.textContent = "Mode local";
       }
     }
 
@@ -1661,8 +1589,6 @@
 
       days.forEach(dayKey => {
         const dayData = currentSchedule[dayKey];
-        if (!dayData) return;
-
         const section = document.createElement("section");
         const isVisibleOnMobile = mobileActiveDay === 'all' || mobileActiveDay === dayKey;
         section.className = `day-column col-${dayKey} ${isVisibleOnMobile ? 'mobile-visible' : ''}`;
@@ -1676,7 +1602,7 @@
         `;
         section.appendChild(header);
 
-        (dayData.slots || []).forEach((slot, index) => {
+        dayData.slots.forEach((slot, index) => {
           const slotItem = document.createElement("div");
           slotItem.className = "slot-item";
           slotItem.dataset.day = dayKey;
@@ -1815,10 +1741,10 @@
       if (isEditMode) {
         btn.classList.add("active");
         label.textContent = "Quitter l'édition";
-        showToast("Mode Édition activé ✎", "✏️");
+        showToast("Mode Édition : Modifiez les créneaux et les titres ✎", "✏️");
       } else {
         btn.classList.remove("active");
-        label.textContent = "Éditer le planning";
+        label.textContent = "Modifier le planning";
         showToast("Modifications enregistrées !", "💾");
       }
       renderSchedule();
@@ -1854,214 +1780,8 @@
     function setMobileDay(dayKey) {
       mobileActiveDay = dayKey;
       document.querySelectorAll(".mobile-day-btn").forEach(btn => btn.classList.remove("active"));
-      if (event && event.target) event.target.classList.add("active");
+      event.target.classList.add("active");
       renderSchedule();
-    }
-
-    function updateAgendaBadge() {
-      const badge = document.getElementById("agendaBadgeCount");
-      if (!badge) return;
-      const events = currentSchedule.events || [];
-      const today = new Date().toISOString().slice(0, 10);
-      const upcoming = events.filter(e => e.date >= today).length;
-      if (upcoming > 0) {
-        badge.textContent = upcoming;
-        badge.style.display = "inline-block";
-      } else {
-        badge.style.display = "none";
-      }
-    }
-
-    function calculateDaysRemaining(dateStr) {
-      if (!dateStr) return null;
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      const target = new Date(dateStr + "T00:00:00");
-      const diffTime = target - today;
-      return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    }
-
-    function openAgendaModal() {
-      selectedEventIcon = '🎓';
-      const events = currentSchedule.events || [];
-
-      events.sort((a, b) => (a.date || '').localeCompare(b.date || ''));
-
-      const modalHtml = `
-        <div style="display:flex; flex-direction:column; gap:20px;">
-          <!-- Formulaire d'ajout -->
-          <div style="background:rgba(30,41,59,0.55); border:1px solid rgba(129,140,248,0.3); border-radius:14px; padding:18px;">
-            <h4 style="font-size:13.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:#818cf8; margin-bottom:12px;">
-              ➕ Ajouter une échéance / examen
-            </h4>
-
-            <div style="display:grid; grid-template-columns: 1fr; gap:12px;">
-              <div>
-                <label style="display:block; font-size:12px; font-weight:700; margin-bottom:4px;">Intitulé de l'échéance :</label>
-                <input type="text" id="agendaEventTitle" placeholder="Ex: CCF Mathématiques, Soutenance Bloc 1, Rendu Projet..." style="width:100%; padding:10px 12px; border-radius:8px; border:1px solid rgba(129,140,248,0.3); background:rgba(15,23,42,0.8); color:inherit; font-size:13.5px;">
-              </div>
-
-              <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                <div>
-                  <label style="display:block; font-size:12px; font-weight:700; margin-bottom:4px;">Date :</label>
-                  <input type="date" id="agendaEventDate" value="${new Date().toISOString().slice(0, 10)}" style="width:100%; padding:9px 12px; border-radius:8px; border:1px solid rgba(129,140,248,0.3); background:rgba(15,23,42,0.8); color:inherit; font-size:13.5px;">
-                </div>
-                <div>
-                  <label style="display:block; font-size:12px; font-weight:700; margin-bottom:4px;">Heure (optionnel) :</label>
-                  <input type="text" id="agendaEventTime" placeholder="Ex: 09h00 - 12h00" style="width:100%; padding:9px 12px; border-radius:8px; border:1px solid rgba(129,140,248,0.3); background:rgba(15,23,42,0.8); color:inherit; font-size:13.5px;">
-                </div>
-              </div>
-
-              <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                <div>
-                  <label style="display:block; font-size:12px; font-weight:700; margin-bottom:4px;">Matière :</label>
-                  <select id="agendaEventSubject" style="width:100%; padding:9px 12px; border-radius:8px; border:1px solid rgba(129,140,248,0.3); background:rgba(15,23,42,0.8); color:inherit; font-size:13px;">
-                    <option value="bloc1">Bloc 1</option>
-                    <option value="bloc2">Bloc 2</option>
-                    <option value="bloc3">Bloc 3</option>
-                    <option value="maths">Mathématiques</option>
-                    <option value="physique">Physique</option>
-                    <option value="culture">Culture générale</option>
-                    <option value="anglais">Anglais</option>
-                    <option value="autre">Autre / Épreuve générale</option>
-                  </select>
-                </div>
-                <div>
-                  <label style="display:block; font-size:12px; font-weight:700; margin-bottom:4px;">Note ou consigne :</label>
-                  <input type="text" id="agendaEventNote" placeholder="Ex: Salle 204, calculatrice autorisée" style="width:100%; padding:9px 12px; border-radius:8px; border:1px solid rgba(129,140,248,0.3); background:rgba(15,23,42,0.8); color:inherit; font-size:13px;">
-                </div>
-              </div>
-
-              <div>
-                <label style="display:block; font-size:12px; font-weight:700; margin-bottom:6px;">Icône pour l'événement :</label>
-                <div style="display:flex; gap:8px; flex-wrap:wrap;" id="iconSelectorContainer">
-                  ${EVENT_ICONS.map((icon, idx) => `
-                    <button type="button" class="btn-ai-secondary" style="font-size:18px; padding:6px 10px; ${idx === 0 ? 'border-color:#818cf8; background:rgba(99,102,241,0.3);' : ''}" onclick="window.selectEventIcon('${icon}', this)">
-                      ${icon}
-                    </button>
-                  `).join('')}
-                </div>
-              </div>
-
-              <div style="display:flex; justify-content:flex-end; margin-top:4px;">
-                <button class="btn-ai-magic" onclick="window.saveNewAgendaEvent()">
-                  ➕ Enregistrer l'échéance
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Liste des événements -->
-          <div>
-            <h4 style="font-size:13.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:#818cf8; margin-bottom:12px;">
-              📋 Liste chronologique des échéances (${events.length})
-            </h4>
-
-            ${events.length === 0 ? `
-              <div style="text-align:center; padding:24px; opacity:0.7; font-size:13.5px; background:rgba(30,41,59,0.3); border-radius:12px;">
-                Aucun examen ou échéance enregistrée pour l'instant. Ajoutez-en une ci-dessus !
-              </div>
-            ` : `
-              <div style="display:flex; flex-direction:column; gap:10px; max-height:320px; overflow-y:auto; padding-right:4px;">
-                ${events.map((ev, index) => {
-                  const days = calculateDaysRemaining(ev.date);
-                  let badgeHtml = '';
-                  if (days !== null) {
-                    if (days < 0) {
-                      badgeHtml = `<span style="background:rgba(148,163,184,0.2); color:#94a3b8; font-size:11px; padding:3px 8px; border-radius:10px; font-weight:700;">Passé</span>`;
-                    } else if (days === 0) {
-                      badgeHtml = `<span style="background:rgba(239,68,68,0.25); color:#fca5a5; font-size:11px; padding:3px 8px; border-radius:10px; font-weight:800; animation:pulseEdit 1.5s infinite;">Aujourd'hui ! 🚨</span>`;
-                    } else if (days === 1) {
-                      badgeHtml = `<span style="background:rgba(249,115,22,0.25); color:#fdba74; font-size:11px; padding:3px 8px; border-radius:10px; font-weight:800;">Demain ⏳</span>`;
-                    } else {
-                      badgeHtml = `<span style="background:rgba(99,102,241,0.25); color:#c7d2fe; font-size:11px; padding:3px 8px; border-radius:10px; font-weight:700;">Dans ${days} j</span>`;
-                    }
-                  }
-
-                  const formattedDate = ev.date ? new Date(ev.date + 'T00:00:00').toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }) : '';
-
-                  return `
-                    <div style="background:rgba(30,41,59,0.5); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:12px 16px; display:flex; justify-content:space-between; align-items:center; gap:12px;">
-                      <div style="display:flex; align-items:center; gap:12px;">
-                        <span style="font-size:24px;">${ev.icon || '🎓'}</span>
-                        <div>
-                          <div style="font-weight:700; font-size:14px; display:flex; align-items:center; gap:8px;">
-                            ${ev.title}
-                            ${badgeHtml}
-                          </div>
-                          <div style="font-size:12px; opacity:0.8; margin-top:2px;">
-                            📅 <strong>${formattedDate}</strong> ${ev.time ? `• ⏰ ${ev.time}` : ''} ${ev.note ? `• <i>${ev.note}</i>` : ''}
-                          </div>
-                        </div>
-                      </div>
-                      <button class="btn-slot-tool tool-delete" style="width:28px; height:28px;" title="Supprimer cet événement" onclick="window.deleteAgendaEvent(${index})">
-                        ✕
-                      </button>
-                    </div>
-                  `;
-                }).join('')}
-              </div>
-            `}
-          </div>
-
-          <div style="display:flex; justify-content:flex-end; border-top:1px solid rgba(255,255,255,0.08); padding-top:14px;">
-            <button onclick="window.closeAiModal()" class="btn-ai-secondary">Fermer</button>
-          </div>
-        </div>
-      `;
-
-      openModal("Agenda & Échéances", "Examens, CCF, Projets & Devoirs BTS CIEL", modalHtml);
-    }
-
-    function selectEventIcon(icon, btn) {
-      selectedEventIcon = icon;
-      document.querySelectorAll("#iconSelectorContainer button").forEach(b => {
-        b.style.borderColor = 'rgba(255,255,255,0.15)';
-        b.style.background = 'rgba(30, 41, 59, 0.7)';
-      });
-      if (btn) {
-        btn.style.borderColor = '#818cf8';
-        btn.style.background = 'rgba(99,102,241,0.3)';
-      }
-    }
-
-    function saveNewAgendaEvent() {
-      const title = document.getElementById("agendaEventTitle")?.value?.trim();
-      const date = document.getElementById("agendaEventDate")?.value;
-      const time = document.getElementById("agendaEventTime")?.value?.trim() || "";
-      const subject = document.getElementById("agendaEventSubject")?.value || "autre";
-      const note = document.getElementById("agendaEventNote")?.value?.trim() || "";
-
-      if (!title || !date) {
-        showToast("Veuillez saisir un intitulé et une date", "⚠️");
-        return;
-      }
-
-      if (!currentSchedule.events) currentSchedule.events = [];
-
-      currentSchedule.events.push({
-        id: crypto.randomUUID(),
-        title,
-        date,
-        time,
-        subject,
-        note,
-        icon: selectedEventIcon || '🎓'
-      });
-
-      persistSchedule();
-      updateAgendaBadge();
-      showToast("Événement ajouté à l'agenda !", "📅");
-      openAgendaModal();
-    }
-
-    function deleteAgendaEvent(index) {
-      if (!currentSchedule.events) return;
-      currentSchedule.events.splice(index, 1);
-      persistSchedule();
-      updateAgendaBadge();
-      showToast("Événement supprimé", "🗑️");
-      openAgendaModal();
     }
 
     function updateColorPreview() {
@@ -2105,7 +1825,7 @@
       if (input1) input1.value = c1;
       if (input2) input2.value = c2;
       updateColorPreview();
-      showToast("Dégradé appliqué", "🎨");
+      showToast("Dégradé personnalisé activé", "🎨");
     }
 
     function resetSlotColors() {
@@ -2115,7 +1835,7 @@
       if (input1) input1.value = "#6366f1";
       if (input2) input2.value = "#4338ca";
       updateColorPreview();
-      showToast("Couleurs officielles réactivées", "🔄");
+      showToast("Couleurs officielles actives", "🔄");
     }
 
     function applyQuickPreset(title, theme, subjectKey) {
@@ -2123,7 +1843,6 @@
       const themeSelect = document.getElementById("editSlotTheme");
       if (titleInput) titleInput.value = title;
       if (themeSelect) themeSelect.value = theme;
-
       isCustomColorActive = false;
       updateColorPreview();
       showToast(`Raccourci appliqué : ${title}`, "✨");
@@ -2155,12 +1874,7 @@
         subjectKey = theme;
       }
 
-      const updatedSlot = {
-        time,
-        title,
-        theme,
-        subjectKey
-      };
+      const updatedSlot = { time, title, theme, subjectKey };
 
       if (isCustomColorActive) {
         updatedSlot.customColor1 = color1;
@@ -2196,16 +1910,16 @@
 
           <div>
             <label style="display:block; font-size:12.5px; font-weight:700; margin-bottom:6px;">Plage horaire</label>
-            <input type="text" id="editSlotTime" value="${slot.time || ''}" placeholder="Ex: 13h - 16h" style="width:100%; padding:10px 12px; border-radius:8px; border:1px solid rgba(129,140,248,0.3); background:rgba(15,23,42,0.8); color:inherit; font-family:inherit; font-size:14px;">
+            <input type="text" id="editSlotTime" value="${slot.time || ''}" placeholder="Ex: 13h - 16h" style="width:100%; padding:10px 12px; border-radius:8px; border:1px solid rgba(129,140,248,0.3); background:rgba(15,23,42,0.8); color:inherit; font-size:14px;">
           </div>
 
           <div>
             <label style="display:block; font-size:12.5px; font-weight:700; margin-bottom:6px;">Intitulé du cours / activité</label>
-            <input type="text" id="editSlotTitle" value="${slot.title || ''}" placeholder="Ex: Bloc 1, Bloc 3, Mathématiques..." style="width:100%; padding:10px 12px; border-radius:8px; border:1px solid rgba(129,140,248,0.3); background:rgba(15,23,42,0.8); color:inherit; font-family:inherit; font-size:14px;" oninput="window.updateColorPreview()">
+            <input type="text" id="editSlotTitle" value="${slot.title || ''}" placeholder="Ex: Bloc 1, Bloc 3, Mathématiques..." style="width:100%; padding:10px 12px; border-radius:8px; border:1px solid rgba(129,140,248,0.3); background:rgba(15,23,42,0.8); color:inherit; font-size:14px;" oninput="window.updateColorPreview()">
           </div>
 
           <div>
-            <label style="display:block; font-size:12.5px; font-weight:700; margin-bottom:6px;">Raccourcis matières BTS CIEL (utilise la couleur officielle)</label>
+            <label style="display:block; font-size:12.5px; font-weight:700; margin-bottom:6px;">Raccourcis matières BTS CIEL :</label>
             <div style="display:flex; flex-wrap:wrap; gap:6px;">
               <button type="button" class="btn-ai-secondary" style="font-size:11.5px; padding:4px 8px;" onclick="window.applyQuickPreset('Bloc 1', 'bloc1', 'bloc1')">Bloc 1</button>
               <button type="button" class="btn-ai-secondary" style="font-size:11.5px; padding:4px 8px;" onclick="window.applyQuickPreset('Bloc 2', 'bloc2', 'bloc2')">Bloc 2</button>
@@ -2226,28 +1940,26 @@
             </div>
 
             <div style="margin-bottom:10px;">
-              <span style="font-size:11.5px; opacity:0.8; display:block; margin-bottom:6px;">Préréglages d'ambiances :</span>
               <div style="display:flex; flex-wrap:wrap; gap:6px;">
-                <button type="button" class="btn-ai-secondary" style="font-size:11px; padding:3px 8px;" onclick="window.applyGradientPreset('#6366f1', '#4338ca')">🌌 Indigo Cosmique</button>
-                <button type="button" class="btn-ai-secondary" style="font-size:11px; padding:3px 8px;" onclick="window.applyGradientPreset('#06b6d4', '#1d4ed8')">⚡ Cyber Cyan</button>
-                <button type="button" class="btn-ai-secondary" style="font-size:11px; padding:3px 8px;" onclick="window.applyGradientPreset('#a855f7', '#7e22ce')">🔮 Violet Néon</button>
+                <button type="button" class="btn-ai-secondary" style="font-size:11px; padding:3px 8px;" onclick="window.applyGradientPreset('#6366f1', '#4338ca')">🌌 Indigo</button>
+                <button type="button" class="btn-ai-secondary" style="font-size:11px; padding:3px 8px;" onclick="window.applyGradientPreset('#06b6d4', '#1d4ed8')">⚡ Cyan</button>
+                <button type="button" class="btn-ai-secondary" style="font-size:11px; padding:3px 8px;" onclick="window.applyGradientPreset('#a855f7', '#7e22ce')">🔮 Violet</button>
                 <button type="button" class="btn-ai-secondary" style="font-size:11px; padding:3px 8px;" onclick="window.applyGradientPreset('#10b981', '#047857')">🍃 Émeraude</button>
-                <button type="button" class="btn-ai-secondary" style="font-size:11px; padding:3px 8px;" onclick="window.applyGradientPreset('#f97316', '#c2410c')">🌅 Crépuscule</button>
-                <button type="button" class="btn-ai-secondary" style="font-size:11px; padding:3px 8px;" onclick="window.applyGradientPreset('#ec4899', '#be185d')">🌸 Rose Pêche</button>
-                <button type="button" class="btn-ai-secondary" style="font-size:11px; padding:3px 8px;" onclick="window.applyGradientPreset('#eab308', '#a16207')">☀️ Ambre Doré</button>
+                <button type="button" class="btn-ai-secondary" style="font-size:11px; padding:3px 8px;" onclick="window.applyGradientPreset('#f97316', '#c2410c')">🌅 Orange</button>
+                <button type="button" class="btn-ai-secondary" style="font-size:11px; padding:3px 8px;" onclick="window.applyGradientPreset('#ec4899', '#be185d')">🌸 Rose</button>
               </div>
             </div>
 
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:12px;">
               <div>
-                <label style="font-size:11.5px; display:block; margin-bottom:4px; opacity:0.8;">Couleur départ :</label>
+                <label style="font-size:11.5px; display:block; margin-bottom:4px; opacity:0.8;">Couleur 1 :</label>
                 <div style="display:flex; align-items:center; gap:8px;">
                   <input type="color" id="editCustomColor1" value="${color1}" onchange="window.isCustomColorActive=true; window.updateColorPreview()" style="width:40px; height:32px; border:none; border-radius:6px; cursor:pointer; background:transparent;">
                   <span id="hexVal1" style="font-family:monospace; font-size:12px;">${color1}</span>
                 </div>
               </div>
               <div>
-                <label style="font-size:11.5px; display:block; margin-bottom:4px; opacity:0.8;">Couleur fin :</label>
+                <label style="font-size:11.5px; display:block; margin-bottom:4px; opacity:0.8;">Couleur 2 :</label>
                 <div style="display:flex; align-items:center; gap:8px;">
                   <input type="color" id="editCustomColor2" value="${color2}" onchange="window.isCustomColorActive=true; window.updateColorPreview()" style="width:40px; height:32px; border:none; border-radius:6px; cursor:pointer; background:transparent;">
                   <span id="hexVal2" style="font-family:monospace; font-size:12px;">${color2}</span>
@@ -2257,7 +1969,7 @@
 
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
               <div>
-                <span style="font-size:11px; opacity:0.75; display:block; margin-bottom:3px;">Aperçu Mode Sombre</span>
+                <span style="font-size:11px; opacity:0.75; display:block; margin-bottom:3px;">Aperçu Sombre</span>
                 <div id="darkPreviewBox" style="border-radius:10px; padding:10px 12px; height:60px; display:flex; flex-direction:column; justify-content:space-between;">
                   <div style="display:flex; justify-content:space-between; align-items:center;">
                     <div style="width:34px; height:14px; border-radius:4px; background:rgba(255,255,255,0.15);"></div>
@@ -2268,7 +1980,7 @@
               </div>
 
               <div>
-                <span style="font-size:11px; opacity:0.75; display:block; margin-bottom:3px;">Aperçu Mode Clair</span>
+                <span style="font-size:11px; opacity:0.75; display:block; margin-bottom:3px;">Aperçu Clair</span>
                 <div id="lightPreviewBox" style="border-radius:10px; padding:10px 12px; height:60px; display:flex; flex-direction:column; justify-content:space-between;">
                   <div style="display:flex; justify-content:space-between; align-items:center;">
                     <div style="width:34px; height:14px; border-radius:4px; background:rgba(0,0,0,0.06);"></div>
@@ -2282,17 +1994,17 @@
 
           <div>
             <label style="display:block; font-size:12.5px; font-weight:700; margin-bottom:6px;">Type standard</label>
-            <select id="editSlotTheme" style="width:100%; padding:10px 12px; border-radius:8px; border:1px solid rgba(129,140,248,0.3); background:rgba(15,23,42,0.8); color:inherit; font-family:inherit; font-size:14px;">
-              <option value="bloc1" ${slot.theme === 'bloc1' ? 'selected' : ''}>Bloc 1 (Bleu doux)</option>
-              <option value="bloc2" ${slot.theme === 'bloc2' ? 'selected' : ''}>Bloc 2 (Orange pâle)</option>
+            <select id="editSlotTheme" style="width:100%; padding:10px 12px; border-radius:8px; border:1px solid rgba(129,140,248,0.3); background:rgba(15,23,42,0.8); color:inherit; font-size:14px;">
+              <option value="bloc1" ${slot.theme === 'bloc1' ? 'selected' : ''}>Bloc 1 (Bleu)</option>
+              <option value="bloc2" ${slot.theme === 'bloc2' ? 'selected' : ''}>Bloc 2 (Orange)</option>
               <option value="bloc3" ${slot.theme === 'bloc3' ? 'selected' : ''}>Bloc 3 (Rose pastel / Néon)</option>
-              <option value="maths" ${slot.theme === 'maths' ? 'selected' : ''}>Mathématiques (Rouge pastel)</option>
-              <option value="physique" ${slot.theme === 'physique' ? 'selected' : ''}>Physique (Jaune pastel)</option>
-              <option value="culture" ${slot.theme === 'culture' ? 'selected' : ''}>Culture générale (Vert pastel)</option>
-              <option value="anglais" ${slot.theme === 'anglais' ? 'selected' : ''}>Anglais (Violet pastel)</option>
-              <option value="quartier-libre" ${slot.theme === 'quartier-libre' ? 'selected' : ''}>Quartier libre (Discret)</option>
-              <option value="pause" ${slot.theme === 'pause' ? 'selected' : ''}>Pause repas / détente</option>
-              <option value="empty" ${slot.theme === 'empty' ? 'selected' : ''}>Vide / Inoccupé</option>
+              <option value="maths" ${slot.theme === 'maths' ? 'selected' : ''}>Mathématiques (Rouge)</option>
+              <option value="physique" ${slot.theme === 'physique' ? 'selected' : ''}>Physique (Jaune)</option>
+              <option value="culture" ${slot.theme === 'culture' ? 'selected' : ''}>Culture générale (Vert)</option>
+              <option value="anglais" ${slot.theme === 'anglais' ? 'selected' : ''}>Anglais (Violet)</option>
+              <option value="quartier-libre" ${slot.theme === 'quartier-libre' ? 'selected' : ''}>Quartier libre</option>
+              <option value="pause" ${slot.theme === 'pause' ? 'selected' : ''}>Pause repas</option>
+              <option value="empty" ${slot.theme === 'empty' ? 'selected' : ''}>Vide</option>
             </select>
           </div>
 
@@ -2319,11 +2031,7 @@
           currentSchedule[dayKey].slots.splice(index, 1);
         }
       } else {
-        currentSchedule[dayKey].slots[index] = {
-          time: "",
-          title: "",
-          theme: "empty"
-        };
+        currentSchedule[dayKey].slots[index] = { time: "", title: "", theme: "empty" };
       }
       renderSchedule();
       persistSchedule();
@@ -2342,6 +2050,190 @@
       openSlotEditor(dayKey, currentSchedule[dayKey].slots.length - 1);
     }
 
+    const AGENDA_ICONS = ["🎓", "📝", "💻", "🗣️", "⚠️", "🎯", "📌", "🏆", "📚", "⚡"];
+    let selectedEventIcon = "🎓";
+
+    function updateAgendaBadge() {
+      const badge = document.getElementById("agendaCountBadge");
+      if (!badge) return;
+      const events = currentSchedule.events || [];
+      const today = new Date().toISOString().slice(0, 10);
+      const upcoming = events.filter(e => e.date >= today);
+      if (upcoming.length > 0) {
+        badge.textContent = upcoming.length;
+        badge.style.display = "inline-block";
+      } else {
+        badge.style.display = "none";
+      }
+    }
+
+    function setSelectedEventIcon(icon) {
+      selectedEventIcon = icon;
+      document.querySelectorAll(".icon-selector-item").forEach(el => {
+        el.style.border = el.dataset.icon === icon ? "2px solid #818cf8" : "1px solid rgba(255,255,255,0.15)";
+        el.style.background = el.dataset.icon === icon ? "rgba(99,102,241,0.3)" : "rgba(30,41,59,0.5)";
+      });
+    }
+
+    function addAgendaEvent() {
+      const title = document.getElementById("newEventTitle")?.value?.trim();
+      const date = document.getElementById("newEventDate")?.value;
+      const time = document.getElementById("newEventTime")?.value?.trim() || "";
+      const subject = document.getElementById("newEventSubject")?.value || "";
+      const note = document.getElementById("newEventNote")?.value?.trim() || "";
+
+      if (!title || !date) {
+        showToast("Veuillez renseigner un titre et une date", "⚠️");
+        return;
+      }
+
+      if (!currentSchedule.events) currentSchedule.events = [];
+      currentSchedule.events.push({
+        id: "evt_" + Date.now(),
+        title,
+        date,
+        time,
+        subject,
+        note,
+        icon: selectedEventIcon || "🎓"
+      });
+
+      persistSchedule();
+      openAgendaModal();
+      showToast("Échéance ajoutée à l'agenda !", "📅");
+    }
+
+    function deleteAgendaEvent(id) {
+      if (!currentSchedule.events) return;
+      currentSchedule.events = currentSchedule.events.filter(e => e.id !== id);
+      persistSchedule();
+      openAgendaModal();
+      showToast("Échéance supprimée", "🗑️");
+    }
+
+    function openAgendaModal() {
+      const events = (currentSchedule.events || []).slice().sort((a, b) => a.date.localeCompare(b.date));
+      const today = new Date().toISOString().slice(0, 10);
+
+      const modalHtml = `
+        <div style="display:flex; flex-direction:column; gap:20px;">
+          <!-- Formulaire Ajout Événement -->
+          <div style="background:rgba(30,41,59,0.5); padding:16px; border-radius:14px; border:1px solid rgba(129,140,248,0.25);">
+            <h4 style="font-size:13.5px; font-weight:700; color:#818cf8; margin-bottom:12px; text-transform:uppercase; letter-spacing:0.5px;">
+              ➕ Ajouter un examen ou une échéance
+            </h4>
+            
+            <div style="display:grid; grid-template-columns: 1fr; gap:10px; margin-bottom:10px;">
+              <div>
+                <label style="font-size:11.5px; font-weight:700; display:block; margin-bottom:4px;">Titre de l'épreuve / devoir *</label>
+                <input type="text" id="newEventTitle" placeholder="Ex: CCF Mathématiques, Rendu Projet Bloc 1..." style="width:100%; padding:8px 12px; border-radius:8px; border:1px solid rgba(129,140,248,0.3); background:rgba(15,23,42,0.8); color:inherit; font-size:13.5px;">
+              </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:10px;">
+              <div>
+                <label style="font-size:11.5px; font-weight:700; display:block; margin-bottom:4px;">Date *</label>
+                <input type="date" id="newEventDate" value="${today}" style="width:100%; padding:8px 12px; border-radius:8px; border:1px solid rgba(129,140,248,0.3); background:rgba(15,23,42,0.8); color:inherit; font-size:13px;">
+              </div>
+              <div>
+                <label style="font-size:11.5px; font-weight:700; display:block; margin-bottom:4px;">Heure (optionnel)</label>
+                <input type="text" id="newEventTime" placeholder="Ex: 14h - 16h" style="width:100%; padding:8px 12px; border-radius:8px; border:1px solid rgba(129,140,248,0.3); background:rgba(15,23,42,0.8); color:inherit; font-size:13px;">
+              </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:12px;">
+              <div>
+                <label style="font-size:11.5px; font-weight:700; display:block; margin-bottom:4px;">Matière associée</label>
+                <select id="newEventSubject" style="width:100%; padding:8px 12px; border-radius:8px; border:1px solid rgba(129,140,248,0.3); background:rgba(15,23,42,0.8); color:inherit; font-size:13px;">
+                  <option value="">Général / Sans matière</option>
+                  <option value="Bloc 1">Bloc 1</option>
+                  <option value="Bloc 2">Bloc 2</option>
+                  <option value="Bloc 3">Bloc 3</option>
+                  <option value="Mathématiques">Mathématiques</option>
+                  <option value="Physique">Physique</option>
+                  <option value="Culture générale">Culture générale</option>
+                  <option value="Anglais">Anglais</option>
+                </select>
+              </div>
+              <div>
+                <label style="font-size:11.5px; font-weight:700; display:block; margin-bottom:4px;">Détails (salle, consigne...)</label>
+                <input type="text" id="newEventNote" placeholder="Ex: Salle 204, calculatrice autorisée" style="width:100%; padding:8px 12px; border-radius:8px; border:1px solid rgba(129,140,248,0.3); background:rgba(15,23,42,0.8); color:inherit; font-size:13px;">
+              </div>
+            </div>
+
+            <div style="margin-bottom:14px;">
+              <label style="font-size:11.5px; font-weight:700; display:block; margin-bottom:6px;">Icône assignée :</label>
+              <div style="display:flex; flex-wrap:wrap; gap:8px;">
+                ${AGENDA_ICONS.map(ic => `
+                  <button type="button" class="icon-selector-item" data-icon="${ic}" onclick="window.setSelectedEventIcon('${ic}')" style="width:36px; height:36px; border-radius:8px; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; ${ic === selectedEventIcon ? 'border:2px solid #818cf8; background:rgba(99,102,241,0.3);' : 'border:1px solid rgba(255,255,255,0.15); background:rgba(30,41,59,0.5);'}">
+                    ${ic}
+                  </button>
+                `).join('')}
+              </div>
+            </div>
+
+            <div style="display:flex; justify-content:flex-end;">
+              <button class="btn-ai-magic" onclick="window.addAgendaEvent()">
+                Ajouter à l'agenda
+              </button>
+            </div>
+          </div>
+
+          <!-- Liste Chronologique -->
+          <div>
+            <h4 style="font-size:13.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:12px; color:#818cf8;">
+              📅 Échéances chronologiques (${events.length})
+            </h4>
+
+            ${events.length === 0 ? `
+              <div style="text-align:center; padding:24px; color:#94a3b8; font-style:italic; background:rgba(15,23,42,0.4); border-radius:12px; border:1px dashed rgba(255,255,255,0.1);">
+                Aucun examen ou événement pour le moment. Ajoutez-en un ci-dessus !
+              </div>
+            ` : `
+              <div style="display:flex; flex-direction:column; gap:10px; max-height:340px; overflow-y:auto; padding-right:4px;">
+                ${events.map(ev => {
+                  const isPast = ev.date < today;
+                  const isToday = ev.date === today;
+                  const dateObj = new Date(ev.date + "T00:00:00");
+                  const formattedDate = dateObj.toLocaleDateString("fr-FR", { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+                  
+                  return `
+                    <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 14px; border-radius:12px; background:${isPast ? 'rgba(30,41,59,0.3)' : 'rgba(30,41,59,0.7)'}; border:1px solid ${isToday ? 'rgba(129,140,248,0.6)' : 'rgba(255,255,255,0.08)'}; opacity:${isPast ? '0.6' : '1'};">
+                      <div style="display:flex; align-items:center; gap:12px;">
+                        <span style="font-size:24px;">${ev.icon || '🎓'}</span>
+                        <div>
+                          <div style="display:flex; align-items:center; gap:8px;">
+                            <strong style="font-size:14px; color:${isToday ? '#818cf8' : 'inherit'};">${ev.title}</strong>
+                            ${ev.subject ? `<span style="font-size:10.5px; font-weight:700; padding:2px 6px; border-radius:4px; background:rgba(99,102,241,0.2); color:#a5b4fc;">${ev.subject}</span>` : ''}
+                            ${isToday ? `<span style="font-size:10.5px; font-weight:800; padding:2px 6px; border-radius:4px; background:#ef4444; color:#ffffff;">AUJOURD'HUI</span>` : ''}
+                          </div>
+                          <div style="font-size:12px; color:#94a3b8; margin-top:2px;">
+                            <span>📅 ${formattedDate}</span>
+                            ${ev.time ? `<span style="margin-left:8px;">⏰ ${ev.time}</span>` : ''}
+                            ${ev.note ? `<span style="margin-left:8px; font-style:italic; opacity:0.8;">• ${ev.note}</span>` : ''}
+                          </div>
+                        </div>
+                      </div>
+                      <button onclick="window.deleteAgendaEvent('${ev.id}')" class="btn-slot-tool tool-delete" title="Supprimer cet événement">
+                        ✕
+                      </button>
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+            `}
+          </div>
+
+          <div style="display:flex; justify-content:flex-end; border-top:1px solid rgba(255,255,255,0.08); padding-top:14px;">
+            <button onclick="window.closeAiModal()" class="btn-ai-secondary">Fermer</button>
+          </div>
+        </div>
+      `;
+
+      openModal("Agenda & Examens BTS CIEL", "Échéances, devoirs et oraux classés par ordre chronologique", modalHtml);
+      updateAgendaBadge();
+    }
+
     function parseSlotDuration(timeStr) {
       if (!timeStr) return 0;
       const regex = /(\d+)(?:h|:)?(\d+)?\s*-\s*(\d+)(?:h|:)?(\d+)?/i;
@@ -2356,17 +2248,13 @@
       const startMinutes = startH * 60 + startM;
       const endMinutes = endH * 60 + endM;
 
-      if (endMinutes > startMinutes) {
-        return (endMinutes - startMinutes) / 60;
-      }
-      return 0;
+      return endMinutes > startMinutes ? (endMinutes - startMinutes) / 60 : 0;
     }
 
     function formatHours(hours) {
       const h = Math.floor(hours);
       const m = Math.round((hours - h) * 60);
-      if (m === 0) return `${h}h`;
-      return `${h}h${m.toString().padStart(2, '0')}`;
+      return m === 0 ? `${h}h` : `${h}h${m.toString().padStart(2, '0')}`;
     }
 
     function openHoursCalculator() {
@@ -2495,7 +2383,7 @@
                 <span style="font-size:22px;">💻</span>
                 <div>
                   <div style="font-weight:700; font-size:14px;">Télécharger HTML pour PC</div>
-                  <div style="font-size:12px; opacity:0.8;">Fichier autonome connecté en direct à votre base Cloud Firestore</div>
+                  <div style="font-size:12px; opacity:0.8;">Fichier autonome avec vos cours enregistrés</div>
                 </div>
               </div>
               <button class="btn-ai-secondary" onclick="window.exportStandaloneHtml()">Télécharger</button>
@@ -2506,7 +2394,7 @@
                 <span style="font-size:22px;">🖼️</span>
                 <div>
                   <div style="font-weight:700; font-size:14px;">Sauvegarder en image (.png)</div>
-                  <div style="font-size:12px; opacity:0.8;">Capture haute résolution (2.5x) pour fond d'écran</div>
+                  <div style="font-size:12px; opacity:0.8;">Capture haute résolution idéale pour fond d'écran</div>
                 </div>
               </div>
               <button class="btn-ai-secondary" onclick="window.exportSchedulePng()">Exporter PNG</button>
@@ -2517,7 +2405,7 @@
                 <span style="font-size:22px;">💾</span>
                 <div>
                   <div style="font-weight:700; font-size:14px;">Sauvegarde de secours (.json)</div>
-                  <div style="font-size:12px; opacity:0.8;">Exporter vos cours pour les conserver en fichier de données</div>
+                  <div style="font-size:12px; opacity:0.8;">Exporter vos cours en fichier de données</div>
                 </div>
               </div>
               <button class="btn-ai-secondary" onclick="window.exportJsonBackup()">Sauvegarder JSON</button>
@@ -2528,7 +2416,7 @@
                 <span style="font-size:22px;">📂</span>
                 <div>
                   <div style="font-weight:700; font-size:14px;">Restaurer un planning (.json)</div>
-                  <div style="font-size:12px; opacity:0.8;">Charger un fichier de sauvegarde précédemment enregistré</div>
+                  <div style="font-size:12px; opacity:0.8;">Charger un fichier de sauvegarde</div>
                 </div>
               </div>
               <button class="btn-ai-secondary" onclick="window.triggerImportFile()">Charger JSON</button>
@@ -2539,7 +2427,7 @@
                 <span style="font-size:22px;">🔄</span>
                 <div>
                   <div style="font-weight:700; font-size:14px; color:#f87171;">Réinitialiser l'emploi du temps</div>
-                  <div style="font-size:12px; opacity:0.8;">Restaurer la grille officielle par défaut de BTS CIEL</div>
+                  <div style="font-size:12px; opacity:0.8;">Restaurer la grille officielle par défaut</div>
                 </div>
               </div>
               <button class="btn-ai-secondary" style="color:#f87171; border-color:rgba(239,68,68,0.4);" onclick="window.resetToDefaultSchedule()">Réinitialiser</button>
@@ -2553,6 +2441,32 @@
       `;
 
       openModal("Paramètres", "Affichage, Thème & Sauvegardes", modalHtml);
+    }
+
+    function showFirebaseDiagnostic() {
+      const modalHtml = `
+        <div style="display:flex; flex-direction:column; gap:16px;">
+          <div style="padding:12px 14px; border-radius:10px; background:rgba(30,41,59,0.7); border:1px solid rgba(255,255,255,0.1);">
+            <div style="font-size:13px; color:#94a3b8; margin-bottom:4px;">Statut :</div>
+            <strong style="font-size:15px; color:#38bdf8;">${isStorageReady ? 'Connecté à Firestore en temps réel' : 'Initialisation en cours'}</strong>
+          </div>
+
+          <div style="padding:12px 14px; border-radius:10px; background:rgba(30,41,59,0.5);">
+            <div style="font-size:12px; color:#94a3b8;">Utilisateur actif :</div>
+            <code style="font-size:13px; color:#a7f3d0; word-break:break-all;">${userId || 'Non identifié'}</code>
+            ${currentUser ? `<div style="font-size:12px; color:#94a3b8; margin-top:4px;">Type : ${currentUser.isAnonymous ? 'Session anonyme' : `Compte Google (${currentUser.email})`}</div>` : ''}
+          </div>
+
+          <div style="font-size:13px; line-height:1.6; opacity:0.9;">
+            Toutes vos modifications sont automatiquement synchronisées sur Firestore et accessibles sur tous vos appareils.
+          </div>
+
+          <div style="display:flex; justify-content:flex-end;">
+            <button onclick="window.closeAiModal()" class="btn-ai-secondary">Fermer</button>
+          </div>
+        </div>
+      `;
+      openModal("Diagnostic Firebase", "État de la synchronisation", modalHtml);
     }
 
     function getSubjectKey(title, rawKey) {
@@ -2579,38 +2493,36 @@
           <div style="background:rgba(99,102,241,0.12); border:1px solid rgba(129,140,248,0.3); padding:14px 18px; border-radius:14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
             <div>
               <strong style="font-size:14px; display:block;">Plateforme de cours CNED</strong>
-              <span style="font-size:12px; opacity:0.85;">Accès direct à votre module pour ${subjectName}</span>
+              <span style="font-size:12px; opacity:0.85;">Accès direct au module ${subjectName}</span>
             </div>
             <div style="display:flex; gap:8px;">
               <a href="${cnedUrl}" target="_blank" rel="noopener noreferrer" class="btn-ai-magic" style="text-decoration:none; padding:8px 14px; font-size:13px;">
-                🚀 Ouvrir la page CNED
+                🚀 Ouvrir page CNED
               </a>
               <button class="btn-ai-secondary" style="font-size:12px; padding:6px 10px;" onclick="window.toggleEditCnedUrl('${subjectKey}')">
-                ✏️ Modifier l'adresse
+                ✏️ Modifier lien
               </button>
             </div>
           </div>
 
           <div id="editCnedContainer" style="display:none; background:rgba(30,41,59,0.5); padding:12px; border-radius:10px; border:1px solid rgba(255,255,255,0.1);">
-            <label style="font-size:12px; display:block; margin-bottom:6px; font-weight:700;">Adresse URL directe CNED pour cette matière :</label>
+            <label style="font-size:12px; display:block; margin-bottom:6px; font-weight:700;">Adresse URL directe CNED :</label>
             <div style="display:flex; gap:8px;">
               <input type="text" id="cnedCustomUrlInput" value="${cnedUrl}" style="flex:1; padding:8px 10px; border-radius:8px; border:1px solid rgba(129,140,248,0.4); background:rgba(15,23,42,0.8); color:inherit; font-size:13px;">
               <button class="btn-ai-magic" style="padding:8px 14px; font-size:13px;" onclick="window.saveCnedUrl('${subjectKey}')">Enregistrer</button>
             </div>
           </div>
 
-          <div id="dropZoneContainer" style="border:2px dashed #818cf8; border-radius:14px; padding:20px; text-align:center; background:rgba(99,102,241,0.06); transition: all 0.2s ease;">
+          <div id="dropZoneContainer" style="border:2px dashed #818cf8; border-radius:14px; padding:20px; text-align:center; background:rgba(99,102,241,0.06);">
             <div style="font-size:28px; margin-bottom:6px;">📑</div>
             <strong style="font-size:14.5px; display:block; margin-bottom:4px; color:#c7d2fe;">Document source du cours (Obligatoire)</strong>
             <p style="font-size:12.5px; opacity:0.85; margin-bottom:12px; max-width:540px; margin-left:auto; margin-right:auto;">
-              L'IA se basera <strong>exclusivement sur le contenu de votre fichier</strong> (PDF, polycopié texte, photo de cours, schéma ou code source).
+              Pour garantir une exactitude parfaite, l'IA se basera <strong>exclusivement sur le contenu de votre fichier</strong> (PDF, polycopié, photo de cours).
             </p>
             <input type="file" id="tutorFileInput" accept=".pdf,.png,.jpg,.jpeg,.webp,.txt,.c,.cpp,.py,.h,.md" style="display:none;" onchange="window.handleTutorFileSelect(event)">
-            <div style="display:flex; justify-content:center; gap:8px; flex-wrap:wrap; align-items:center;">
-              <button type="button" class="btn-ai-magic" onclick="document.getElementById('tutorFileInput').click()">
-                📂 Choisir mon cours sur le PC (PDF, Image, Texte)
-              </button>
-            </div>
+            <button type="button" class="btn-ai-magic" onclick="document.getElementById('tutorFileInput').click()">
+              📂 Choisir mon document sur le PC
+            </button>
             
             <div id="fileAttachedInfo" style="margin-top:14px; padding:10px 14px; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); border-radius:10px; display:none; align-items:center; justify-content:space-between;">
               <div style="display:flex; align-items:center; gap:8px; text-align:left;">
@@ -2628,12 +2540,12 @@
 
           <div>
             <label style="display:block; font-size:12.5px; font-weight:700; margin-bottom:6px;">Consigne particulière (optionnelle) :</label>
-            <input type="text" id="tutorPromptInput" placeholder="Ex: Résumer le chapitre 2, générer une fiche mémo, extraire les formules clés..." style="width:100%; padding:10px 12px; border-radius:8px; border:1px solid rgba(129,140,248,0.3); background:rgba(15,23,42,0.8); color:inherit; font-size:13.5px;">
+            <input type="text" id="tutorPromptInput" placeholder="Ex: Faire une fiche de révision, extraire les formules clés..." style="width:100%; padding:10px 12px; border-radius:8px; border:1px solid rgba(129,140,248,0.3); background:rgba(15,23,42,0.8); color:inherit; font-size:13.5px;">
           </div>
 
           <div id="tutorGeneratingStatus" style="display:none; align-items:center; gap:10px; color:#818cf8; font-weight:600; font-size:13.5px;">
             <div style="width:20px; height:20px; border:3px solid rgba(99,102,241,0.2); border-radius:50%; border-top-color:#6366f1; animation:spin 0.8s linear infinite;"></div>
-            <span id="tutorStatusMessage">Lecture et analyse stricte de votre document en cours...</span>
+            <span id="tutorStatusMessage">Lecture et analyse stricte du document...</span>
           </div>
 
           <div id="tutorResultContainer" style="display:none; background:rgba(15,23,42,0.6); padding:16px; border-radius:12px; border:1px solid rgba(255,255,255,0.1); max-height:400px; overflow-y:auto; line-height:1.7;"></div>
@@ -2645,7 +2557,7 @@
                 📥 Télécharger en PDF
               </button>
               <button class="btn-ai-magic" onclick="window.generateDocumentCourse('${subjectName}', '${dayName}', '${slotTime}')">
-                ✨ Générer la fiche d'après mon document
+                ✨ Générer fiche d'après mon fichier
               </button>
             </div>
           </div>
@@ -2689,7 +2601,7 @@
 
       if (infoBox && nameLabel && sizeLabel) {
         nameLabel.textContent = file.name;
-        sizeLabel.textContent = `${(file.size / 1024).toFixed(1)} Ko - Prêt pour l'extraction stricte`;
+        sizeLabel.textContent = `${(file.size / 1024).toFixed(1)} Ko - Prêt`;
         infoBox.style.display = "flex";
       }
       showToast(`Document « ${file.name} » chargé`, "📄");
@@ -2710,11 +2622,7 @@
         reader.onload = () => {
           const res = reader.result;
           const commaIndex = res.indexOf(',');
-          if (commaIndex !== -1) {
-            resolve(res.substring(commaIndex + 1));
-          } else {
-            resolve(res);
-          }
+          resolve(commaIndex !== -1 ? res.substring(commaIndex + 1) : res);
         };
         reader.onerror = reject;
         reader.readAsDataURL(file);
@@ -2734,20 +2642,20 @@
         if (resultEl) {
           resultEl.innerHTML = `
             <div style="background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.4); border-radius:10px; padding:14px; color:#fca5a5;">
-              <strong style="display:block; margin-bottom:4px; font-size:14px;">⚠️ Aucun document de cours n'a été fourni</strong>
+              <strong style="display:block; margin-bottom:4px; font-size:14px;">⚠️ Aucun document n'a été sélectionné</strong>
               <p style="font-size:13px; margin:0;">
-                Veuillez cliquer sur <strong>« 📂 Choisir mon cours sur le PC »</strong> pour charger votre PDF, polycopié ou photo de cours.
+                Veuillez cliquer sur <strong>« 📂 Choisir mon document »</strong> pour charger votre support réel.
               </p>
             </div>
           `;
           resultEl.style.display = "block";
         }
-        showToast("Veuillez sélectionner un document de cours", "⚠️");
+        showToast("Veuillez sélectionner un document", "⚠️");
         return;
       }
 
       if (statusEl) statusEl.style.display = "flex";
-      if (statusMsg) statusMsg.textContent = "Extraction et lecture stricte de votre document...";
+      if (statusMsg) statusMsg.textContent = "Lecture et analyse de votre fichier...";
       if (resultEl) resultEl.style.display = "none";
 
       const parts = [];
@@ -2763,51 +2671,33 @@
         if (isTextType) {
           const textContent = await attachedFile.text();
           parts.push({
-            text: `DOCUMENT SOURCE FOURNI PAR L'ÉTUDIANT (${attachedFile.name}) :\n\"\"\"\n${textContent.slice(0, 50000)}\n\"\"\"`
+            text: `DOCUMENT SOURCE :\n\"\"\"\n${textContent.slice(0, 50000)}\n\"\"\"`
           });
         } else {
-          if (statusMsg) statusMsg.textContent = "Traitement du fichier binaire (PDF/Image)...";
           const base64Data = await readFileAsBase64(attachedFile);
-          let mimeType = attachedFile.type;
-          if (!mimeType || mimeType === "application/octet-stream") {
-            if (attachedFile.name.endsWith(".pdf")) mimeType = "application/pdf";
-            else if (attachedFile.name.endsWith(".png")) mimeType = "image/png";
-            else if (attachedFile.name.endsWith(".jpg") || attachedFile.name.endsWith(".jpeg")) mimeType = "image/jpeg";
-            else if (attachedFile.name.endsWith(".webp")) mimeType = "image/webp";
-            else mimeType = "application/pdf";
-          }
+          let mimeType = attachedFile.type || "application/pdf";
+          if (attachedFile.name.endsWith(".png")) mimeType = "image/png";
+          else if (attachedFile.name.endsWith(".jpg") || attachedFile.name.endsWith(".jpeg")) mimeType = "image/jpeg";
 
           parts.push({
-            inlineData: {
-              mimeType: mimeType,
-              data: base64Data
-            }
-          });
-          parts.push({
-            text: `Le document ci-joint est le fichier officiel nommé "${attachedFile.name}".`
+            inlineData: { mimeType: mimeType, data: base64Data }
           });
         }
 
-        const userPrompt = `Consigne de travail : Analyse le document ci-joint pour le cours de "${subjectName}" (${dayName}, ${slotTime}).
-${customInstruction ? `Demande spécifique de l'étudiant : "${customInstruction}"` : 'Fais une fiche de révision technique synthétique, claire et directe.'}
+        const userPrompt = `Analyse ce document pour "${subjectName}" (${dayName}, ${slotTime}).
+${customInstruction ? `Demande : "${customInstruction}"` : 'Fais une fiche de révision technique synthétique, claire et directe.'}
 
-RÈGLES D'EXTRACTION ABSOLUES ET STRICTES :
-1. BASE-TOI STRICTEMENT ET EXCLUSIVEMENT SUR CE DOCUMENT. N'INVENTE RIEN.
-2. Il est formellement interdit d'ajouter des théorèmes, des formules, du code ou des notions qui ne figurent PAS dans ce document fourni.
-3. Si une information n'est pas dans le document, NE L'INVENTE PAS.
-4. Aucun bavardage oral, aucune introduction, aucune conclusion. Donne directement le document au format HTML épuré.
-5. Structure le document en HTML propre (balises <h4>, <p>, <ul>, <li>, <code>, <strong>, <table border="1"> si besoin, et <details><summary> pour les questions/réponses).`;
+RÈGLES STRICTES :
+1. Base-toi uniquement sur le document joint. N'invente rien.
+2. Tout ce qui n'est pas dans le fichier ne doit pas être mentionné.
+3. Aucun bavardage oral ("Bonjour", "Voici"). Structure en HTML propre (<h4>, <p>, <ul>, <li>, <code>, <strong>).`;
 
         parts.push({ text: userPrompt });
-
-        if (statusMsg) statusMsg.textContent = "Gemini synthétise fidèlement votre cours...";
 
         const payload = {
           contents: [{ parts: parts }],
           systemInstruction: {
-            parts: [{
-              text: "Tu es un synthétiseur technique ultra-rigoureux. RÈGLE CRITIQUE : Tu dois extraire et synthétiser UNIQUEMENT et STRICTEMENT les informations présentes dans le document fourni ci-joint par l'étudiant. Tu ne dois sous aucun prétexte inventer ou extrapoler des notions externes absentes du document. Aucun bavardage oral."
-            }]
+            parts: [{ text: "Tu es un synthétiseur technique rigoureux. Tu extrais UNIQUEMENT et STRICTEMENT les notions présentes dans le document fourni. Aucun bavardage oral." }]
           }
         };
 
@@ -2818,7 +2708,7 @@ RÈGLES D'EXTRACTION ABSOLUES ET STRICTES :
         });
 
         const data = await response.json();
-        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || "Impossible d'extraire le contenu du document.";
+        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || "Impossible d'extraire le contenu.";
 
         if (statusEl) statusEl.style.display = "none";
         if (resultEl) {
@@ -2829,7 +2719,7 @@ RÈGLES D'EXTRACTION ABSOLUES ET STRICTES :
       } catch (err) {
         if (statusEl) statusEl.style.display = "none";
         if (resultEl) {
-          resultEl.innerHTML = `<div style="color:#ef4444; padding:10px; background:rgba(239,68,68,0.1); border-radius:8px;">Erreur lors de l'analyse du document : ${err.message}</div>`;
+          resultEl.innerHTML = `<div style="color:#ef4444; padding:10px;">Erreur lors de l'analyse : ${err.message}</div>`;
           resultEl.style.display = "block";
         }
       }
@@ -2837,69 +2727,29 @@ RÈGLES D'EXTRACTION ABSOLUES ET STRICTES :
 
     function downloadTutorPdf() {
       const resultEl = document.getElementById("tutorResultContainer");
-      if (!resultEl || !resultEl.innerHTML.trim()) {
-        showToast("Veuillez d'abord générer un document à exporter", "⚠️");
-        return;
-      }
-      const modalTitle = document.getElementById("modalTitle")?.textContent || "Fiche_Revision";
-      const modalSubtitle = document.getElementById("modalSubtitle")?.textContent || "BTS CIEL";
+      if (!resultEl || !resultEl.innerHTML.trim()) return;
 
       const printWindow = window.open("", "_blank");
       if (!printWindow) {
-        showToast("Veuillez autoriser les fenêtres pop-up", "⚠️");
+        showToast("Autorisez les fenêtres pop-up pour imprimer", "⚠️");
         return;
       }
-
-      const clone = resultEl.cloneNode(true);
-      clone.querySelectorAll("details").forEach(d => d.setAttribute("open", "true"));
 
       printWindow.document.write(`
         <!DOCTYPE html>
         <html lang="fr">
         <head>
           <meta charset="UTF-8">
-          <title>${modalTitle} - ${modalSubtitle}</title>
-          <link rel="preconnect" href="https://fonts.googleapis.com">
-          <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+          <title>Fiche de révision BTS CIEL</title>
           <style>
-            * { box-sizing: border-box; }
-            body {
-              font-family: 'Plus Jakarta Sans', sans-serif;
-              color: #0f172a;
-              background: #ffffff;
-              padding: 32px;
-              max-width: 860px;
-              margin: 0 auto;
-              line-height: 1.65;
-            }
-            .print-header {
-              border-bottom: 2px solid #6366f1;
-              padding-bottom: 12px;
-              margin-bottom: 20px;
-            }
-            .print-header h1 { margin: 0; font-size: 24px; color: #4338ca; }
-            .print-header p { margin: 4px 0 0 0; color: #64748b; font-size: 13.5px; }
-            code { background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 13px; color: #9333ea; }
-            details { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; margin: 12px 0; }
-            summary { font-weight: 700; cursor: pointer; color: #4f46e5; margin-bottom: 6px; }
-            h4, h3, h2 { color: #1e1b4b; margin-top: 1.4em; margin-bottom: 0.4em; }
-            ul, ol { padding-left: 20px; }
-            @media print {
-              body { padding: 0; max-width: 100%; }
-            }
+            body { font-family: sans-serif; color: #0f172a; padding: 24px; line-height: 1.6; }
+            h4 { color: #4338ca; }
+            code { background: #f1f5f9; padding: 2px 4px; border-radius: 4px; font-family: monospace; }
           </style>
         </head>
         <body>
-          <div class="print-header">
-            <h1>${modalTitle}</h1>
-            <p>${modalSubtitle} • Fiche de révision BTS CIEL</p>
-          </div>
-          <div>${clone.innerHTML}</div>
-          <script>
-            window.onload = function() {
-              window.print();
-            };
-          <\/script>
+          <div>${resultEl.innerHTML}</div>
+          <script>window.onload = function() { window.print(); }<\/script>
         </body>
         </html>
       `);
@@ -2914,7 +2764,7 @@ RÈGLES D'EXTRACTION ABSOLUES ET STRICTES :
       document.body.appendChild(downloadAnchor);
       downloadAnchor.click();
       downloadAnchor.remove();
-      showToast("Fichier JSON téléchargé !", "💾");
+      showToast("Sauvegarde JSON téléchargée !", "💾");
     }
 
     async function exportSchedulePng() {
@@ -2922,32 +2772,23 @@ RÈGLES D'EXTRACTION ABSOLUES ET STRICTES :
       if (!board) return;
 
       closeAiModal();
-      showToast("Génération de l'image haute définition en cours...", "🖼️");
+      showToast("Génération de l'image haute définition...", "🖼️");
 
       try {
         const wasEditMode = isEditMode;
         if (wasEditMode) document.body.classList.remove("edit-mode");
 
         const originalBoardBg = board.style.background;
-        const originalBoardBorder = board.style.borderColor;
-
-        if (isDarkMode) {
-          board.style.background = '#0b0f19';
-          board.style.borderColor = 'rgba(255, 255, 255, 0.15)';
-        } else {
-          board.style.background = '#ffffff';
-          board.style.borderColor = '#cbd5e1';
-        }
+        board.style.background = isDarkMode ? '#0b0f19' : '#ffffff';
 
         const canvas = await html2canvas(board, {
-          scale: 2.5,
+          scale: 2.2,
           useCORS: true,
           logging: false,
           backgroundColor: isDarkMode ? '#0b0f19' : '#ffffff'
         });
 
         board.style.background = originalBoardBg;
-        board.style.borderColor = originalBoardBorder;
         if (wasEditMode) document.body.classList.add("edit-mode");
 
         const imageUri = canvas.toDataURL("image/png");
@@ -2958,10 +2799,9 @@ RÈGLES D'EXTRACTION ABSOLUES ET STRICTES :
         downloadLink.click();
         downloadLink.remove();
 
-        showToast("Fond d'écran PNG téléchargé !", "🖼️");
+        showToast("Image PNG téléchargée !", "🖼️");
       } catch (err) {
-        console.error("Erreur capture PNG :", err);
-        showToast("Erreur lors de la capture d'image : " + err.message, "❌");
+        showToast("Erreur capture PNG : " + err.message, "❌");
       }
     }
 
@@ -2978,7 +2818,7 @@ RÈGLES D'EXTRACTION ABSOLUES ET STRICTES :
       reader.onload = (e) => {
         try {
           const parsed = JSON.parse(e.target.result);
-          if (parsed && parsed.lundi && parsed.mardi && parsed.mercredi && parsed.jeudi && parsed.vendredi) {
+          if (parsed && parsed.lundi && parsed.mardi) {
             currentSchedule = parsed;
             if (currentSchedule.preferences && typeof currentSchedule.preferences.isDarkMode === 'boolean') {
               isDarkMode = currentSchedule.preferences.isDarkMode;
@@ -2989,11 +2829,9 @@ RÈGLES D'EXTRACTION ABSOLUES ET STRICTES :
             persistSchedule();
             closeAiModal();
             showToast("Planning restauré avec succès !", "📂");
-          } else {
-            showToast("Format de fichier JSON non reconnu", "⚠️");
           }
         } catch (err) {
-          showToast("Erreur lors de la lecture du fichier : " + err.message, "❌");
+          showToast("Erreur fichier JSON : " + err.message, "❌");
         }
       };
       reader.readAsText(file);
@@ -3027,7 +2865,7 @@ RÈGLES D'EXTRACTION ABSOLUES ET STRICTES :
       updateAgendaBadge();
       persistSchedule();
       closeAiModal();
-      showToast("Planning réinitialisé aux valeurs par défaut", "🔄");
+      showToast("Planning réinitialisé", "🔄");
     }
 
     window.toggleEditMode = toggleEditMode;
@@ -3058,13 +2896,13 @@ RÈGLES D'EXTRACTION ABSOLUES ET STRICTES :
     window.handleFileImport = handleFileImport;
     window.exportStandaloneHtml = exportStandaloneHtml;
     window.resetToDefaultSchedule = resetToDefaultSchedule;
-    window.openAgendaModal = openAgendaModal;
-    window.selectEventIcon = selectEventIcon;
-    window.saveNewAgendaEvent = saveNewAgendaEvent;
-    window.deleteAgendaEvent = deleteAgendaEvent;
-    window.showFirebaseDiagnostic = showFirebaseDiagnostic;
     window.loginWithGoogle = loginWithGoogle;
     window.logoutGoogle = logoutGoogle;
+    window.showFirebaseDiagnostic = showFirebaseDiagnostic;
+    window.openAgendaModal = openAgendaModal;
+    window.setSelectedEventIcon = setSelectedEventIcon;
+    window.addAgendaEvent = addAgendaEvent;
+    window.deleteAgendaEvent = deleteAgendaEvent;
 
     window.addEventListener("DOMContentLoaded", async () => {
       document.body.classList.toggle("dark-theme", isDarkMode);
