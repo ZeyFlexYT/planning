@@ -1178,8 +1178,6 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
     import { 
       getAuth, 
-      signInAnonymously, 
-      signInWithCustomToken, 
       GoogleAuthProvider, 
       signInWithPopup, 
       signOut, 
@@ -1420,9 +1418,16 @@
         showToast("Firebase n'est pas encore initialisé", "⚠️");
         return;
       }
+      const gateStatus = document.getElementById("gateStatusMsg");
+      if (gateStatus) {
+        gateStatus.className = "gate-status-msg info";
+        gateStatus.style.display = "block";
+        gateStatus.textContent = "Ouverture de la fenêtre Google...";
+      }
       try {
         updateSyncIndicator("saving", "Connexion Google...");
         const provider = new GoogleAuthProvider();
+        provider.setCustomParameters({ prompt: 'select_account' });
         const result = await signInWithPopup(auth, provider);
         currentUser = result.user;
         userId = currentUser.uid;
@@ -1431,36 +1436,58 @@
         if (userTag) userTag.textContent = `ID: ${userId}`;
         
         updateAuthUI();
-        showToast(`Connecté avec succès : ${currentUser.displayName || currentUser.email}`, "🎉");
+        setGateVisibility(false);
+        showToast(`Connecté : ${currentUser.displayName || currentUser.email}`, "🎉");
         
-        // Recharger le planning Firestore associé au compte Google
         listenToUserSchedule();
       } catch (err) {
         console.error("Erreur connexion Google :", err);
-        updateSyncIndicator("saved", "Synchronisé en ligne");
-        showToast("Erreur lors de la connexion Google : " + err.message, "❌");
+        if (gateStatus) {
+          gateStatus.className = "gate-status-msg error";
+          gateStatus.style.display = "block";
+
+          if (err.code === 'auth/unauthorized-domain') {
+            gateStatus.innerHTML = `⚠️ <strong>Domaine non autorisé dans Firebase</strong> :<br>Ajoutez <code>${window.location.hostname}</code> dans votre console Firebase (<em>Authentication &gt; Paramètres &gt; Domaines autorisés</em>).`;
+          } else if (err.code === 'auth/popup-blocked') {
+            gateStatus.textContent = "⚠️ La fenêtre de connexion a été bloquée par votre navigateur. Autorisez les pop-ups pour continuer.";
+          } else if (err.code === 'auth/popup-closed-by-user') {
+            gateStatus.textContent = "La fenêtre de connexion a été fermée avant la validation.";
+          } else if (err.code === 'auth/operation-not-allowed') {
+            gateStatus.innerHTML = "⚠️ <strong>Fournisseur Google non activé</strong> : Activez Google dans votre console Firebase (<em>Authentication &gt; Sign-in method &gt; Google</em>).";
+          } else {
+            gateStatus.textContent = "Échec de connexion : " + err.message;
+          }
+        }
+        updateSyncIndicator("error", "Non connecté");
+        showToast("Erreur connexion Google", "❌");
       }
     }
 
     async function logoutGoogle() {
       if (!auth) return;
       try {
-        await signOut(auth);
-        showToast("Déconnexion réussie", "👋");
-        // Reconnecter automatiquement en session anonyme
-        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-          await signInWithCustomToken(auth, __initial_auth_token);
-        } else {
-          await signInAnonymously(auth);
+        if (unsubscribeFirestore) {
+          unsubscribeFirestore();
+          unsubscribeFirestore = null;
         }
-        currentUser = auth.currentUser;
-        userId = currentUser?.uid || crypto.randomUUID();
-        const userTag = document.getElementById("userIdDisplay");
-        if (userTag) userTag.textContent = `ID: ${userId}`;
+        await signOut(auth);
+        currentUser = null;
+        userId = null;
+        setGateVisibility(true);
         updateAuthUI();
-        listenToUserSchedule();
+        showToast("Déconnexion réussie. Veuillez vous reconnecter.", "👋");
       } catch (err) {
         console.error("Erreur déconnexion :", err);
+      }
+    }
+
+    function setGateVisibility(visible) {
+      const gate = document.getElementById("loginGateScreen");
+      const gateStatus = document.getElementById("gateStatusMsg");
+      if (!gate) return;
+      gate.style.display = visible ? "flex" : "none";
+      if (!visible && gateStatus) {
+        gateStatus.style.display = "none";
       }
     }
 
@@ -1468,8 +1495,8 @@
       if (!currentSchedule.preferences) currentSchedule.preferences = {};
       currentSchedule.preferences.isDarkMode = isDarkMode;
 
-      if (!isStorageReady || !db || !userId) {
-        updateSyncIndicator("saved", "Prêt (en attente serveur)");
+      if (!isStorageReady || !db || !userId || !currentUser || currentUser.isAnonymous) {
+        updateSyncIndicator("error", "Connexion requise");
         return;
       }
 
@@ -1519,14 +1546,18 @@
 
     async function initCloudPersistence() {
       const userTag = document.getElementById("userIdDisplay");
+      const gateStatus = document.getElementById("gateStatusMsg");
       try {
+        if (gateStatus) {
+          gateStatus.style.display = "flex";
+          gateStatus.textContent = "Vérification du compte...";
+        }
         updateSyncIndicator("saving", "Connexion...");
         
         let firebaseConfig = null;
         if (typeof __firebase_config !== 'undefined') {
           firebaseConfig = JSON.parse(__firebase_config);
         } else {
-          // Configuration Firebase par défaut
           firebaseConfig = {
             apiKey: "AIzaSyAQDUVcR-oXmkCc3YJ92oDlYJUm4W6NqXw",
             authDomain: "privateplanning.firebaseapp.com",
@@ -1543,27 +1574,33 @@
 
         onAuthStateChanged(auth, (user) => {
           currentUser = user;
-          if (user) {
+          if (user && !user.isAnonymous) {
             userId = user.uid;
             if (userTag) userTag.textContent = `ID: ${userId}`;
             isStorageReady = true;
+            setGateVisibility(false);
             updateAuthUI();
             listenToUserSchedule();
           } else {
+            // Aucun compte Google connecté : verrouillage strict
+            userId = null;
+            isStorageReady = false;
+            if (unsubscribeFirestore) {
+              unsubscribeFirestore();
+              unsubscribeFirestore = null;
+            }
+            if (userTag) userTag.textContent = "Non connecté";
+            setGateVisibility(true);
             updateAuthUI();
+            updateSyncIndicator("error", "Connexion requise");
           }
         });
-
-        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-          await signInWithCustomToken(auth, __initial_auth_token);
-        } else {
-          await signInAnonymously(auth);
-        }
 
       } catch (err) {
         console.warn("Échec cloud :", err);
         updateSyncIndicator("error", "Erreur réseau");
-        if (userTag) userTag.textContent = "Mode local";
+        if (userTag) userTag.textContent = "Erreur connexion";
+        setGateVisibility(true);
       }
     }
 
