@@ -1,0 +1,1901 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Planning Hebdomadaire - BTS Ciel 1ère année</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #e9eef5;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px 15px;
+      color: #1e293b;
+    }
+
+    .action-bar {
+      width: 100%;
+      max-width: 1460px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .btn-print {
+      background: #1e293b;
+      color: #ffffff;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.15);
+    }
+
+    .btn-print:hover {
+      background: #334155;
+      transform: translateY(-1px);
+    }
+
+    .btn-ai-magic {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      color: #ffffff;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
+    }
+
+    .btn-ai-magic:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(99, 102, 241, 0.35);
+      filter: brightness(1.05);
+    }
+
+    .btn-ai-secondary {
+      background: #ffffff;
+      color: #334155;
+      border: 1px solid #cbd5e1;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04);
+    }
+
+    .btn-ai-secondary:hover {
+      background: #f8fafc;
+      border-color: #94a3b8;
+      transform: translateY(-1px);
+    }
+
+    .action-bar {
+      width: 100%;
+      max-width: 1460px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .action-bar-left, .action-bar-right {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .sync-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #f1f5f9;
+      color: #475569;
+      border: 1px solid #cbd5e1;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .sync-badge.saved {
+      background: #ecfdf5;
+      color: #065f46;
+      border-color: #a7f3d0;
+    }
+
+    .sync-badge.saving {
+      background: #eff6ff;
+      color: #1e40af;
+      border-color: #bfdbfe;
+    }
+
+    .sync-badge.error {
+      background: #fef2f2;
+      color: #991b1b;
+      border-color: #fecaca;
+    }
+
+    .user-id-tag {
+      font-size: 11px;
+      color: #64748b;
+      font-family: monospace;
+      padding: 3px 8px;
+      background: #ffffff;
+      border-radius: 6px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .btn-toggle-edit {
+      background: #ffffff;
+      color: #0f172a;
+      border: 1.5px solid #6366f1;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 6px rgba(99, 102, 241, 0.15);
+    }
+
+    .btn-toggle-edit:hover {
+      background: #eef2ff;
+      transform: translateY(-1px);
+    }
+
+    .btn-toggle-edit.active {
+      background: #4f46e5;
+      color: #ffffff;
+      border-color: #4338ca;
+      box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);
+    }
+
+    .edit-mode-indicator {
+      display: none;
+      background: #e0e7ff;
+      color: #3730a3;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12.5px;
+      font-weight: 700;
+      align-items: center;
+      gap: 6px;
+      animation: pulseEdit 2s infinite ease-in-out;
+    }
+
+    body.edit-mode .edit-mode-indicator {
+      display: inline-flex;
+    }
+
+    @keyframes pulseEdit {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.75; }
+    }
+
+    /* Styles pour les cartes en mode édition */
+    body.edit-mode .card-box {
+      cursor: grab !important;
+      position: relative;
+    }
+
+    body.edit-mode .card-box:active {
+      cursor: grabbing !important;
+    }
+
+    .card-box.dragging {
+      opacity: 0.4;
+      transform: scale(0.97);
+      border: 2px dashed #6366f1 !important;
+    }
+
+    .slot-item.drag-over .card-box {
+      border: 2px solid #6366f1 !important;
+      background-color: #f5f3ff !important;
+      transform: translateY(-3px);
+    }
+
+    .card-edit-overlay {
+      display: none;
+      position: absolute;
+      top: 4px;
+      right: 6px;
+      gap: 4px;
+      z-index: 10;
+    }
+
+    body.edit-mode .card-edit-overlay {
+      display: flex;
+    }
+
+    .btn-slot-tool {
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid #cbd5e1;
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #475569;
+      font-size: 11px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      transition: all 0.15s ease;
+    }
+
+    .btn-slot-tool:hover {
+      background: #ffffff;
+      color: #4f46e5;
+      transform: scale(1.1);
+      border-color: #818cf8;
+    }
+
+    .btn-slot-tool.tool-delete:hover {
+      color: #dc2626;
+      border-color: #f87171;
+    }
+
+    .btn-add-slot {
+      display: none;
+      width: 100%;
+      border: 1.5px dashed #cbd5e1;
+      background: transparent;
+      padding: 8px;
+      border-radius: 10px;
+      color: #64748b;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 6px;
+    }
+
+    body.edit-mode .btn-add-slot {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .btn-add-slot:hover {
+      background: #ffffff;
+      border-color: #6366f1;
+      color: #4f46e5;
+    }
+
+    .card-box.clickable-slot {
+      cursor: pointer;
+    }
+    .card-box.clickable-slot:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+      outline: 2px solid rgba(99, 102, 241, 0.4);
+    }
+
+    /* Modal Backdrop and Box */
+    .ai-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.55);
+      backdrop-filter: blur(4px);
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+
+    .ai-modal-backdrop.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .ai-modal-card {
+      background: #ffffff;
+      border-radius: 20px;
+      width: 100%;
+      max-width: 680px;
+      max-height: 88vh;
+      overflow-y: auto;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      border: 1px solid #e2e8f0;
+      display: flex;
+      flex-direction: column;
+      transform: scale(0.96);
+      transition: transform 0.25s ease;
+    }
+
+    .ai-modal-backdrop.active .ai-modal-card {
+      transform: scale(1);
+    }
+
+    .ai-modal-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #f8fafc;
+      border-radius: 20px 20px 0 0;
+    }
+
+    .ai-modal-body {
+      padding: 24px;
+      font-size: 14.5px;
+      line-height: 1.6;
+      color: #334155;
+    }
+
+    .ai-loading-spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(99, 102, 241, 0.2);
+      border-radius: 50%;
+      border-top-color: #6366f1;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Toast Notification */
+    .ai-toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #1e293b;
+      color: #f8fafc;
+      padding: 12px 20px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+      font-size: 14px;
+      font-weight: 500;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .ai-toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* Conteneur principal */
+    .board-container {
+      background-color: #f7f9fd;
+      width: 100%;
+      max-width: 1460px;
+      border-radius: 28px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 20px 45px rgba(15, 23, 42, 0.08);
+      padding: 40px 45px 50px 45px;
+    }
+
+    /* En-tête */
+    .header-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 35px;
+    }
+
+    .title-group h1 {
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: 0.8px;
+      color: #162033;
+      text-transform: uppercase;
+      line-height: 1.2;
+    }
+
+    .title-group p {
+      font-size: 15px;
+      font-weight: 500;
+      color: #64748b;
+      margin-top: 6px;
+      letter-spacing: 0.2px;
+    }
+
+    .menu-icon {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      align-items: flex-end;
+      padding-top: 6px;
+    }
+
+    .menu-icon span {
+      display: block;
+      height: 3px;
+      background-color: #475569;
+      border-radius: 4px;
+    }
+
+    .menu-icon span:nth-child(1) { width: 34px; }
+    .menu-icon span:nth-child(2) { width: 24px; }
+    .menu-icon span:nth-child(3) { width: 14px; }
+
+    /* Grille des 5 jours */
+    .schedule-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 20px;
+    }
+
+    .day-column {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* En-têtes de colonnes */
+    .day-header {
+      border-radius: 14px;
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+      margin-bottom: 4px;
+    }
+
+    .day-header .day-name {
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: #1e293b;
+    }
+
+    .day-header .day-dot {
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      border: 2px solid;
+    }
+
+    /* Thèmes de couleurs par jour */
+    .col-lundi .day-header {
+      background-color: #f0e8ff;
+    }
+    .col-lundi .day-dot {
+      border-color: #9061f9;
+      background-color: #d8b4fe;
+    }
+
+    .col-mardi .day-header {
+      background-color: #e4f5fc;
+    }
+    .col-mardi .day-dot {
+      border-color: #06b6d4;
+      background-color: #a5f3fc;
+    }
+
+    .col-mercredi .day-header {
+      background-color: #e7f8ee;
+    }
+    .col-mercredi .day-dot {
+      border-color: #10b981;
+      background-color: #a7f3d0;
+    }
+
+    .col-jeudi .day-header {
+      background-color: #ffeedf;
+    }
+    .col-jeudi .day-dot {
+      border-color: #f97316;
+      background-color: #fdba74;
+    }
+
+    .col-vendredi .day-header {
+      background-color: #fef5d2;
+    }
+    .col-vendredi .day-dot {
+      border-color: #eab308;
+      background-color: #fde047;
+    }
+
+    /* Cartes créneaux */
+    .slot-item {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .slot-time {
+      font-size: 12px;
+      font-weight: 700;
+      color: #1e293b;
+      padding-left: 2px;
+    }
+
+    .slot-time.empty-time {
+      visibility: hidden;
+    }
+
+    .card-box {
+      border-radius: 12px;
+      height: 64px;
+      padding: 10px 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      background-color: #ebf1f7;
+      border: 1px solid rgba(226, 232, 240, 0.8);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .card-box:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .badge-pill {
+      width: 44px;
+      height: 20px;
+      border-radius: 6px;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      flex-shrink: 0;
+    }
+
+    .col-lundi .badge-pill { background-color: #f3edff; border-color: #e4d4ff; }
+    .col-mardi .badge-pill { background-color: #e6f6fd; border-color: #c9effc; }
+    .col-mercredi .badge-pill { background-color: #eafbf1; border-color: #c4f4d7; }
+    .col-jeudi .badge-pill { background-color: #fff1e5; border-color: #fed7be; }
+    .col-vendredi .badge-pill { background-color: #fef8dd; border-color: #faeeb5; }
+
+    .card-title {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: #1e293b;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex-grow: 1;
+      text-align: right;
+    }
+
+    .card-lines {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(to right, rgba(203, 213, 225, 0.4), rgba(203, 213, 225, 0.8), rgba(203, 213, 225, 0.4));
+      margin-top: auto;
+      margin-bottom: 4px;
+    }
+
+    /* Typologies de matières & activités */
+    .card-box.theme-quartier-libre {
+      background-color: #ebf1f7;
+    }
+    .card-box.theme-quartier-libre .card-title {
+      font-style: italic;
+      font-weight: 500;
+      color: #556987;
+    }
+
+    .card-box.theme-pause {
+      background-color: #edf3f8;
+    }
+    .card-box.theme-pause .card-title {
+      font-style: italic;
+      font-weight: 600;
+    }
+    .col-lundi .card-box.theme-pause .card-title { color: #8b5cf6; }
+    .col-mardi .card-box.theme-pause .card-title { color: #0284c7; }
+    .col-mercredi .card-box.theme-pause .card-title { color: #059669; }
+
+    .card-box.theme-bloc1 {
+      background-color: #dbeafe;
+      border-color: #bfdbfe;
+    }
+    .card-box.theme-bloc1 .card-title {
+      color: #1e3a8a;
+      font-weight: 700;
+    }
+
+    /* BLOC 2 - Orange pâle demandé */
+    .card-box.theme-bloc2 {
+      background-color: #fed7aa;
+      border-color: #fdba74;
+    }
+    .card-box.theme-bloc2 .card-title {
+      color: #9a3412;
+      font-weight: 700;
+    }
+
+    .card-box.theme-anglais {
+      background-color: #f3e8ff;
+      border-color: #e9d5ff;
+    }
+    .card-box.theme-anglais .card-title {
+      color: #581c87;
+      font-weight: 700;
+    }
+
+    .card-box.theme-culture {
+      background-color: #dcfce7;
+      border-color: #bbf7d0;
+    }
+    .card-box.theme-culture .card-title {
+      color: #14532d;
+      font-weight: 700;
+    }
+
+    .card-box.theme-physique {
+      background-color: #fef08a;
+      border-color: #fde047;
+    }
+    .card-box.theme-physique .card-title {
+      color: #713f12;
+      font-weight: 700;
+    }
+
+    .card-box.theme-maths {
+      background-color: #fee2e2;
+      border-color: #fecaca;
+    }
+    .card-box.theme-maths .card-title {
+      color: #991b1b;
+      font-weight: 700;
+    }
+
+    .card-box.theme-empty {
+      background-color: #edf2f7;
+      border: 1px dashed #cbd5e1;
+      opacity: 0.75;
+    }
+
+    /* Ajustements print */
+    @media print {
+      body {
+        background-color: #ffffff;
+        padding: 0;
+      }
+      .action-bar {
+        display: none;
+      }
+      .board-container {
+        box-shadow: none;
+        border: none;
+        padding: 10px;
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="action-bar">
+    <div class="action-bar-left">
+      <button id="btnToggleEdit" class="btn-toggle-edit" onclick="toggleEditMode()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
+          <path d="m15 5 4 4"/>
+        </svg>
+        <span id="editModeBtnLabel">Éditer le planning</span>
+      </button>
+
+      <span class="edit-mode-indicator">
+        <span>● Mode Édition actif : Glissez-déposez ou cliquez sur un cours</span>
+      </span>
+
+      <button class="btn-ai-magic" onclick="openScheduleEditorModal()">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/>
+        </svg>
+        Adapter via Gemini IA
+      </button>
+
+      <button class="btn-ai-secondary" onclick="openHoursCalculator()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="4" y="2" width="16" height="20" rx="2"></rect>
+          <line x1="8" y1="6" x2="16" y2="6"></line>
+          <line x1="16" y1="14" x2="16" y2="18"></line>
+          <path d="M16 10h.01"></path>
+          <path d="M12 10h.01"></path>
+          <path d="M8 10h.01"></path>
+          <path d="M12 14h.01"></path>
+          <path d="M8 14h.01"></path>
+          <path d="M12 18h.01"></path>
+          <path d="M8 18h.01"></path>
+        </svg>
+        Calculateur d'horaires
+      </button>
+    </div>
+
+    <div class="action-bar-right">
+      <button class="btn-ai-secondary" onclick="exportStandaloneHtml()" title="Télécharger le fichier HTML complet prêt à l'emploi sur votre PC">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Télécharger HTML pour PC
+      </button>
+
+      <button class="btn-ai-secondary" onclick="exportSchedulePng()" title="Exporter en image PNG haute définition (idéal fond d'écran)">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/>
+          <circle cx="9" cy="9" r="2"/>
+          <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
+        </svg>
+        Sauvegarder (.png)
+      </button>
+
+      <button class="btn-ai-secondary" onclick="exportJsonBackup()" title="Sauvegarder une copie de secours sur votre PC">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+          <polyline points="17 21 17 13 7 13 7 21"/>
+          <polyline points="7 3 7 8 15 8"/>
+        </svg>
+        Sauvegarder (.json)
+      </button>
+
+      <button class="btn-ai-secondary" onclick="triggerImportFile()" title="Restaurer un planning depuis votre PC">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="17 8 12 3 7 8"/>
+          <line x1="12" y1="3" x2="12" y2="15"/>
+        </svg>
+        Charger (.json)
+      </button>
+      <input type="file" id="importFileInput" accept=".json" style="display:none;" onchange="handleFileImport(event)">
+
+      <button class="btn-ai-secondary" onclick="resetToDefaultSchedule()" title="Restaurer l'emploi du temps par défaut">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+          <path d="M3 3v5h5"/>
+        </svg>
+        Réinitialiser
+      </button>
+
+      <button class="btn-print" onclick="window.print()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 6 2 18 2 18 9"></polyline>
+          <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+          <rect x="6" y="14" width="12" height="8"></rect>
+        </svg>
+        Imprimer / Sauvegarder en PDF
+      </button>
+
+      <div id="syncBadge" class="sync-badge saved" title="Statut de sauvegarde">
+        <span id="syncDot">●</span>
+        <span id="syncText">Sauvegardé</span>
+      </div>
+      <span id="userIdDisplay" class="user-id-tag" title="Identifiant unique de votre planning">Compte invité</span>
+    </div>
+  </div>
+
+  <div class="board-container">
+    <!-- En-tête -->
+    <header class="header-section">
+      <div class="title-group">
+        <h1>Planning Hebdomadaire</h1>
+        <p>BTS - Ciel 1ère année &bull; <span style="color:#6366f1; font-weight:600;">✨ Cliquez sur un cours pour le tuteur IA</span></p>
+      </div>
+      <div class="menu-icon" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </header>
+
+    <!-- Grille des 5 jours (remplie dynamiquement ou réactive) -->
+    <main class="schedule-grid" id="schedule-grid-container">
+      <!-- Les colonnes sont générées dynamiquement par JS pour permettre la modification IA instantanée -->
+    </main>
+  </div>
+
+  <!-- Modal Universel IA -->
+  <div id="aiModal" class="ai-modal-backdrop" onclick="if(event.target === this) closeAiModal()">
+    <div class="ai-modal-card">
+      <div class="ai-modal-header">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <div style="width:34px; height:34px; border-radius:10px; background:#e0e7ff; display:flex; align-items:center; justify-content:center; color:#4f46e5; font-weight:bold;">
+            ✨
+          </div>
+          <div>
+            <h3 id="modalTitle" style="font-size:17px; font-weight:700; color:#0f172a;">Coach IA BTS CIEL</h3>
+            <p id="modalSubtitle" style="font-size:12px; color:#64748b;">Gemini 3 Flash Intelligence</p>
+          </div>
+        </div>
+        <button onclick="closeAiModal()" style="background:transparent; border:none; color:#94a3b8; cursor:pointer; font-size:22px; line-height:1;">&times;</button>
+      </div>
+      <div id="modalContent" class="ai-modal-body">
+        <!-- Content inserted dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="aiToast" class="ai-toast">
+    <span id="toastIcon">✨</span>
+    <span id="toastMsg">Action effectuée</span>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+    let db = null;
+    let auth = null;
+    let currentUser = null;
+    let userId = null;
+    let isStorageReady = false;
+
+    /* Configuration Gemini API */
+    const apiKey = "";
+    const GEMINI_TEXT_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+
+    let isEditMode = false;
+    let draggedSlotInfo = null;
+
+    // Données par défaut du planning BTS CIEL (avec Bloc 2 et Quartier libre Mercredi)
+    const defaultScheduleData = {
+      lundi: {
+        label: "LUNDI",
+        slots: [
+          { time: "9h - 9h30", title: "Quartier libre", theme: "quartier-libre" },
+          { time: "9h30 - 12h", title: "Bloc 1", theme: "bloc1", subjectKey: "bloc1" },
+          { time: "12h - 12h30", title: "Pause repas", theme: "pause" },
+          { time: "12h30 - 14h", title: "Anglais", theme: "anglais", subjectKey: "anglais" },
+          { time: "14h - X", title: "Quartier libre", theme: "quartier-libre" },
+          { time: "", title: "", theme: "empty" },
+          { time: "", title: "", theme: "empty" }
+        ]
+      },
+      mardi: {
+        label: "MARDI",
+        slots: [
+          { time: "X - 12h", title: "Quartier libre", theme: "quartier-libre" },
+          { time: "12h - 12h30", title: "Pause repas", theme: "pause" },
+          { time: "12h30 - 16h", title: "Culture générale", theme: "culture", subjectKey: "culture" },
+          { time: "16h - 17h", title: "Pause goûter / jeux", theme: "pause" },
+          { time: "17h - 19h", title: "Mathématiques", theme: "maths", subjectKey: "maths" },
+          { time: "19h - 21h", title: "Bloc 2", theme: "bloc2", subjectKey: "bloc2" },
+          { time: "21h - X", title: "Quartier libre", theme: "quartier-libre" }
+        ]
+      },
+      mercredi: {
+        label: "MERCREDI",
+        slots: [
+          { time: "7h - 7h30", title: "Quartier libre", theme: "quartier-libre" },
+          { time: "7h30 - 12h", title: "Physique", theme: "physique", subjectKey: "physique" },
+          { time: "12h - 12h30", title: "Pause repas", theme: "pause" },
+          { time: "12h30 - 16h", title: "Physique", theme: "physique", subjectKey: "physique" },
+          { time: "16h - 17h", title: "Pause goûter / jeux", theme: "pause" },
+          { time: "17h - 20h", title: "Mathématiques", theme: "maths", subjectKey: "maths" },
+          { time: "20h - X", title: "Quartier libre", theme: "quartier-libre" }
+        ]
+      },
+      jeudi: {
+        label: "JEUDI",
+        slots: [
+          { time: "X - 16h30", title: "Quartier libre", theme: "quartier-libre" },
+          { time: "16h30 - 20h", title: "Bloc 1", theme: "bloc1", subjectKey: "bloc1" },
+          { time: "20h - X", title: "Quartier libre", theme: "quartier-libre" },
+          { time: "", title: "", theme: "empty" },
+          { time: "", title: "", theme: "empty" },
+          { time: "", title: "", theme: "empty" },
+          { time: "", title: "", theme: "empty" }
+        ]
+      },
+      vendredi: {
+        label: "VENDREDI",
+        slots: [
+          { time: "X - 14h30", title: "Quartier libre", theme: "quartier-libre" },
+          { time: "14h30 - 18h", title: "Bloc 1", theme: "bloc1", subjectKey: "bloc1" },
+          { time: "18h - X", title: "Quartier libre", theme: "quartier-libre" },
+          { time: "", title: "", theme: "empty" },
+          { time: "", title: "", theme: "empty" },
+          { time: "", title: "", theme: "empty" },
+          { time: "", title: "", theme: "empty" }
+        ]
+      }
+    };
+
+    function parseSlotDuration(timeStr) {
+      if (!timeStr) return 0;
+      // Analyse les formats de type "9h - 9h30", "12h30 - 16h", "17h - 20h"
+      const regex = /(\d+)(?:h|:)?(\d+)?\s*-\s*(\d+)(?:h|:)?(\d+)?/i;
+      const match = timeStr.match(regex);
+      if (!match) return 0;
+
+      const startH = parseInt(match[1], 10);
+      const startM = match[2] ? parseInt(match[2], 10) : 0;
+      const endH = parseInt(match[3], 10);
+      const endM = match[4] ? parseInt(match[4], 10) : 0;
+
+      const startMinutes = startH * 60 + startM;
+      const endMinutes = endH * 60 + endM;
+
+      if (endMinutes > startMinutes) {
+        return (endMinutes - startMinutes) / 60;
+      }
+      return 0;
+    }
+
+    function formatHours(hours) {
+      const h = Math.floor(hours);
+      const m = Math.round((hours - h) * 60);
+      if (m === 0) return `${h}h`;
+      return `${h}h${m.toString().padStart(2, '0')}`;
+    }
+
+    function openHoursCalculator() {
+      const days = ["lundi", "mardi", "mercredi", "jeudi", "vendredi"];
+      const dailyTotals = {};
+      const subjectTotals = {
+        "bloc1": { label: "Bloc 1", hours: 0, color: "#1e3a8a", bg: "#dbeafe", border: "#bfdbfe" },
+        "bloc2": { label: "Bloc 2", hours: 0, color: "#9a3412", bg: "#fed7aa", border: "#fdba74" },
+        "maths": { label: "Mathématiques", hours: 0, color: "#991b1b", bg: "#fee2e2", border: "#fecaca" },
+        "physique": { label: "Physique", hours: 0, color: "#713f12", bg: "#fef08a", border: "#fde047" },
+        "culture": { label: "Culture générale", hours: 0, color: "#14532d", bg: "#dcfce7", border: "#bbf7d0" },
+        "anglais": { label: "Anglais", hours: 0, color: "#581c87", bg: "#f3e8ff", border: "#e9d5ff" }
+      };
+
+      let grandTotalCourseHours = 0;
+      let totalPauseHours = 0;
+
+      days.forEach(dayKey => {
+        let dayCourseHours = 0;
+        const slots = currentSchedule[dayKey]?.slots || [];
+
+        slots.forEach(slot => {
+          const duration = parseSlotDuration(slot.time);
+          if (duration > 0) {
+            // Identifier les matières académiques
+            const isCourse = slot.theme && subjectTotals[slot.theme];
+            if (isCourse) {
+              subjectTotals[slot.theme].hours += duration;
+              dayCourseHours += duration;
+              grandTotalCourseHours += duration;
+            } else if (slot.theme === "pause") {
+              totalPauseHours += duration;
+            }
+          }
+        });
+
+        dailyTotals[dayKey] = {
+          label: currentSchedule[dayKey].label,
+          hours: dayCourseHours
+        };
+      });
+
+      // Rendu HTML du calculateur
+      const modalHtml = `
+        <div style="display:flex; flex-direction:column; gap:22px;">
+          <!-- Synthèse globale -->
+          <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); color: #ffffff; padding: 20px 24px; border-radius: 16px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.2);">
+            <div>
+              <span style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #94a3b8;">Volume horaire de cours hebdomadaire</span>
+              <div style="font-size: 34px; font-weight: 800; line-height: 1.1; margin-top: 4px; color: #f8fafc;">
+                ${formatHours(grandTotalCourseHours)}
+                <span style="font-size: 15px; font-weight: 500; color: #cbd5e1;">/ semaine</span>
+              </div>
+            </div>
+            <div style="text-align: right; border-left: 1px solid #334155; padding-left: 20px;">
+              <span style="font-size: 12px; color: #94a3b8;">Moyenne par jour</span>
+              <div style="font-size: 20px; font-weight: 700; color: #38bdf8;">
+                ${formatHours(grandTotalCourseHours / 5)} / j
+              </div>
+            </div>
+          </div>
+
+          <!-- Total quotidien -->
+          <div>
+            <h4 style="font-size: 14px; font-weight: 700; color: #1e293b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+              <span>📅</span> Total quotidien des cours
+            </h4>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px;">
+              ${days.map(d => {
+                const day = dailyTotals[d];
+                return `
+                  <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px 10px; text-align: center;">
+                    <div style="font-size: 12px; font-weight: 700; color: #64748b; letter-spacing: 0.5px;">${day.label}</div>
+                    <div style="font-size: 20px; font-weight: 800; color: #0f172a; margin-top: 4px;">
+                      ${formatHours(day.hours)}
+                    </div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>
+
+          <!-- Total par matière -->
+          <div>
+            <h4 style="font-size: 14px; font-weight: 700; color: #1e293b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+              <span>📚</span> Répartition par matière
+            </h4>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+              ${Object.keys(subjectTotals).map(key => {
+                const s = subjectTotals[key];
+                const percentage = grandTotalCourseHours > 0 ? Math.round((s.hours / grandTotalCourseHours) * 100) : 0;
+                return `
+                  <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px 16px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                      <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="display: inline-block; width: 12px; height: 12px; border-radius: 4px; background: ${s.bg}; border: 1.5px solid ${s.border};"></span>
+                        <strong style="font-size: 14px; color: #1e293b;">${s.label}</strong>
+                      </div>
+                      <div style="display: flex; align-items: baseline; gap: 8px;">
+                        <span style="font-size: 15px; font-weight: 800; color: ${s.color};">${formatHours(s.hours)}</span>
+                        <span style="font-size: 12px; font-weight: 600; color: #64748b;">(${percentage}%)</span>
+                      </div>
+                    </div>
+                    <div style="width: 100%; height: 7px; background: #f1f5f9; border-radius: 10px; overflow: hidden;">
+                      <div style="width: ${percentage}%; height: 100%; background: ${s.color}; border-radius: 10px; transition: width 0.4s ease;"></div>
+                    </div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: flex-end; border-top: 1px solid #e2e8f0; padding-top: 14px;">
+            <button onclick="window.closeAiModal()" class="btn-ai-secondary">Fermer</button>
+          </div>
+        </div>
+      `;
+
+      openModal("Calculateur d'horaires BTS CIEL", "Synthèse quotidienne, globale et par matière", modalHtml);
+    }
+
+    // Copie de travail réactive
+    let currentSchedule = JSON.parse(JSON.stringify(defaultScheduleData));
+
+    function updateSyncIndicator(status, message) {
+      const badge = document.getElementById("syncBadge");
+      const text = document.getElementById("syncText");
+      if (!badge || !text) return;
+
+      badge.className = `sync-badge ${status}`;
+      text.textContent = message;
+    }
+
+    async function persistSchedule() {
+      if (!isStorageReady || !db || !userId) return;
+      updateSyncIndicator("saving", "Sauvegarde en cours...");
+      try {
+        const scheduleRef = doc(db, 'artifacts', appId, 'users', userId, 'schedules', 'weekly');
+        await setDoc(scheduleRef, {
+          schedule: currentSchedule,
+          lastUpdated: Date.now()
+        });
+        updateSyncIndicator("saved", "Sauvegardé");
+      } catch (err) {
+        console.error("Erreur lors de la sauvegarde cloud :", err);
+        updateSyncIndicator("error", "Erreur sauvegarde");
+      }
+    }
+
+    async function initCloudPersistence() {
+      if (typeof __firebase_config === 'undefined') {
+        updateSyncIndicator("saved", "Mode hors-ligne");
+        return;
+      }
+
+      try {
+        updateSyncIndicator("saving", "Connexion...");
+        const firebaseConfig = JSON.parse(__firebase_config);
+        const app = initializeApp(firebaseConfig);
+        db = getFirestore(app);
+        auth = getAuth(app);
+
+        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+          await signInWithCustomToken(auth, __initial_auth_token);
+        } else {
+          await signInAnonymously(auth);
+        }
+
+        currentUser = auth.currentUser;
+        userId = currentUser?.uid || crypto.randomUUID();
+
+        const userTag = document.getElementById("userIdDisplay");
+        if (userTag) {
+          userTag.textContent = `ID: ${userId}`;
+        }
+
+        isStorageReady = true;
+
+        // Écoute en direct des changements
+        const scheduleRef = doc(db, 'artifacts', appId, 'users', userId, 'schedules', 'weekly');
+        onSnapshot(scheduleRef, (snapshot) => {
+          if (snapshot.exists()) {
+            const data = snapshot.data();
+            if (data && data.schedule) {
+              currentSchedule = data.schedule;
+              renderSchedule();
+              updateSyncIndicator("saved", "Synchronisé");
+            }
+          } else {
+            // Sauvegarder l'état initial
+            persistSchedule();
+          }
+        }, (error) => {
+          console.error("Erreur d'écoute de la synchronisation :", error);
+          updateSyncIndicator("error", "Erreur réseau");
+        });
+      } catch (err) {
+        console.warn("Échec d'initialisation du stockage cloud :", err);
+        updateSyncIndicator("saved", "Local");
+      }
+    }
+
+    function toggleEditMode() {
+      isEditMode = !isEditMode;
+      document.body.classList.toggle("edit-mode", isEditMode);
+      const btn = document.getElementById("btnToggleEdit");
+      const label = document.getElementById("editModeBtnLabel");
+
+      if (isEditMode) {
+        btn.classList.add("active");
+        label.textContent = "Quitter l'édition";
+        showToast("Mode Édition activé : vous pouvez déplacer et modifier les cours", "✏️");
+      } else {
+        btn.classList.remove("active");
+        label.textContent = "Éditer le planning";
+        showToast("Modifications enregistrées", "💾");
+      }
+      renderSchedule();
+    }
+
+    function resetToDefaultSchedule() {
+      currentSchedule = JSON.parse(JSON.stringify(defaultScheduleData));
+      renderSchedule();
+      persistSchedule();
+      showToast("Planning réinitialisé aux valeurs d'origine", "🔄");
+    }
+
+    function renderSchedule() {
+      const container = document.getElementById("schedule-grid-container");
+      if (!container) return;
+      container.innerHTML = "";
+
+      const days = ["lundi", "mardi", "mercredi", "jeudi", "vendredi"];
+
+      days.forEach(dayKey => {
+        const dayData = currentSchedule[dayKey];
+        const section = document.createElement("section");
+        section.className = `day-column col-${dayKey}`;
+
+        // Header
+        const header = document.createElement("div");
+        header.className = "day-header";
+        header.innerHTML = `
+          <span class="day-name">${dayData.label}</span>
+          <span class="day-dot"></span>
+        `;
+        section.appendChild(header);
+
+        // Slots
+        dayData.slots.forEach((slot, index) => {
+          const slotItem = document.createElement("div");
+          slotItem.className = "slot-item";
+          slotItem.dataset.day = dayKey;
+          slotItem.dataset.index = index;
+
+          const timeSpan = document.createElement("span");
+          timeSpan.className = slot.time ? "slot-time" : "slot-time empty-time";
+          timeSpan.textContent = slot.time || "Créneau libre";
+          slotItem.appendChild(timeSpan);
+
+          const cardBox = document.createElement("div");
+          cardBox.className = `card-box theme-${slot.theme || 'empty'}`;
+
+          // Drag and Drop en mode édition
+          if (isEditMode) {
+            cardBox.setAttribute("draggable", "true");
+            cardBox.addEventListener("dragstart", (e) => {
+              draggedSlotInfo = { day: dayKey, index: index };
+              cardBox.classList.add("dragging");
+              e.dataTransfer.effectAllowed = "move";
+            });
+
+            cardBox.addEventListener("dragend", () => {
+              cardBox.classList.remove("dragging");
+              document.querySelectorAll(".slot-item").forEach(el => el.classList.remove("drag-over"));
+            });
+
+            slotItem.addEventListener("dragover", (e) => {
+              e.preventDefault();
+              e.dataTransfer.dropEffect = "move";
+              slotItem.classList.add("drag-over");
+            });
+
+            slotItem.addEventListener("dragleave", () => {
+              slotItem.classList.remove("drag-over");
+            });
+
+            slotItem.addEventListener("drop", (e) => {
+              e.preventDefault();
+              slotItem.classList.remove("drag-over");
+              if (!draggedSlotInfo) return;
+
+              const targetDay = dayKey;
+              const targetIndex = index;
+              swapOrMoveSlots(draggedSlotInfo.day, draggedSlotInfo.index, targetDay, targetIndex);
+              draggedSlotInfo = null;
+            });
+
+            cardBox.onclick = (e) => {
+              if (e.target.closest('.card-edit-overlay')) return;
+              openSlotEditor(dayKey, index);
+            };
+          } else {
+            const isAcademic = slot.subjectKey && slot.theme !== "empty" && slot.theme !== "quartier-libre" && slot.theme !== "pause";
+            if (isAcademic) {
+              cardBox.classList.add("clickable-slot");
+              cardBox.title = "Cliquez pour voir la fiche & le quiz IA de ce créneau";
+              cardBox.onclick = () => openSubjectTutor(slot.title, slot.time, dayData.label);
+            }
+          }
+
+          cardBox.innerHTML = `
+            <div class="card-top">
+              <div class="badge-pill"></div>
+              <span class="card-title">${slot.title}</span>
+            </div>
+            <div class="card-lines"></div>
+            <div class="card-edit-overlay">
+              <button class="btn-slot-tool" title="Modifier ce créneau" onclick="event.stopPropagation(); window.openSlotEditor('${dayKey}', ${index})">
+                ✎
+              </button>
+              <button class="btn-slot-tool tool-delete" title="Vider ou supprimer" onclick="event.stopPropagation(); window.clearOrDeleteSlot('${dayKey}', ${index})">
+                ✕
+              </button>
+            </div>
+          `;
+
+          slotItem.appendChild(cardBox);
+          section.appendChild(slotItem);
+        });
+
+        // Bouton ajouter un créneau pour chaque jour en mode édition
+        const addBtn = document.createElement("button");
+        addBtn.className = "btn-add-slot";
+        addBtn.innerHTML = "+ Ajouter un créneau";
+        addBtn.onclick = () => addNewSlot(dayKey);
+        section.appendChild(addBtn);
+
+        container.appendChild(section);
+      });
+    }
+
+    function swapOrMoveSlots(srcDay, srcIdx, destDay, destIdx) {
+      if (srcDay === destDay && srcIdx === destIdx) return;
+      
+      const sourceItem = currentSchedule[srcDay].slots[srcIdx];
+      const targetItem = currentSchedule[destDay].slots[destIdx];
+
+      // Échange direct du contenu
+      currentSchedule[srcDay].slots[srcIdx] = targetItem;
+      currentSchedule[destDay].slots[destIdx] = sourceItem;
+
+      renderSchedule();
+      persistSchedule();
+      showToast(`Créneau déplacé vers ${currentSchedule[destDay].label}`, "↔️");
+    }
+
+    function addNewSlot(dayKey) {
+      currentSchedule[dayKey].slots.push({
+        time: "Horaire à définir",
+        title: "Nouveau cours",
+        theme: "bloc1",
+        subjectKey: "bloc1"
+      });
+      renderSchedule();
+      persistSchedule();
+      openSlotEditor(dayKey, currentSchedule[dayKey].slots.length - 1);
+    }
+
+    function clearOrDeleteSlot(dayKey, index) {
+      const slot = currentSchedule[dayKey].slots[index];
+      if (!slot.title && slot.theme === "empty") {
+        if (currentSchedule[dayKey].slots.length > 5) {
+          currentSchedule[dayKey].slots.splice(index, 1);
+        }
+      } else {
+        currentSchedule[dayKey].slots[index] = {
+          time: "",
+          title: "",
+          theme: "empty"
+        };
+      }
+      renderSchedule();
+      persistSchedule();
+      showToast("Créneau vidé", "🗑️");
+    }
+
+    function openSlotEditor(dayKey, index) {
+      const slot = currentSchedule[dayKey].slots[index];
+      const dayName = currentSchedule[dayKey].label;
+
+      const modalHtml = `
+        <div style="display:flex; flex-direction:column; gap:16px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; background:#f8fafc; padding:10px 14px; border-radius:10px; border:1px solid #e2e8f0;">
+            <span style="font-weight:700; color:#1e293b;">Jour : ${dayName} (Créneau #${index + 1})</span>
+            <div style="display:flex; gap:6px;">
+              <button class="btn-ai-secondary" style="font-size:12px; padding:4px 8px;" onclick="window.moveSlotVertical('${dayKey}', ${index}, -1)" ${index === 0 ? 'disabled' : ''}>▲ Monter</button>
+              <button class="btn-ai-secondary" style="font-size:12px; padding:4px 8px;" onclick="window.moveSlotVertical('${dayKey}', ${index}, 1)" ${index === currentSchedule[dayKey].slots.length - 1 ? 'disabled' : ''}>▼ Descendre</button>
+            </div>
+          </div>
+
+          <div>
+            <label style="display:block; font-size:13px; font-weight:700; color:#334155; margin-bottom:6px;">Plage horaire</label>
+            <input type="text" id="editSlotTime" value="${slot.time || ''}" placeholder="Ex: 14h30 - 16h" style="width:100%; padding:10px 12px; border-radius:8px; border:1px solid #cbd5e1; font-family:inherit; font-size:14px;">
+          </div>
+
+          <div>
+            <label style="display:block; font-size:13px; font-weight:700; color:#334155; margin-bottom:6px;">Intitulé du cours / activité</label>
+            <input type="text" id="editSlotTitle" value="${slot.title || ''}" placeholder="Ex: Mathématiques, Bloc 1..." style="width:100%; padding:10px 12px; border-radius:8px; border:1px solid #cbd5e1; font-family:inherit; font-size:14px;">
+          </div>
+
+          <div>
+            <label style="display:block; font-size:13px; font-weight:700; color:#334155; margin-bottom:6px;">Raccourcis matières BTS CIEL</label>
+            <div style="display:flex; flex-wrap:wrap; gap:6px;">
+              <button type="button" class="btn-ai-secondary" style="font-size:12px; padding:4px 8px;" onclick="window.applyQuickPreset('Bloc 1', 'bloc1', 'bloc1')">Bloc 1</button>
+              <button type="button" class="btn-ai-secondary" style="font-size:12px; padding:4px 8px;" onclick="window.applyQuickPreset('Bloc 2', 'bloc2', 'bloc2')">Bloc 2</button>
+              <button type="button" class="btn-ai-secondary" style="font-size:12px; padding:4px 8px;" onclick="window.applyQuickPreset('Mathématiques', 'maths', 'maths')">Maths</button>
+              <button type="button" class="btn-ai-secondary" style="font-size:12px; padding:4px 8px;" onclick="window.applyQuickPreset('Physique', 'physique', 'physique')">Physique</button>
+              <button type="button" class="btn-ai-secondary" style="font-size:12px; padding:4px 8px;" onclick="window.applyQuickPreset('Culture générale', 'culture', 'culture')">Culture G</button>
+              <button type="button" class="btn-ai-secondary" style="font-size:12px; padding:4px 8px;" onclick="window.applyQuickPreset('Anglais', 'anglais', 'anglais')">Anglais</button>
+              <button type="button" class="btn-ai-secondary" style="font-size:12px; padding:4px 8px;" onclick="window.applyQuickPreset('Quartier libre', 'quartier-libre', '')">Quartier libre</button>
+              <button type="button" class="btn-ai-secondary" style="font-size:12px; padding:4px 8px;" onclick="window.applyQuickPreset('Pause repas', 'pause', '')">Pause repas</button>
+            </div>
+          </div>
+
+          <div>
+            <label style="display:block; font-size:13px; font-weight:700; color:#334155; margin-bottom:6px;">Type & Couleur visuelle</label>
+            <select id="editSlotTheme" style="width:100%; padding:10px 12px; border-radius:8px; border:1px solid #cbd5e1; font-family:inherit; font-size:14px; background:#ffffff;">
+              <option value="bloc1" ${slot.theme === 'bloc1' ? 'selected' : ''}>Bloc 1 (Bleu doux)</option>
+              <option value="bloc2" ${slot.theme === 'bloc2' ? 'selected' : ''}>Bloc 2 (Orange pâle)</option>
+              <option value="maths" ${slot.theme === 'maths' ? 'selected' : ''}>Mathématiques (Rouge pastel)</option>
+              <option value="physique" ${slot.theme === 'physique' ? 'selected' : ''}>Physique (Jaune pastel)</option>
+              <option value="culture" ${slot.theme === 'culture' ? 'selected' : ''}>Culture générale (Vert pastel)</option>
+              <option value="anglais" ${slot.theme === 'anglais' ? 'selected' : ''}>Anglais (Violet pastel)</option>
+              <option value="quartier-libre" ${slot.theme === 'quartier-libre' ? 'selected' : ''}>Quartier libre (Gris bleu discret)</option>
+              <option value="pause" ${slot.theme === 'pause' ? 'selected' : ''}>Pause (Italique pastel)</option>
+              <option value="empty" ${slot.theme === 'empty' ? 'selected' : ''}>Vide / Inoccupé</option>
+            </select>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px; border-top:1px solid #e2e8f0; padding-top:14px;">
+            <button onclick="window.clearOrDeleteSlot('${dayKey}', ${index}); window.closeAiModal();" class="btn-ai-secondary" style="color:#ef4444; border-color:#fecaca;">
+              Vider ce créneau
+            </button>
+            <div style="display:flex; gap:8px;">
+              <button onclick="window.closeAiModal()" class="btn-ai-secondary">Annuler</button>
+              <button onclick="window.saveSlotEdit('${dayKey}', ${index})" class="btn-ai-magic">Enregistrer</button>
+            </div>
+          </div>
+        </div>
+      `;
+
+      openModal(`Modifier le créneau (${dayName})`, "Éditeur manuel du planning", modalHtml);
+    }
+
+    function applyQuickPreset(title, theme, subjectKey) {
+      const titleInput = document.getElementById("editSlotTitle");
+      const themeSelect = document.getElementById("editSlotTheme");
+      if (titleInput) titleInput.value = title;
+      if (themeSelect) themeSelect.value = theme;
+    }
+
+    function moveSlotVertical(dayKey, index, direction) {
+      const slots = currentSchedule[dayKey].slots;
+      const targetIndex = index + direction;
+      if (targetIndex < 0 || targetIndex >= slots.length) return;
+
+      const temp = slots[index];
+      slots[index] = slots[targetIndex];
+      slots[targetIndex] = temp;
+
+      renderSchedule();
+      persistSchedule();
+      openSlotEditor(dayKey, targetIndex);
+    }
+
+    function saveSlotEdit(dayKey, index) {
+      const time = document.getElementById("editSlotTime")?.value?.trim() || "";
+      const title = document.getElementById("editSlotTitle")?.value?.trim() || "";
+      const theme = document.getElementById("editSlotTheme")?.value || "empty";
+
+      let subjectKey = undefined;
+      if (['bloc1', 'bloc2', 'maths', 'physique', 'culture', 'anglais'].includes(theme)) {
+        subjectKey = theme;
+      }
+
+      currentSchedule[dayKey].slots[index] = {
+        time,
+        title,
+        theme,
+        subjectKey
+      };
+
+      renderSchedule();
+      persistSchedule();
+      closeAiModal();
+      showToast("Créneau mis à jour et sauvegardé !", "✅");
+    }
+
+    function showToast(message, icon = "✨") {
+      const toast = document.getElementById("aiToast");
+      if (!toast) return;
+      document.getElementById("toastIcon").textContent = icon;
+      document.getElementById("toastMsg").textContent = message;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 3800);
+    }
+
+    function openModal(title, subtitle, contentHtml) {
+      document.getElementById("modalTitle").textContent = title;
+      document.getElementById("modalSubtitle").textContent = subtitle;
+      document.getElementById("modalContent").innerHTML = contentHtml;
+      document.getElementById("aiModal").classList.add("active");
+    }
+
+    function closeAiModal() {
+      document.getElementById("aiModal").classList.remove("active");
+    }
+
+    async function callGemini(payload, endpoint = GEMINI_TEXT_URL, maxRetries = 3) {
+      let delay = 1000;
+      for (let attempt = 0; attempt < maxRetries; attempt++) {
+        try {
+          const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          if (response.status === 429) {
+            await new Promise(res => setTimeout(res, delay));
+            delay *= 2;
+            continue;
+          }
+          if (!response.ok) {
+            throw new Error(`Erreur réseau: ${response.status}`);
+          }
+          return await response.json();
+        } catch (err) {
+          if (attempt === maxRetries - 1) throw err;
+          await new Promise(res => setTimeout(res, delay));
+          delay *= 2;
+        }
+      }
+    }
+
+    async function openSubjectTutor(subjectName, slotTime, dayName) {
+      openModal(
+        `Tuteur BTS CIEL : ${subjectName}`,
+        `${dayName} &bull; ${slotTime}`,
+        `
+        <div style="text-align:center; padding: 40px 0;">
+          <div class="ai-loading-spinner"></div>
+          <p style="margin-top:14px; font-weight:600; color:#475569;">Génération de la fiche de révision et du mini-quiz BTS CIEL par Gemini...</p>
+        </div>
+        `
+      );
+
+      const prompt = `Tu es un professeur tuteur expert en BTS CIEL (Cybersécurité, Informatique et réseaux, Électronique) 1ère année.
+Pour le créneau "${subjectName}" (${dayName}, ${slotTime}), prépare une fiche d'accompagnement courte et percutante pour l'étudiant.
+Structure ta réponse en HTML stylé (sans balise <html> ni <head>, utilise des balises <h4>, <p>, <ul>, <li>, <strong>, avec des bordures et cartes claires) :
+1. 🎯 **Notions clés du programme BTS CIEL** pour ce cours (ex: Réseaux IP / Programmation C++ / Linux pour Bloc 1, Cartes à microcontrôleurs / Électronique analogique/numérique pour Bloc 2, équations différentielles/Fourier pour Maths, etc.).
+2. 💡 **Conseil d'efficacité & méthode** pour ce créneau spécifique.
+3. ⚡ **Mini-Quiz de vérification rapide (2 questions clés avec réponses pliables sous balise <details><summary>)**.
+Reste concis, motivant et direct.`;
+
+      try {
+        const payload = {
+          contents: [{ parts: [{ text: prompt }] }],
+          systemInstruction: {
+            parts: [{ text: "Tu es un professeur mentor en BTS CIEL. Rends le contenu clair, pédagogique, avec du HTML élégant et aéré." }]
+          }
+        };
+
+        const result = await callGemini(payload);
+        const text = result?.candidates?.[0]?.content?.parts?.[0]?.text || "Impossible de générer le contenu pour le moment.";
+
+        document.getElementById("modalContent").innerHTML = `
+          <div style="display:flex; flex-direction:column; gap:16px;">
+            <div style="background:#f1f5f9; padding:12px 16px; border-radius:10px; border-left:4px solid #6366f1; font-size:13.5px; color:#334155;">
+              <strong>Créneau sélectionné :</strong> ${subjectName} (${dayName} ${slotTime})
+            </div>
+            <div class="ai-tutor-body" style="font-size:14px; line-height:1.7;">
+              ${text.replace(/```html/g, '').replace(/```/g, '')}
+            </div>
+            <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:12px; border-top:1px solid #e2e8f0; padding-top:12px;">
+              <button onclick="window.closeAiModal()" class="btn-ai-secondary">Fermer</button>
+            </div>
+          </div>
+        `;
+      } catch (err) {
+        document.getElementById("modalContent").innerHTML = `
+          <div style="color:#ef4444; background:#fef2f2; padding:16px; border-radius:10px;">
+            <p><strong>Erreur de génération :</strong> ${err.message || 'Une erreur est survenue.'}</p>
+            <button onclick="window.closeAiModal()" class="btn-ai-secondary" style="margin-top:12px;">Fermer</button>
+          </div>
+        `;
+      }
+    }
+
+    function openScheduleEditorModal() {
+      const modalHtml = `
+        <div style="display:flex; flex-direction:column; gap:16px;">
+          <p style="color:#475569; font-size:14px;">
+            Décrivez en français ce que vous souhaitez adapter ou ajouter à votre emploi du temps. Gemini comprendra votre demande et modifiera automatiquement la grille.
+          </p>
+
+          <div style="display:flex; flex-wrap:wrap; gap:8px;">
+            <button class="btn-ai-secondary" style="font-size:12.5px; padding:6px 10px;" onclick="document.getElementById('aiInstruction').value = 'Ajoute 2h de révision C++ le jeudi de 20h à 22h'">
+              + 2h Révision C++ Jeudi
+            </button>
+            <button class="btn-ai-secondary" style="font-size:12.5px; padding:6px 10px;" onclick="document.getElementById('aiInstruction').value = 'Permute le créneau de Bloc 2 du mardi avec l\\'anglais du lundi'">
+              Permuter Bloc 2 & Anglais
+            </button>
+            <button class="btn-ai-secondary" style="font-size:12.5px; padding:6px 10px;" onclick="document.getElementById('aiInstruction').value = 'Ajoute une pause goûter de 30min le lundi à 16h'">
+              + Pause Lundi 16h
+            </button>
+          </div>
+
+          <textarea id="aiInstruction" rows="3" placeholder="Ex: 'Ajoute 2h de révision Réseaux le vendredi soir' ou 'Décale les maths de mercredi à 18h'..." style="width:100%; border:1px solid #cbd5e1; border-radius:10px; padding:12px; font-family:inherit; font-size:14px; outline:none;"></textarea>
+
+          <div id="reorganizeStatus" style="display:none; align-items:center; gap:10px; color:#6366f1; font-weight:600; font-size:13.5px;">
+            <div class="ai-loading-spinner"></div>
+            <span>Gemini analyse et réécrit l'emploi du temps...</span>
+          </div>
+
+          <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:8px;">
+            <button onclick="window.closeAiModal()" class="btn-ai-secondary">Annuler</button>
+            <button onclick="window.submitScheduleReorganization()" class="btn-ai-magic">
+              Appliquer les changements
+            </button>
+          </div>
+        </div>
+      `;
+
+      openModal("Adapter l'emploi du temps avec Gemini", "Modification intelligente en langage naturel", modalHtml);
+    }
+
+    async function submitScheduleReorganization() {
+      const input = document.getElementById("aiInstruction")?.value?.trim();
+      if (!input) {
+        showToast("Veuillez saisir une consigne pour Gemini", "⚠️");
+        return;
+      }
+
+      const statusEl = document.getElementById("reorganizeStatus");
+      if (statusEl) statusEl.style.display = "flex";
+
+      const prompt = `Voici l'emploi du temps actuel de BTS CIEL au format JSON:
+${JSON.stringify(currentSchedule, null, 2)}
+
+L'utilisateur demande la modification suivante :
+"${input}"
+
+Génère la version mise à jour de tout l'objet d'emploi du temps au format JSON respectant strictement le schéma.
+Règles :
+- Les thèmes valides sont : "bloc1", "bloc2", "maths", "physique", "anglais", "culture", "quartier-libre", "pause", "empty".
+- Si c'est une matière d'enseignement, renseigne "subjectKey" ("bloc1", "bloc2", "maths", "physique", "anglais", "culture").
+- Conserve 7 créneaux par jour pour garder la régularité visuelle (les créneaux inoccupés ont time="", title="", theme="empty").
+- Reste fidèle aux modifications demandées tout en préservant le reste.`;
+
+      const payload = {
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: {
+          responseMimeType: "application/json",
+          responseSchema: {
+            type: "OBJECT",
+            properties: {
+              lundi: {
+                type: "OBJECT",
+                properties: {
+                  label: { type: "STRING" },
+                  slots: {
+                    type: "ARRAY",
+                    items: {
+                      type: "OBJECT",
+                      properties: {
+                        time: { type: "STRING" },
+                        title: { type: "STRING" },
+                        theme: { type: "STRING" },
+                        subjectKey: { type: "STRING" }
+                      },
+                      required: ["time", "title", "theme"]
+                    }
+                  }
+                },
+                required: ["label", "slots"]
+              },
+              mardi: {
+                type: "OBJECT",
+                properties: {
+                  label: { type: "STRING" },
+                  slots: {
+                    type: "ARRAY",
+                    items: {
+                      type: "OBJECT",
+                      properties: {
+                        time: { type: "STRING" },
+                        title: { type: "STRING" },
+                        theme: { type: "STRING" },
+                        subjectKey: { type: "STRING" }
+                      },
+                      required: ["time", "title", "theme"]
+                    }
+                  }
+                },
+                required: ["label", "slots"]
+              },
+              mercredi: {
+                type: "OBJECT",
+                properties: {
+                  label: { type: "STRING" },
+                  slots: {
+                    type: "ARRAY",
+                    items: {
+                      type: "OBJECT",
+                      properties: {
+                        time: { type: "STRING" },
+                        title: { type: "STRING" },
+                        theme: { type: "STRING" },
+                        subjectKey: { type: "STRING" }
+                      },
+                      required: ["time", "title", "theme"]
+                    }
+                  }
+                },
+                required: ["label", "slots"]
+              },
+              jeudi: {
+                type: "OBJECT",
+                properties: {
+                  label: { type: "STRING" },
+                  slots: {
+                    type: "ARRAY",
+                    items: {
+                      type: "OBJECT",
+                      properties: {
+                        time: { type: "STRING" },
+                        title: { type: "STRING" },
+                        theme: { type: "STRING" },
+                        subjectKey: { type: "STRING" }
+                      },
+                      required: ["time", "title", "theme"]
+                    }
+                  }
+                },
+                required: ["label", "slots"]
+              },
+              vendredi: {
+                type: "OBJECT",
+                properties: {
+                  label: { type: "STRING" },
+                  slots: {
+                    type: "ARRAY",
+                    items: {
+                      type: "OBJECT",
+                      properties: {
+                        time: { type: "STRING" },
+                        title: { type: "STRING" },
+                        theme: { type: "STRING" },
+                        subjectKey: { type: "STRING" }
+                      },
+                      required: ["time", "title", "theme"]
+                    }
+                  }
+                },
+                required: ["label", "slots"]
+              }
+            },
+            required: ["lundi", "mardi", "mercredi", "jeudi", "vendredi"]
+          }
+        }
+      };
+
+      try {
+        const result = await callGemini(payload);
+        const candidate = result.candidates?.[0];
+        if (candidate?.content?.parts?.[0]?.text) {
+          const newSchedule = JSON.parse(candidate.content.parts[0].text);
+          currentSchedule = newSchedule;
+          renderSchedule();
+          persistSchedule();
+          closeAiModal();
+          showToast("Emploi du temps mis à jour avec succès !", "🎉");
+        } else {
+          throw new Error("Réponse inattendue de l'IA.");
+        }
+      } catch (err) {
+        if (statusEl) statusEl.style.display = "none";
+        showToast("Erreur lors de la mise à jour : " + err.message, "❌");
+      }
+    }
+
+    function exportJsonBackup() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(currentSchedule, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `planning_bts_ciel_${new Date().toISOString().slice(0,10)}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      showToast("Planning sauvegardé sur votre PC (.json) !", "💾");
+    }
+
+    async function exportSchedulePng() {
+      const board = document.querySelector(".board-container");
+      if (!board) return;
+
+      showToast("Génération de l'image haute définition en cours...", "🖼️");
+
+      try {
+        // Désactiver temporairement le mode édition pour capturer un planning propre
+        const wasEditMode = isEditMode;
+        if (wasEditMode) {
+          document.body.classList.remove("edit-mode");
+        }
+
+        // Capture à haute résolution (scale 2.5) pour un rendu net sur écran 1080p ou 4K
+        const canvas = await html2canvas(board, {
+          scale: 2.5,
+          useCORS: true,
+          logging: false,
+          backgroundColor: '#f7f9fd'
+        });
+
+        if (wasEditMode) {
+          document.body.classList.add("edit-mode");
+        }
+
+        // Téléchargement direct du fichier PNG
+        const imageUri = canvas.toDataURL("image/png");
+        const downloadLink = document.createElement("a");
+        downloadLink.download = `planning_bts_ciel_fond_ecran_${new Date().toISOString().slice(0, 10)}.png`;
+        downloadLink.href = imageUri;
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        downloadLink.remove();
+
+        showToast("Fond d'écran PNG téléchargé avec succès !", "🖼️");
+      } catch (err) {
+        console.error("Erreur lors de la capture PNG :", err);
+        showToast("Erreur lors de la capture d'image : " + err.message, "❌");
+      }
+    }
+
+    function triggerImportFile() {
+      const input = document.getElementById("importFileInput");
+      if (input) input.click();
+    }
+
+    function handleFileImport(event) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const parsed = JSON.parse(e.target.result);
+          if (parsed && parsed.lundi && parsed.mardi && parsed.mercredi && parsed.jeudi && parsed.vendredi) {
+            currentSchedule = parsed;
+            renderSchedule();
+            persistSchedule();
+            showToast("Planning restauré avec succès depuis votre fichier !", "📂");
+          } else {
+            showToast("Format de fichier JSON non reconnu", "⚠️");
+          }
+        } catch (err) {
+          showToast("Erreur lors de la lecture du fichier : " + err.message, "❌");
+        }
+      };
+      reader.readAsText(file);
+      event.target.value = "";
+    }
+
+    function exportStandaloneHtml() {
+      let htmlContent = document.documentElement.outerHTML;
+      const scheduleJson = JSON.stringify(currentSchedule, null, 2);
+      
+      // On remplace les données par défaut par vos données personnalisées actuelles
+      const regex = /const defaultScheduleData = \{[\s\S]*?\n    \};/;
+      if (regex.test(htmlContent)) {
+        htmlContent = htmlContent.replace(regex, `const defaultScheduleData = ${scheduleJson};`);
+      }
+
+      const blob = new Blob([htmlContent], { type: "text/html;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = "planning_bts_ciel.html";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      showToast("Fichier HTML téléchargé avec vos cours sauvegardés !", "💻");
+    }
+
+    window.toggleEditMode = toggleEditMode;
+    window.openScheduleEditorModal = openScheduleEditorModal;
+    window.openHoursCalculator = openHoursCalculator;
+    window.resetToDefaultSchedule = resetToDefaultSchedule;
+    window.closeAiModal = closeAiModal;
+    window.openSlotEditor = openSlotEditor;
+    window.clearOrDeleteSlot = clearOrDeleteSlot;
+    window.addNewSlot = addNewSlot;
+    window.applyQuickPreset = applyQuickPreset;
+    window.moveSlotVertical = moveSlotVertical;
+    window.saveSlotEdit = saveSlotEdit;
+    window.submitScheduleReorganization = submitScheduleReorganization;
+    window.openSubjectTutor = openSubjectTutor;
+    window.exportJsonBackup = exportJsonBackup;
+    window.exportSchedulePng = exportSchedulePng;
+    window.triggerImportFile = triggerImportFile;
+    window.handleFileImport = handleFileImport;
+    window.exportStandaloneHtml = exportStandaloneHtml;
+
+    window.addEventListener("DOMContentLoaded", async () => {
+      renderSchedule();
+      await initCloudPersistence();
+    });
+  </script>
+</body>
+</html>
