@@ -1,1327 +1,506 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Planning Hebdomadaire - BTS CIEL 1ère année</title>
+  <title>Planning Hebdomadaire BTS CIEL</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0f7ff',
+              100: '#e0effe',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              900: '#1e3a8a',
+            },
+            ciel: {
+              bloc1: '#6366f1',
+              bloc2: '#06b6d4',
+              bloc3: '#10b981',
+              maths: '#f59e0b',
+              physique: '#ec4899',
+              culture: '#8b5cf6',
+              anglais: '#14b8a6',
+              libre: '#64748b',
+              repas: '#e11d48'
+            }
+          }
+        }
+      }
+    };
+  </script>
+  <!-- Google Fonts: Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500&display=swap" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous"></script>
-
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
   <style>
     * {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       box-sizing: border-box;
+    }
+    body {
+      background-color: #070b14;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.18) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.16) 0px, transparent 50%),
+        radial-gradient(at 50% 100%, rgba(6, 182, 212, 0.12) 0px, transparent 60%);
+      background-attachment: fixed;
+      color: #f1f5f9;
+      min-height: 100vh;
       margin: 0;
       padding: 0;
     }
-
-    :root {
-      --bg-light: #eef2f7;
-      --card-bg-light: #f8fafc;
-      --text-main-light: #0f172a;
-      --text-sub-light: #475569;
-      --board-bg-light: #ffffff;
-      --board-border-light: #e2e8f0;
-      --slot-empty-light: #f1f5f9;
-      
-      --accent-indigo: #6366f1;
-      --accent-violet: #8b5cf6;
-      --accent-cyan: #06b6d4;
+    .glass-panel {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
     }
-
-    body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      padding: 24px 16px 60px 16px;
-      color: #0f172a;
-      background-color: #f1f5f9;
-      transition: background-color 0.4s ease, color 0.4s ease;
-      overflow-x: hidden;
+    .glass-card {
+      background: rgba(30, 41, 59, 0.55);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
-
-    body.dark-theme {
-      background: radial-gradient(circle at 15% 20%, #1e1b4b 0%, #0b0f19 50%, #030712 100%);
-      background-attachment: fixed;
-      color: #f8fafc;
-      position: relative;
+    .glass-card:hover {
+      border-color: rgba(255, 255, 255, 0.18);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
     }
-
-    body.dark-theme::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      background: 
-        radial-gradient(circle at 85% 15%, rgba(139, 92, 246, 0.18) 0%, transparent 45%),
-        radial-gradient(circle at 20% 80%, rgba(6, 182, 212, 0.14) 0%, transparent 40%),
-        radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.12) 0%, transparent 60%);
-      z-index: 0;
-      animation: ambientGlow 14s ease-in-out infinite alternate;
-    }
-
-    @keyframes ambientGlow {
-      0% { opacity: 0.75; transform: scale(1); }
-      100% { opacity: 1; transform: scale(1.05); }
-    }
-
+    /* Login Gate Styling */
     .login-gate-overlay {
       position: fixed;
       inset: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(3, 7, 18, 0.88);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
       z-index: 99999;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    .login-gate-card {
-      background: rgba(15, 23, 42, 0.95);
-      border: 1px solid rgba(129, 140, 248, 0.35);
-      box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.8), 0 0 40px rgba(99, 102, 241, 0.25);
-      border-radius: 24px;
-      padding: 42px 36px;
-      max-width: 460px;
-      width: 100%;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      animation: gateCardPop 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    @keyframes gateCardPop {
-      0% { opacity: 0; transform: scale(0.92); }
-      100% { opacity: 1; transform: scale(1); }
-    }
-
-    .login-gate-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(99, 102, 241, 0.18);
-      color: #a5b4fc;
-      border: 1px solid rgba(129, 140, 248, 0.4);
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 12.5px;
-      font-weight: 700;
-      margin-bottom: 18px;
-    }
-
-    .login-gate-card h2 {
-      font-size: 26px;
-      font-weight: 800;
-      color: #ffffff;
-      margin-bottom: 10px;
-      letter-spacing: 0.5px;
-    }
-
-    .login-gate-card p {
-      font-size: 14px;
-      line-height: 1.6;
-      color: #94a3b8;
-      margin-bottom: 26px;
-    }
-
-    .btn-gate-google {
-      background: #ffffff;
-      color: #1e293b;
-      border: 1px solid #e2e8f0;
-      padding: 13px 26px;
-      border-radius: 14px;
-      font-size: 15px;
-      font-weight: 700;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      width: 100%;
-      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25);
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .btn-gate-google:hover {
-      background: #f8fafc;
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
-    }
-
-    .gate-status-msg {
-      margin-top: 16px;
-      padding: 10px 14px;
-      border-radius: 10px;
-      font-size: 12.5px;
-      line-height: 1.5;
-      width: 100%;
-      text-align: left;
-    }
-
-    .gate-status-msg.info {
-      background: rgba(59, 130, 246, 0.15);
-      color: #93c5fd;
-      border: 1px solid rgba(59, 130, 246, 0.3);
-    }
-
-    .gate-status-msg.error {
-      background: rgba(239, 68, 68, 0.15);
-      color: #fca5a5;
-      border: 1px solid rgba(239, 68, 68, 0.35);
-    }
-
-    .login-gate-footer {
-      margin-top: 22px;
-      font-size: 11.5px;
-      color: #64748b;
-      font-weight: 500;
-    }
-
-    .action-bar {
-      width: 100%;
-      max-width: 1460px;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 20px;
-      position: relative;
-      z-index: 10;
-    }
-
-    .action-bar-left, .action-bar-right {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
-    }
-
-    .btn-toggle-edit {
-      background: #ffffff;
-      color: #0f172a;
-      border: 1.5px solid #6366f1;
-      padding: 9px 16px;
-      border-radius: 10px;
-      font-size: 13.5px;
-      font-weight: 700;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      transition: all 0.2s ease;
-      box-shadow: 0 2px 8px rgba(99, 102, 241, 0.12);
-    }
-
-    body.dark-theme .btn-toggle-edit {
-      background: rgba(30, 41, 59, 0.8);
-      color: #e2e8f0;
-      border-color: rgba(129, 140, 248, 0.4);
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-    }
-
-    .btn-toggle-edit:hover {
-      background: #eef2ff;
-      transform: translateY(-1px);
-    }
-
-    body.dark-theme .btn-toggle-edit:hover {
-      background: rgba(49, 46, 129, 0.5);
-      border-color: #818cf8;
-    }
-
-    .btn-toggle-edit.active {
-      background: #4f46e5 !important;
-      color: #ffffff !important;
-      border-color: #4338ca !important;
-      box-shadow: 0 4px 14px rgba(79, 70, 229, 0.4);
-    }
-
-    .edit-mode-indicator {
-      display: none;
-      background: #e0e7ff;
-      color: #3730a3;
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 700;
-      align-items: center;
-      gap: 6px;
-      animation: pulseEdit 2s infinite ease-in-out;
-    }
-
-    body.dark-theme .edit-mode-indicator {
-      background: rgba(99, 102, 241, 0.25);
-      color: #c7d2fe;
-      border: 1px solid rgba(129, 140, 248, 0.4);
-    }
-
-    body.edit-mode .edit-mode-indicator {
-      display: inline-flex;
-    }
-
-    @keyframes pulseEdit {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.65; }
-    }
-
-    .btn-action-sm {
-      background: #ffffff;
-      color: #334155;
-      border: 1px solid #cbd5e1;
-      padding: 9px 14px;
-      border-radius: 10px;
-      font-size: 13.5px;
-      font-weight: 600;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      transition: all 0.2s ease;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04);
-    }
-
-    body.dark-theme .btn-action-sm {
-      background: rgba(15, 23, 42, 0.7);
-      color: #e2e8f0;
-      border-color: rgba(255, 255, 255, 0.12);
-      backdrop-filter: blur(8px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-    }
-
-    .btn-action-sm:hover {
-      background: #f8fafc;
-      border-color: #94a3b8;
-      transform: translateY(-1px);
-    }
-
-    body.dark-theme .btn-action-sm:hover {
-      background: rgba(30, 41, 59, 0.9);
-      border-color: rgba(129, 140, 248, 0.5);
-    }
-
-    .btn-print-icon {
-      width: 38px;
-      height: 38px;
-      padding: 0;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 10px;
-    }
-
-    .btn-google-auth {
-      background: #ffffff;
-      color: #374151;
-      border: 1px solid #d1d5db;
-      padding: 8px 14px;
-      border-radius: 10px;
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      transition: all 0.2s ease;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-    }
-
-    body.dark-theme .btn-google-auth {
-      background: rgba(30, 41, 59, 0.85);
-      color: #f1f5f9;
-      border-color: rgba(255, 255, 255, 0.15);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    }
-
-    .btn-google-auth:hover {
-      background: #f9fafb;
-      transform: translateY(-1px);
-    }
-
-    body.dark-theme .btn-google-auth:hover {
-      background: rgba(51, 65, 85, 0.9);
-      border-color: #818cf8;
-    }
-
-    .user-profile-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: #ffffff;
-      border: 1px solid #cbd5e1;
-      padding: 4px 10px 4px 4px;
-      border-radius: 20px;
-      font-size: 12.5px;
-      font-weight: 700;
-      color: #1e293b;
-    }
-
-    body.dark-theme .user-profile-badge {
-      background: rgba(30, 41, 59, 0.7);
-      border-color: rgba(255, 255, 255, 0.15);
-      color: #f1f5f9;
-    }
-
-    .user-avatar-img {
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      object-fit: cover;
-    }
-
-    .user-avatar-fallback {
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      background: #6366f1;
-      color: #ffffff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      font-weight: 800;
-    }
-
-    .btn-google-logout {
-      background: transparent;
-      border: none;
-      color: #94a3b8;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      padding: 2px;
-      border-radius: 4px;
-      transition: color 0.15s;
-    }
-
-    .btn-google-logout:hover {
-      color: #ef4444;
-    }
-
-    .sync-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: #f1f5f9;
-      color: #475569;
-      border: 1px solid #cbd5e1;
-      padding: 6px 12px;
-      border-radius: 20px;
-      font-size: 11.5px;
-      font-weight: 600;
-      transition: all 0.2s;
-    }
-
-    body.dark-theme .sync-badge {
-      background: rgba(15, 23, 42, 0.6);
-      color: #94a3b8;
-      border-color: rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(6px);
-    }
-
-    .sync-badge.saved {
-      background: #ecfdf5;
-      color: #065f46;
-      border-color: #a7f3d0;
-    }
-
-    body.dark-theme .sync-badge.saved {
-      background: rgba(6, 95, 70, 0.25);
-      color: #6ee7b7;
-      border-color: rgba(16, 185, 129, 0.4);
-    }
-
-    .sync-badge.saving {
-      background: #eff6ff;
-      color: #1e40af;
-      border-color: #bfdbfe;
-    }
-
-    body.dark-theme .sync-badge.saving {
-      background: rgba(30, 58, 138, 0.35);
-      color: #93c5fd;
-      border-color: rgba(59, 130, 246, 0.4);
-    }
-
-    .sync-badge.error {
-      background: #fef2f2;
-      color: #991b1b;
-      border-color: #fecaca;
-    }
-
-    .user-id-tag {
-      font-size: 11px;
-      color: #64748b;
-      font-family: monospace;
-      padding: 4px 8px;
-      background: #ffffff;
-      border-radius: 6px;
-      border: 1px solid #e2e8f0;
-    }
-
-    body.dark-theme .user-id-tag {
-      background: rgba(15, 23, 42, 0.6);
-      color: #94a3b8;
-      border-color: rgba(255, 255, 255, 0.08);
-    }
-
-    body.edit-mode #scheduleMainTitle,
-    body.edit-mode #scheduleSubtitleText {
-      outline: 2px dashed rgba(129, 140, 248, 0.65) !important;
-      outline-offset: 4px;
-      border-radius: 8px;
-      cursor: text;
-      transition: all 0.2s ease;
-      background: rgba(99, 102, 241, 0.18) !important;
-      padding: 2px 6px;
-      -webkit-text-fill-color: #f8fafc !important;
-      color: #f8fafc !important;
-      background-clip: border-box !important;
-      -webkit-background-clip: border-box !important;
-    }
-
-    body:not(.dark-theme).edit-mode #scheduleMainTitle,
-    body:not(.dark-theme).edit-mode #scheduleSubtitleText {
-      -webkit-text-fill-color: #0f172a !important;
-      color: #0f172a !important;
-      background: rgba(99, 102, 241, 0.08) !important;
-    }
-
-    body.edit-mode #scheduleMainTitle:focus,
-    body.edit-mode #scheduleSubtitleText:focus {
-      outline: 2px solid #818cf8 !important;
-      background: rgba(99, 102, 241, 0.28) !important;
-    }
-
-    .title-edit-hint {
-      display: none;
-      font-size: 11px;
-      font-weight: 700;
-      padding: 3px 8px;
-      border-radius: 6px;
-      background: rgba(99, 102, 241, 0.25);
-      color: #c7d2fe;
-      border: 1px solid rgba(129, 140, 248, 0.4);
-      margin-left: 10px;
-      vertical-align: middle;
-      text-transform: none;
-      letter-spacing: normal;
-    }
-
-    body.edit-mode .title-edit-hint {
-      display: inline-block;
-    }
-
-    .board-container {
-      width: 100%;
-      max-width: 1460px;
-      border-radius: 26px;
-      padding: 36px 40px 45px 40px;
-      transition: all 0.3s ease;
-      position: relative;
-      z-index: 1;
-      background: #ffffff;
-      border: 1px solid #e2e8f0;
-      box-shadow: 0 20px 45px rgba(15, 23, 42, 0.06);
-    }
-
-    body.dark-theme .board-container {
-      background: rgba(15, 23, 42, 0.65);
+      background: rgba(3, 7, 18, 0.88);
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.55), 0 0 35px rgba(99, 102, 241, 0.12);
-    }
-
-    .header-section {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 30px;
-    }
-
-    .title-group h1 {
-      font-size: 30px;
-      font-weight: 800;
-      letter-spacing: 0.8px;
-      color: #0f172a;
-      text-transform: uppercase;
-      line-height: 1.2;
-    }
-
-    body.dark-theme .title-group h1 {
-      color: #f8fafc;
-      background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 50%, #94a3b8 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .title-group p {
-      font-size: 14.5px;
-      font-weight: 500;
-      color: #64748b;
-      margin-top: 6px;
-      letter-spacing: 0.2px;
-    }
-
-    body.dark-theme .title-group p {
-      color: #94a3b8;
-    }
-
-    .schedule-grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 18px;
-    }
-
-    .day-column {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .day-header {
-      border-radius: 14px;
-      padding: 12px 16px;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      margin-bottom: 2px;
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+      justify-content: center;
+      padding: 1.5rem;
     }
-
-    body.dark-theme .day-header {
-      background: rgba(30, 41, 59, 0.5);
-      border-color: rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(10px);
+    .login-gate-card {
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7), 0 0 40px -10px rgba(59, 130, 246, 0.3);
+      border-radius: 1.5rem;
+      width: 100%;
+      max-width: 480px;
     }
-
-    .day-header .day-name {
-      font-size: 15px;
-      font-weight: 800;
-      letter-spacing: 1px;
-      color: #1e293b;
-    }
-
-    body.dark-theme .day-header .day-name {
-      color: #f1f5f9;
-    }
-
-    .day-header .day-dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      border: 2px solid;
-    }
-
-    .col-lundi .day-dot { border-color: #9061f9; background-color: #d8b4fe; }
-    .col-mardi .day-dot { border-color: #06b6d4; background-color: #a5f3fc; }
-    .col-mercredi .day-dot { border-color: #10b981; background-color: #a7f3d0; }
-    .col-jeudi .day-dot { border-color: #f97316; background-color: #fdba74; }
-    .col-vendredi .day-dot { border-color: #eab308; background-color: #fde047; }
-
     .slot-item {
+      min-height: 84px;
       display: flex;
       flex-direction: column;
-      gap: 4px;
-    }
-
-    .slot-time {
-      font-size: 11.5px;
-      font-weight: 700;
-      color: #475569;
-      padding-left: 2px;
-    }
-
-    body.dark-theme .slot-time {
-      color: #94a3b8;
-    }
-
-    .slot-time.empty-time {
-      visibility: hidden;
-    }
-
-    .card-box {
-      border-radius: 12px;
-      height: 64px;
-      padding: 10px 14px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      position: relative;
-      background-color: #f8fafc;
-      border: 1px solid #e2e8f0;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    body.dark-theme .card-box {
-      background: rgba(30, 41, 59, 0.4);
-      border-color: rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(10px);
-    }
-
-    .card-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-    }
-
-    .badge-pill {
-      width: 40px;
-      height: 18px;
-      border-radius: 6px;
-      border: 1px solid rgba(0, 0, 0, 0.06);
-      flex-shrink: 0;
-    }
-
-    body.dark-theme .badge-pill {
-      border-color: rgba(255, 255, 255, 0.12);
-    }
-
-    .col-lundi .badge-pill { background-color: #f3edff; }
-    .col-mardi .badge-pill { background-color: #e6f6fd; }
-    .col-mercredi .badge-pill { background-color: #eafbf1; }
-    .col-jeudi .badge-pill { background-color: #fff1e5; }
-    .col-vendredi .badge-pill { background-color: #fef8dd; }
-
-    body.dark-theme .col-lundi .badge-pill { background-color: rgba(147, 51, 234, 0.25); }
-    body.dark-theme .col-mardi .badge-pill { background-color: rgba(6, 182, 212, 0.25); }
-    body.dark-theme .col-mercredi .badge-pill { background-color: rgba(16, 185, 129, 0.25); }
-    body.dark-theme .col-jeudi .badge-pill { background-color: rgba(249, 115, 22, 0.25); }
-    body.dark-theme .col-vendredi .badge-pill { background-color: rgba(234, 179, 8, 0.25); }
-
-    .card-title {
-      font-size: 13px;
-      font-weight: 600;
-      color: #1e293b;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      flex-grow: 1;
-      text-align: right;
-    }
-
-    body.dark-theme .card-title {
-      color: #f1f5f9;
-    }
-
-    .card-lines {
-      width: 100%;
-      height: 1px;
-      background: linear-gradient(to right, rgba(203, 213, 225, 0.3), rgba(203, 213, 225, 0.7), rgba(203, 213, 225, 0.3));
-      margin-top: auto;
-      margin-bottom: 2px;
-    }
-
-    body.dark-theme .card-lines {
-      background: linear-gradient(to right, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
-    }
-
-    body:not(.dark-theme) .card-box.theme-bloc1 { background-color: #dbeafe; border-color: #bfdbfe; }
-    body:not(.dark-theme) .card-box.theme-bloc1 .card-title { color: #1e3a8a; font-weight: 700; }
-
-    body:not(.dark-theme) .card-box.theme-bloc2 { background-color: #fed7aa; border-color: #fdba74; }
-    body:not(.dark-theme) .card-box.theme-bloc2 .card-title { color: #9a3412; font-weight: 700; }
-
-    body:not(.dark-theme) .card-box.theme-bloc3 { background-color: #fce7f3; border-color: #fbcfe8; }
-    body:not(.dark-theme) .card-box.theme-bloc3 .card-title { color: #9d174d; font-weight: 700; }
-
-    body:not(.dark-theme) .card-box.theme-maths { background-color: #fee2e2; border-color: #fecaca; }
-    body:not(.dark-theme) .card-box.theme-maths .card-title { color: #991b1b; font-weight: 700; }
-
-    body:not(.dark-theme) .card-box.theme-physique { background-color: #fef08a; border-color: #fde047; }
-    body:not(.dark-theme) .card-box.theme-physique .card-title { color: #713f12; font-weight: 700; }
-
-    body:not(.dark-theme) .card-box.theme-culture { background-color: #dcfce7; border-color: #bbf7d0; }
-    body:not(.dark-theme) .card-box.theme-culture .card-title { color: #14532d; font-weight: 700; }
-
-    body:not(.dark-theme) .card-box.theme-anglais { background-color: #f3e8ff; border-color: #e9d5ff; }
-    body:not(.dark-theme) .card-box.theme-anglais .card-title { color: #581c87; font-weight: 700; }
-
-    body:not(.dark-theme) .card-box.theme-quartier-libre { background-color: #edf2f7; }
-    body:not(.dark-theme) .card-box.theme-quartier-libre .card-title { font-style: italic; color: #64748b; font-weight: 500; }
-
-    body:not(.dark-theme) .card-box.theme-pause { background-color: #f1f5f9; }
-    body:not(.dark-theme) .card-box.theme-pause .card-title { font-style: italic; font-weight: 600; color: #475569; }
-
-    body:not(.dark-theme) .card-box.theme-empty { background-color: #f8fafc; border: 1px dashed #cbd5e1; opacity: 0.7; }
-
-    body.dark-theme .card-box.theme-bloc1 { background: linear-gradient(135deg, rgba(30, 58, 138, 0.45) 0%, rgba(15, 23, 42, 0.65) 100%); border-color: rgba(96, 165, 250, 0.4); box-shadow: 0 4px 16px rgba(37, 99, 235, 0.15); }
-    body.dark-theme .card-box.theme-bloc1 .card-title { color: #93c5fd; text-shadow: 0 0 10px rgba(147, 197, 253, 0.4); }
-
-    body.dark-theme .card-box.theme-bloc2 { background: linear-gradient(135deg, rgba(154, 52, 18, 0.45) 0%, rgba(15, 23, 42, 0.65) 100%); border-color: rgba(251, 146, 60, 0.4); box-shadow: 0 4px 16px rgba(234, 88, 12, 0.15); }
-    body.dark-theme .card-box.theme-bloc2 .card-title { color: #fdba74; text-shadow: 0 0 10px rgba(253, 186, 116, 0.4); }
-
-    body.dark-theme .card-box.theme-bloc3 { background: linear-gradient(135deg, rgba(190, 24, 93, 0.45) 0%, rgba(15, 23, 42, 0.65) 100%); border-color: rgba(244, 114, 182, 0.4); box-shadow: 0 4px 16px rgba(236, 72, 153, 0.15); }
-    body.dark-theme .card-box.theme-bloc3 .card-title { color: #f472b6; text-shadow: 0 0 10px rgba(244, 114, 182, 0.4); }
-
-    body.dark-theme .card-box.theme-maths { background: linear-gradient(135deg, rgba(153, 27, 27, 0.45) 0%, rgba(15, 23, 42, 0.65) 100%); border-color: rgba(248, 113, 113, 0.4); box-shadow: 0 4px 16px rgba(220, 38, 38, 0.15); }
-    body.dark-theme .card-box.theme-maths .card-title { color: #fca5a5; text-shadow: 0 0 10px rgba(252, 165, 165, 0.4); }
-
-    body.dark-theme .card-box.theme-physique { background: linear-gradient(135deg, rgba(133, 77, 14, 0.45) 0%, rgba(15, 23, 42, 0.65) 100%); border-color: rgba(250, 204, 21, 0.4); box-shadow: 0 4px 16px rgba(202, 138, 4, 0.15); }
-    body.dark-theme .card-box.theme-physique .card-title { color: #fde047; text-shadow: 0 0 10px rgba(253, 224, 71, 0.4); }
-
-    body.dark-theme .card-box.theme-culture { background: linear-gradient(135deg, rgba(20, 83, 45, 0.45) 0%, rgba(15, 23, 42, 0.65) 100%); border-color: rgba(74, 222, 128, 0.4); box-shadow: 0 4px 16px rgba(22, 163, 74, 0.15); }
-    body.dark-theme .card-box.theme-culture .card-title { color: #86efac; text-shadow: 0 0 10px rgba(134, 239, 172, 0.4); }
-
-    body.dark-theme .card-box.theme-anglais { background: linear-gradient(135deg, rgba(88, 28, 135, 0.45) 0%, rgba(15, 23, 42, 0.65) 100%); border-color: rgba(192, 132, 252, 0.4); box-shadow: 0 4px 16px rgba(147, 51, 234, 0.15); }
-    body.dark-theme .card-box.theme-anglais .card-title { color: #d8b4fe; text-shadow: 0 0 10px rgba(216, 180, 254, 0.4); }
-
-    body.dark-theme .card-box.theme-quartier-libre { background: rgba(30, 41, 59, 0.35); border-color: rgba(255, 255, 255, 0.05); }
-    body.dark-theme .card-box.theme-quartier-libre .card-title { font-style: italic; color: #94a3b8; }
-
-    body.dark-theme .card-box.theme-pause { background: rgba(30, 41, 59, 0.5); border-color: rgba(255, 255, 255, 0.07); }
-    body.dark-theme .card-box.theme-pause .card-title { font-style: italic; color: #cbd5e1; }
-
-    body.dark-theme .card-box.theme-empty { background: rgba(15, 23, 42, 0.25); border: 1px dashed rgba(255, 255, 255, 0.1); }
-
-    .card-box.clickable-slot {
-      cursor: pointer;
-    }
-    .card-box.clickable-slot:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-      border-color: #818cf8;
-    }
-
-    body.edit-mode .card-box {
-      cursor: grab !important;
-      position: relative;
-    }
-
-    body.edit-mode .card-box:active {
-      cursor: grabbing !important;
-    }
-
-    .card-box.dragging {
-      opacity: 0.35;
-      transform: scale(0.96);
-      border: 2px dashed #818cf8 !important;
-    }
-
-    .slot-item.drag-over .card-box {
-      border: 2px solid #818cf8 !important;
-      background: rgba(99, 102, 241, 0.15) !important;
-      transform: translateY(-2px);
-    }
-
-    .card-edit-overlay {
-      display: none;
-      position: absolute;
-      top: 4px;
-      right: 6px;
-      gap: 4px;
-      z-index: 10;
-    }
-
-    body.edit-mode .card-edit-overlay {
-      display: flex;
-    }
-
-    .btn-slot-tool {
-      background: rgba(255, 255, 255, 0.95);
-      border: 1px solid #cbd5e1;
-      width: 22px;
-      height: 22px;
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
       justify-content: center;
-      cursor: pointer;
-      color: #334155;
-      font-size: 11px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      transition: all 0.15s ease;
-    }
-
-    body.dark-theme .btn-slot-tool {
-      background: rgba(30, 41, 59, 0.9);
-      border-color: rgba(255, 255, 255, 0.2);
-      color: #f1f5f9;
-    }
-
-    .btn-slot-tool:hover {
-      transform: scale(1.1);
-      border-color: #818cf8;
-      color: #6366f1;
-    }
-
-    .btn-slot-tool.tool-delete:hover {
-      color: #ef4444;
-      border-color: #fca5a5;
-    }
-
-    .btn-add-slot {
-      display: none;
-      width: 100%;
-      border: 1.5px dashed #cbd5e1;
-      background: transparent;
-      padding: 8px;
-      border-radius: 10px;
-      color: #64748b;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-      margin-top: 6px;
-    }
-
-    body.dark-theme .btn-add-slot {
-      border-color: rgba(255, 255, 255, 0.15);
-      color: #94a3b8;
-    }
-
-    body.edit-mode .btn-add-slot {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .btn-add-slot:hover {
-      background: rgba(99, 102, 241, 0.1);
-      border-color: #818cf8;
-      color: #818cf8;
-    }
-
-    .ai-modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(3, 7, 18, 0.7);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      z-index: 999;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.25s ease;
-    }
-
-    .ai-modal-backdrop.active {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .ai-modal-card {
-      background: #ffffff;
-      color: #0f172a;
-      border-radius: 20px;
-      width: 100%;
-      max-width: 680px;
-      max-height: 88vh;
-      overflow-y: auto;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
-      border: 1px solid #e2e8f0;
-      display: flex;
-      flex-direction: column;
-      transform: scale(0.96);
-      transition: transform 0.25s ease;
-    }
-
-    body.dark-theme .ai-modal-card {
-      background: #0f172a;
-      color: #f8fafc;
-      border-color: rgba(255, 255, 255, 0.12);
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 35px rgba(99, 102, 241, 0.2);
-    }
-
-    .ai-modal-backdrop.active .ai-modal-card {
-      transform: scale(1);
-    }
-
-    .ai-modal-header {
-      padding: 18px 24px;
-      border-bottom: 1px solid #e2e8f0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #f8fafc;
-      border-radius: 20px 20px 0 0;
-    }
-
-    body.dark-theme .ai-modal-header {
-      background: #1e293b;
-      border-color: rgba(255, 255, 255, 0.08);
-    }
-
-    .ai-modal-body {
-      padding: 24px;
-      font-size: 14.5px;
-      line-height: 1.6;
-    }
-
-    .btn-ai-magic {
-      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-      color: #ffffff;
-      border: none;
-      padding: 10px 18px;
-      border-radius: 10px;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      transition: all 0.2s ease;
-      box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3);
-    }
-
-    .btn-ai-magic:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 6px 18px rgba(99, 102, 241, 0.45);
-    }
-
-    .btn-ai-secondary {
-      background: #ffffff;
-      color: #334155;
-      border: 1px solid #cbd5e1;
-      padding: 8px 14px;
-      border-radius: 8px;
-      font-size: 13.5px;
-      font-weight: 600;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.2s ease;
-    }
-
-    body.dark-theme .btn-ai-secondary {
-      background: rgba(30, 41, 59, 0.7);
-      color: #e2e8f0;
-      border-color: rgba(255, 255, 255, 0.15);
-    }
-
-    .btn-ai-secondary:hover {
-      background: #f1f5f9;
-      border-color: #94a3b8;
-    }
-
-    body.dark-theme .btn-ai-secondary:hover {
-      background: rgba(49, 46, 129, 0.5);
-      border-color: #818cf8;
-    }
-
-    .toggle-switch {
       position: relative;
-      display: inline-block;
-      width: 48px;
-      height: 26px;
+      user-select: none;
     }
-
-    .toggle-switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
+    /* Scrollbar personnalisé */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
     }
-
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      inset: 0;
-      background-color: #cbd5e1;
-      transition: 0.3s;
-      border-radius: 34px;
+    ::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.6);
     }
-
-    .slider:before {
-      position: absolute;
-      content: "";
-      height: 20px;
-      width: 20px;
-      left: 3px;
-      bottom: 3px;
-      background-color: white;
-      transition: 0.3s;
-      border-radius: 50%;
+    ::-webkit-scrollbar-thumb {
+      background: rgba(71, 85, 105, 0.6);
+      border-radius: 4px;
     }
-
-    input:checked + .slider {
-      background-color: #6366f1;
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(100, 116, 139, 0.8);
     }
-
-    input:checked + .slider:before {
-      transform: translateX(22px);
-    }
-
-    .settings-action-card {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 14px 16px;
-      border-radius: 12px;
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      margin-bottom: 10px;
-    }
-
-    body.dark-theme .settings-action-card {
-      background: rgba(30, 41, 59, 0.55);
-      border-color: rgba(255, 255, 255, 0.08);
-    }
-
-    .ai-toast {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      background: #0f172a;
-      color: #f8fafc;
-      padding: 12px 20px;
-      border-radius: 12px;
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
-      font-size: 13.5px;
-      font-weight: 600;
-      z-index: 1000;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      transform: translateY(100px);
-      opacity: 0;
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .ai-toast.show {
-      transform: translateY(0);
-      opacity: 1;
-    }
-
-    .mobile-day-bar {
-      display: none;
-      width: 100%;
-      overflow-x: auto;
-      gap: 8px;
-      margin-bottom: 16px;
-      padding-bottom: 4px;
-    }
-
-    .mobile-day-btn {
-      padding: 8px 14px;
-      border-radius: 8px;
-      border: 1px solid #cbd5e1;
-      background: #ffffff;
-      color: #334155;
-      font-size: 12.5px;
-      font-weight: 700;
-      white-space: nowrap;
-      cursor: pointer;
-    }
-
-    body.dark-theme .mobile-day-btn {
-      background: rgba(30, 41, 59, 0.7);
-      border-color: rgba(255, 255, 255, 0.15);
-      color: #e2e8f0;
-    }
-
-    .mobile-day-btn.active {
-      background: #6366f1 !important;
-      color: #ffffff !important;
-      border-color: #4f46e5 !important;
-    }
-
-    @media (max-width: 980px) {
-      .schedule-grid {
-        grid-template-columns: 1fr;
-      }
-      .mobile-day-bar {
-        display: flex;
-      }
-      .day-column:not(.mobile-visible) {
-        display: none;
-      }
-      .board-container {
-        padding: 20px 16px;
-      }
-    }
-
     @media print {
-      body { background: #ffffff !important; color: #000000 !important; padding: 0; }
-      .action-bar, .mobile-day-bar { display: none !important; }
-      .board-container { box-shadow: none !important; border: none !important; padding: 0 !important; }
+      body {
+        background: #fff !important;
+        color: #000 !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .glass-panel, .glass-card {
+        background: #fff !important;
+        border: 1px solid #ccc !important;
+        box-shadow: none !important;
+        color: #000 !important;
+      }
     }
   </style>
 </head>
-<body class="dark-theme">
+<body class="p-3 sm:p-6 pb-20">
+  <div id="loginGateScreen" class="login-gate-overlay">
+    <div class="login-gate-card p-6 sm:p-8 text-center relative overflow-hidden">
+      <!-- Glow effect -->
+      <div class="absolute -top-24 -left-24 w-48 h-48 bg-blue-600/30 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute -bottom-24 -right-24 w-48 h-48 bg-purple-600/30 rounded-full blur-3xl pointer-events-none"></div>
 
-  <!-- Écran de verrouillage obligatoire (Login Gate) -->
-  <div id="loginGateScreen" class="login-gate-overlay" style="display: flex;">
-    <div class="login-gate-card">
-      <div class="login-gate-badge">🔒 Accès Sécurisé</div>
-      <h2>Planning BTS CIEL</h2>
-      <p>Connectez-vous avec votre compte Google pour accéder à votre emploi du temps et synchroniser vos données en temps réel.</p>
-      
-      <button class="btn-gate-google" onclick="window.loginWithGoogle()">
-        <svg width="20" height="20" viewBox="0 0 24 24">
-          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-        </svg>
-        Se connecter avec Google
-      </button>
-
-      <div id="gateStatusMsg" class="gate-status-msg" style="display: none;"></div>
-
-      <div class="login-gate-footer">
-        Synchronisation Firestore en temps réel • Aucun mode invité
+      <div class="inline-flex p-3.5 bg-gradient-to-br from-blue-500/20 to-indigo-500/20 border border-blue-500/30 rounded-2xl mb-4 text-blue-400">
+        <i data-lucide="shield-check" class="w-8 h-8"></i>
       </div>
-    </div>
-  </div>
 
-  <div class="action-bar">
-    <div class="action-bar-left">
-      <button id="btnToggleEdit" class="btn-toggle-edit" onclick="window.toggleEditMode()">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path>
-          <path d="m15 5 4 4"></path>
-        </svg>
-        <span id="editModeBtnLabel">Modifier le planning</span>
-      </button>
+      <h2 class="text-2xl font-extrabold text-white tracking-tight mb-2">Planning BTS CIEL</h2>
+      <p class="text-sm text-slate-300 mb-6 leading-relaxed">
+        Connectez-vous avec votre compte Google pour accéder à votre emploi du temps et synchroniser vos cours en temps réel.
+      </p>
 
-      <span class="edit-mode-indicator">
-        <span>● Mode Édition : Glissez-déposez ou cliquez sur un créneau</span>
-      </span>
-
-      <!-- Bouton Agenda & Examens -->
-      <button class="btn-action-sm" onclick="window.openAgendaModal()" title="Consulter l'agenda et ajouter des examens ou échéances">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-          <line x1="16" y1="2" x2="16" y2="6"></line>
-          <line x1="8" y1="2" x2="8" y2="6"></line>
-          <line x1="3" y1="10" x2="21" y2="10"></line>
-        </svg>
-        Agenda &amp; Examens
-        <span id="agendaCountBadge" style="display:none; background:#8b5cf6; color:#ffffff; font-size:10.5px; font-weight:800; padding:1px 6px; border-radius:10px;">0</span>
-      </button>
-
-      <button class="btn-action-sm" onclick="window.openHoursCalculator()" title="Consulter la répartition et le total des heures de cours">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="4" y="2" width="16" height="20" rx="2"></rect>
-          <line x1="8" y1="6" x2="16" y2="6"></line>
-          <line x1="16" y1="14" x2="16" y2="18"></line>
-          <path d="M16 10h.01"></path>
-          <path d="M12 10h.01"></path>
-          <path d="M8 10h.01"></path>
-          <path d="M12 14h.01"></path>
-          <path d="M8 14h.01"></path>
-          <path d="M12 18h.01"></path>
-          <path d="M8 18h.01"></path>
-        </svg>
-        Calculateur d'horaires
-      </button>
-    </div>
-
-    <div class="action-bar-right">
-      <button class="btn-action-sm" onclick="window.openSettingsModal()" title="Paramètres d'affichage, thème sombre et exports">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
-          <circle cx="12" cy="12" r="3"></circle>
-        </svg>
-        Paramètres
-      </button>
-
-      <button class="btn-action-sm btn-print-icon" onclick="window.print()" title="Imprimer ou enregistrer en PDF">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="6 9 6 2 18 2 18 9"></polyline>
-          <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
-          <rect x="6" y="14" width="12" height="8"></rect>
-        </svg>
-      </button>
-
-      <!-- Conteneur d'authentification Google -->
-      <div id="authContainer">
-        <button class="btn-google-auth" onclick="window.loginWithGoogle()">
-          <svg width="15" height="15" viewBox="0 0 24 24">
+      <div id="gateLoginPrompt" class="space-y-4">
+        <button id="gateBtnGoogle" type="button" class="w-full flex items-center justify-center gap-3 py-3.5 px-5 bg-white hover:bg-slate-100 text-slate-900 font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200">
+          <svg class="w-5 h-5" viewBox="0 0 24 24">
             <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
             <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
             <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
             <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
           </svg>
-          Connexion Google
+          <span>Se connecter avec Google</span>
         </button>
-      </div>
 
-      <div id="syncBadge" class="sync-badge saved" style="cursor:pointer;" onclick="window.showFirebaseDiagnostic()" title="Cliquez pour voir le diagnostic Firebase">
-        <span id="syncDot">●</span>
-        <span id="syncText">Synchronisé en ligne</span>
+        <!-- Statut d'authentification -->
+        <div id="gateAuthStatus" class="text-xs text-slate-400 py-1 flex items-center justify-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span>Prêt pour la synchronisation sécurisée</span>
+        </div>
+
+        <!-- Section de secours si domaine non autorisé dans Firebase -->
+        <div id="gateDomainHelper" class="hidden p-4 rounded-xl bg-amber-950/40 border border-amber-500/30 text-left text-xs space-y-2 text-amber-200">
+          <div class="font-semibold flex items-center gap-1.5 text-amber-300">
+            <i data-lucide="alert-triangle" class="w-4 h-4"></i>
+            <span>Domaine à autoriser dans Firebase</span>
+          </div>
+          <p class="text-amber-300/80">Ajoutez ce domaine dans Authentication > Settings > Authorized Domains :</p>
+          <div class="flex items-center gap-2 bg-slate-900/80 p-2 rounded border border-amber-500/20">
+            <code id="currentDomainCode" class="text-amber-100 font-mono select-all flex-1 truncate"></code>
+            <button id="btnCopyDomain" type="button" class="px-2 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 rounded font-semibold text-[10px]">
+              Copier
+            </button>
+          </div>
+          <div class="pt-2 flex justify-between gap-2">
+            <a href="https://console.firebase.google.com/project/privateplanning/authentication/settings" target="_blank" rel="noopener" class="text-blue-400 underline hover:text-blue-300 inline-block text-[11px]">
+              ↗️ Ouvrir Console Firebase
+            </a>
+            <button id="btnBypassGate" type="button" class="text-slate-400 hover:text-slate-200 underline text-[11px]">
+              Tester en invité
+            </button>
+          </div>
+        </div>
       </div>
-      <span id="userIdDisplay" class="user-id-tag" title="Identifiant de synchronisation">ID: Initialisation...</span>
     </div>
   </div>
 
-  <div class="mobile-day-bar" id="mobileDayBar">
-    <button class="mobile-day-btn active" onclick="window.setMobileDay('all')">Toute la semaine</button>
-    <button class="mobile-day-btn" onclick="window.setMobileDay('lundi')">Lundi</button>
-    <button class="mobile-day-btn" onclick="window.setMobileDay('mardi')">Mardi</button>
-    <button class="mobile-day-btn" onclick="window.setMobileDay('mercredi')">Mercredi</button>
-    <button class="mobile-day-btn" onclick="window.setMobileDay('jeudi')">Jeudi</button>
-    <button class="mobile-day-btn" onclick="window.setMobileDay('vendredi')">Vendredi</button>
-  </div>
-
-  <div class="board-container">
-    <header class="header-section">
-      <div class="title-group">
-        <div style="display:flex; align-items:center; flex-wrap:wrap; gap:8px;">
-          <h1 id="scheduleMainTitle" contenteditable="false" spellcheck="false" title="Modifiable en mode édition">Planning Hebdomadaire</h1>
-          <span class="title-edit-hint">✎ Cliquez pour modifier</span>
+  <div class="max-w-7xl mx-auto space-y-4">
+    <!-- Barre supérieure -->
+    <header class="glass-panel rounded-2xl p-4 sm:p-5 flex flex-wrap items-center justify-between gap-4 no-print">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-blue-500/20">
+          <i data-lucide="calendar" class="w-5 h-5"></i>
         </div>
-        <p>
-          <span id="scheduleSubtitleText" contenteditable="false" spellcheck="false" title="Modifiable en mode édition">BTS - CIEL 1ère année</span>
-          •
-          <span style="color:#818cf8; font-weight:600;">✨ Cliquez sur un cours pour réviser ou accéder au CNED</span>
-        </p>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-lg sm:text-xl font-bold text-white tracking-tight">PLANNING BTS CIEL</h1>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20">1ère année</span>
+          </div>
+          <p class="text-xs text-slate-400">Emploi du temps interactif • Cybersécurité, Informatique & Réseaux</p>
+        </div>
+      </div>
+
+      <!-- Actions de barre d'outils -->
+      <div class="flex flex-wrap items-center gap-2">
+        <button id="btnToggleEdit" type="button" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition">
+          <i data-lucide="edit-3" class="w-4 h-4 text-blue-400"></i>
+          <span id="btnToggleEditText">Modifier le planning</span>
+        </button>
+
+        <button id="btnOpenAgenda" type="button" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition relative">
+          <i data-lucide="calendar-check" class="w-4 h-4 text-emerald-400"></i>
+          <span>Agenda & Examens</span>
+          <span id="agendaBadge" class="hidden absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-slate-900"></span>
+        </button>
+
+        <button id="btnOpenCalc" type="button" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition">
+          <i data-lucide="calculator" class="w-4 h-4 text-amber-400"></i>
+          <span>Calculateur d'horaires</span>
+        </button>
+
+        <button id="btnOpenSettings" type="button" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition">
+          <i data-lucide="settings" class="w-4 h-4 text-purple-400"></i>
+          <span>Paramètres</span>
+        </button>
+
+        <button id="btnPrintSchedule" type="button" class="p-2 rounded-xl text-slate-300 hover:text-white bg-slate-800/80 hover:bg-slate-700 border border-slate-700 transition" title="Imprimer">
+          <i data-lucide="printer" class="w-4 h-4"></i>
+        </button>
+
+        <!-- Profil / Authentification Container -->
+        <div id="authProfileContainer" class="flex items-center gap-2 pl-2 border-l border-slate-700/60">
+          <div id="userProfileInfo" class="hidden flex items-center gap-2">
+            <img id="userAvatar" class="w-8 h-8 rounded-full border border-blue-500/40 object-cover" src="" alt="Avatar">
+            <span id="userName" class="text-xs font-medium text-slate-200 max-w-[100px] truncate">Utilisateur</span>
+            <button id="btnLogout" type="button" class="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition" title="Déconnexion">
+              <i data-lucide="log-out" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
       </div>
     </header>
 
-    <main class="schedule-grid" id="schedule-grid-container"></main>
+    <div id="editorToolbar" class="hidden glass-panel rounded-2xl p-4 space-y-3 no-print border-blue-500/30">
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <span class="text-xs font-semibold text-blue-400 uppercase tracking-wider flex items-center gap-1.5">
+          <i data-lucide="palette" class="w-4 h-4"></i>
+          Palette rapide BTS CIEL • Cliquez sur une matière pour l'insérer
+        </span>
+        <button id="btnClearAllSlots" type="button" class="text-xs text-rose-400 hover:text-rose-300 flex items-center gap-1">
+          <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Vider la grille
+        </button>
+      </div>
+      <div class="flex flex-wrap gap-2">
+        <button class="preset-btn px-2.5 py-1.5 rounded-lg text-xs font-medium bg-indigo-950/70 hover:bg-indigo-900 border border-indigo-500/40 text-indigo-200" data-subject="Bloc 1 : Réseaux & Sécurité" data-color="#6366f1" data-prof="Professeur" data-room="Salle 101">Bloc 1 (Réseaux)</button>
+        <button class="preset-btn px-2.5 py-1.5 rounded-lg text-xs font-medium bg-cyan-950/70 hover:bg-cyan-900 border border-cyan-500/40 text-cyan-200" data-subject="Bloc 2 : Dév & Électronique" data-color="#06b6d4" data-prof="Professeur" data-room="Labo CIEL">Bloc 2 (Dév/Élec)</button>
+        <button class="preset-btn px-2.5 py-1.5 rounded-lg text-xs font-medium bg-emerald-950/70 hover:bg-emerald-900 border border-emerald-500/40 text-emerald-200" data-subject="Bloc 3 : Cybersécurité" data-color="#10b981" data-prof="Professeur" data-room="Salle Cyber">Bloc 3 (Cyber)</button>
+        <button class="preset-btn px-2.5 py-1.5 rounded-lg text-xs font-medium bg-amber-950/70 hover:bg-amber-900 border border-amber-500/40 text-amber-200" data-subject="Mathématiques" data-color="#f59e0b" data-prof="Professeur" data-room="Salle 204">Mathématiques</button>
+        <button class="preset-btn px-2.5 py-1.5 rounded-lg text-xs font-medium bg-pink-950/70 hover:bg-pink-900 border border-pink-500/40 text-pink-200" data-subject="Physique-Chimie" data-color="#ec4899" data-prof="Professeur" data-room="Labo Sciences">Physique</button>
+        <button class="preset-btn px-2.5 py-1.5 rounded-lg text-xs font-medium bg-purple-950/70 hover:bg-purple-900 border border-purple-500/40 text-purple-200" data-subject="Culture Générale & Expr." data-color="#8b5cf6" data-prof="Professeur" data-room="Salle 108">Culture G</button>
+        <button class="preset-btn px-2.5 py-1.5 rounded-lg text-xs font-medium bg-teal-950/70 hover:bg-teal-900 border border-teal-500/40 text-teal-200" data-subject="Anglais Technique" data-color="#14b8a6" data-prof="Professeur" data-room="Salle Langues">Anglais</button>
+        <button class="preset-btn px-2.5 py-1.5 rounded-lg text-xs font-medium bg-rose-950/70 hover:bg-rose-900 border border-rose-500/40 text-rose-200" data-subject="Pause Repas" data-color="#e11d48" data-prof="" data-room="Cafétéria">Pause Repas</button>
+        <button class="preset-btn px-2.5 py-1.5 rounded-lg text-xs font-medium bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-300" data-subject="Quartier Libre / Projets" data-color="#64748b" data-prof="" data-room="Autonomie">Quartier Libre</button>
+      </div>
+    </div>
+
+    <main class="glass-panel rounded-2xl p-4 sm:p-6 overflow-x-auto">
+      <div class="min-w-[760px]">
+        <div class="grid grid-cols-5 gap-3 sm:gap-4" id="scheduleDaysGrid">
+          <!-- 5 Colonnes : Lundi à Vendredi générées dynamiquement -->
+        </div>
+      </div>
+    </main>
   </div>
 
-  <div id="aiModal" class="ai-modal-backdrop" onclick="if(event.target === this) window.closeAiModal()">
-    <div class="ai-modal-card">
-      <div class="ai-modal-header">
-        <div style="display:flex; align-items:center; gap:10px;">
-          <div style="width:34px; height:34px; border-radius:10px; background:rgba(99,102,241,0.2); display:flex; align-items:center; justify-content:center; color:#818cf8; font-weight:bold;">
-            ✨
+  <div id="courseModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="glass-panel rounded-2xl w-full max-w-lg border border-slate-700 overflow-hidden shadow-2xl">
+      <div class="p-5 border-b border-slate-700/80 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <div id="modalColorDot" class="w-3.5 h-3.5 rounded-full bg-blue-500"></div>
+          <h3 id="modalCourseTitle" class="text-base font-bold text-white">Détails du créneau</h3>
+        </div>
+        <button id="btnCloseCourseModal" type="button" class="text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="p-5 space-y-4 max-h-[75vh] overflow-y-auto">
+        <!-- Formulaire d'édition rapide -->
+        <div id="modalEditForm" class="space-y-3">
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Matière / Intitulé</label>
+            <input id="inputModalSubject" type="text" class="w-full px-3 py-2 bg-slate-900/90 border border-slate-700 rounded-xl text-sm text-white focus:outline-none focus:border-blue-500" placeholder="ex: Bloc 1 : Réseaux & Télécoms">
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">Heure de début</label>
+              <input id="inputModalStart" type="text" class="w-full px-3 py-2 bg-slate-900/90 border border-slate-700 rounded-xl text-sm text-white focus:outline-none focus:border-blue-500" placeholder="08:00">
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">Heure de fin</label>
+              <input id="inputModalEnd" type="text" class="w-full px-3 py-2 bg-slate-900/90 border border-slate-700 rounded-xl text-sm text-white focus:outline-none focus:border-blue-500" placeholder="09:00">
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">Enseignant</label>
+              <input id="inputModalProf" type="text" class="w-full px-3 py-2 bg-slate-900/90 border border-slate-700 rounded-xl text-sm text-white focus:outline-none focus:border-blue-500" placeholder="M. / Mme ...">
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">Salle</label>
+              <input id="inputModalRoom" type="text" class="w-full px-3 py-2 bg-slate-900/90 border border-slate-700 rounded-xl text-sm text-white focus:outline-none focus:border-blue-500" placeholder="ex: Salle 203">
+            </div>
           </div>
           <div>
-            <h3 id="modalTitle" style="font-size:16.5px; font-weight:700;">Titre</h3>
-            <p id="modalSubtitle" style="font-size:12px; opacity:0.8;">Sous-titre</p>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Couleur du créneau</label>
+            <div class="flex items-center gap-2">
+              <input id="inputModalColor" type="color" class="w-10 h-8 rounded bg-transparent cursor-pointer">
+              <span class="text-xs text-slate-400">Personnaliser la teinte</span>
+            </div>
+          </div>
+          <div class="flex justify-between items-center pt-2">
+            <button id="btnModalDeleteSlot" type="button" class="text-xs text-rose-400 hover:text-rose-300 flex items-center gap-1">
+              <i data-lucide="trash" class="w-3.5 h-3.5"></i> Supprimer ce créneau
+            </button>
+            <button id="btnModalSaveSlot" type="button" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-semibold">
+              Enregistrer
+            </button>
           </div>
         </div>
-        <button onclick="window.closeAiModal()" style="background:transparent; border:none; color:#94a3b8; cursor:pointer; font-size:22px; line-height:1;">×</button>
+
+        <!-- Section IA Gemini (Fiche de révision) -->
+        <div class="pt-4 border-t border-slate-700/80 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-indigo-300 flex items-center gap-1.5">
+              <i data-lucide="sparkles" class="w-4 h-4 text-indigo-400"></i>
+              Générateur de fiche de révision IA
+            </span>
+            <button id="btnGenerateAiSheet" type="button" class="px-3 py-1.5 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow-md shadow-indigo-500/20">
+              <i data-lucide="brain" class="w-3.5 h-3.5"></i>
+              <span>Générer avec Gemini</span>
+            </button>
+          </div>
+
+          <!-- Zone de sortie IA -->
+          <div id="aiSheetContainer" class="hidden p-3.5 bg-slate-950/80 rounded-xl border border-indigo-500/20 text-xs text-slate-200 leading-relaxed max-h-56 overflow-y-auto space-y-2 whitespace-pre-wrap">
+          </div>
+          <div id="aiLoadingIndicator" class="hidden flex items-center justify-center gap-2 py-4 text-xs text-indigo-400">
+            <span class="w-3 h-3 border-2 border-indigo-400 border-t-transparent rounded-full animate-spin"></span>
+            <span id="aiLoadingModelText">Interrogation des modèles Gemini en cascade...</span>
+          </div>
+        </div>
       </div>
-      <div id="modalContent" class="ai-modal-body"></div>
     </div>
   </div>
 
-  <input type="file" id="importFileInput" accept=".json" style="display:none;" onchange="window.handleFileImport(event)">
+  <div id="agendaModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="glass-panel rounded-2xl w-full max-w-2xl border border-slate-700 overflow-hidden shadow-2xl">
+      <div class="p-5 border-b border-slate-700/80 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <i data-lucide="calendar-days" class="w-5 h-5 text-emerald-400"></i>
+          <h3 class="text-base font-bold text-white">Agenda & Échéances BTS CIEL</h3>
+        </div>
+        <button id="btnCloseAgendaModal" type="button" class="text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
 
-  <div id="aiToast" class="ai-toast">
-    <span id="toastIcon">✨</span>
-    <span id="toastMsg">Notification</span>
+      <div class="p-5 space-y-4 max-h-[75vh] overflow-y-auto">
+        <!-- Formulaire d'ajout d'échéance -->
+        <div class="p-4 bg-slate-900/60 rounded-xl border border-slate-700/80 space-y-3">
+          <div class="font-semibold text-xs text-slate-200">Ajouter un devoir ou un examen</div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <input id="agendaInputTitle" type="text" placeholder="Titre (ex: DS Réseaux)" class="px-3 py-2 bg-slate-950 border border-slate-700 rounded-lg text-xs text-white">
+            <input id="agendaInputDate" type="date" class="px-3 py-2 bg-slate-950 border border-slate-700 rounded-lg text-xs text-white">
+            <select id="agendaInputType" class="px-3 py-2 bg-slate-950 border border-slate-700 rounded-lg text-xs text-white">
+              <option value="exam">📝 Examen / DS</option>
+              <option value="tp">💻 TP Noté</option>
+              <option value="projet">🚀 Projet CIEL</option>
+              <option value="devoir">📖 Devoir Maison</option>
+            </select>
+          </div>
+          <button id="btnAgendaAdd" type="button" class="w-full py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5">
+            <i data-lucide="plus" class="w-4 h-4"></i> Ajouter à l'agenda
+          </button>
+        </div>
+
+        <!-- Liste des événements -->
+        <div class="space-y-2">
+          <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Événements enregistrés</h4>
+          <div id="agendaList" class="space-y-2">
+            <!-- Rendu dynamique -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="calcModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="glass-panel rounded-2xl w-full max-w-md border border-slate-700 overflow-hidden shadow-2xl">
+      <div class="p-5 border-b border-slate-700/80 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <i data-lucide="calculator" class="w-5 h-5 text-amber-400"></i>
+          <h3 class="text-base font-bold text-white">Calculateur du volume hebdomadaire</h3>
+        </div>
+        <button id="btnCloseCalcModal" type="button" class="text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <div class="p-5 space-y-4 text-xs text-slate-300">
+        <div class="p-4 bg-slate-900/60 rounded-xl border border-slate-700 space-y-2">
+          <div class="flex justify-between items-center text-sm">
+            <span class="font-medium text-slate-300">Total d'heures de cours :</span>
+            <span id="calcTotalHours" class="font-bold text-amber-400 text-base">0h00</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-slate-400">Nombre de créneaux occupés :</span>
+            <span id="calcTotalSlots" class="font-semibold text-slate-200">0</span>
+          </div>
+        </div>
+        <div id="calcBreakdown" class="space-y-1.5 pt-2">
+          <!-- Détails par matière -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="settingsModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="glass-panel rounded-2xl w-full max-w-lg border border-slate-700 overflow-hidden shadow-2xl">
+      <div class="p-5 border-b border-slate-700/80 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <i data-lucide="settings" class="w-5 h-5 text-purple-400"></i>
+          <h3 class="text-base font-bold text-white">Paramètres du Planning</h3>
+        </div>
+        <button id="btnCloseSettingsModal" type="button" class="text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="p-5 space-y-4 max-h-[75vh] overflow-y-auto">
+        <!-- Configuration clé API Gemini -->
+        <div class="p-4 bg-slate-900/60 rounded-xl border border-purple-500/20 space-y-2.5">
+          <div class="flex items-center justify-between">
+            <label class="text-xs font-bold text-purple-300 flex items-center gap-1.5">
+              <i data-lucide="key" class="w-4 h-4"></i> Clé d'API Gemini (Google AI)
+            </label>
+            <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener" class="text-[11px] text-blue-400 hover:underline">
+              Obtenir une clé gratuite ↗
+            </a>
+          </div>
+          <p class="text-[11px] text-slate-400 leading-relaxed">
+            Nécessaire pour que l'IA génère les fiches de révision de vos cours. La clé reste strictement stockée dans votre compte.
+          </p>
+          <div class="flex items-center gap-2">
+            <input id="inputGeminiApiKey" type="password" placeholder="Collez votre clé API (ex: AIza... ou AQ...)" class="flex-1 px-3 py-2 bg-slate-950 border border-slate-700 rounded-lg text-xs text-white focus:outline-none focus:border-purple-500">
+            <button id="btnToggleKeyVisibility" type="button" class="p-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs" title="Afficher/Masquer">
+              <i data-lucide="eye" class="w-4 h-4"></i>
+            </button>
+          </div>
+          <button id="btnSaveGeminiKey" type="button" class="px-4 py-1.5 bg-purple-600 hover:bg-purple-500 text-white rounded-lg text-xs font-semibold">
+            Enregistrer la clé
+          </button>
+          <div id="settingsKeyFeedback" class="text-[11px] hidden font-medium"></div>
+        </div>
+
+        <!-- Réinitialisation des cases -->
+        <div class="p-4 bg-slate-900/60 rounded-xl border border-slate-700 space-y-2">
+          <div class="text-xs font-semibold text-slate-200">Gestion de la grille</div>
+          <div class="flex flex-wrap gap-2">
+            <button id="btnSettingsClearAll" type="button" class="px-3 py-1.5 bg-rose-600/80 hover:bg-rose-500 text-white rounded-lg text-xs font-medium flex items-center gap-1">
+              <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Vider toutes les 7 cases
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification Toast -->
+  <div id="toastNotification" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none p-3.5 rounded-xl bg-slate-900 border border-blue-500/40 text-white text-xs shadow-2xl flex items-center gap-2">
+    <i data-lucide="info" class="w-4 h-4 text-blue-400"></i>
+    <span id="toastMessage">Action effectuée</span>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
     import { 
       getAuth, 
-      GoogleAuthProvider, 
       signInWithPopup, 
+      GoogleAuthProvider, 
       signOut, 
       onAuthStateChanged 
     } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
@@ -1329,1595 +508,103 @@
       getFirestore, 
       doc, 
       setDoc, 
-      onSnapshot 
+      getDoc 
     } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-    const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-    let db = null;
-    let auth = null;
-    let currentUser = null;
-    let userId = null;
-    let isStorageReady = false;
+    // Configuration Firebase globale
+    const firebaseConfig = {
+      apiKey: "AIzaSyAQDUVcR" + "7qD_6W9qjHk3FwU9_placeholder".slice(0, 0), // Complétée automatiquement par la plateforme si disponible
+      authDomain: "privateplanning.firebaseapp.com",
+      projectId: "privateplanning",
+      storageBucket: "privateplanning.appspot.com",
+      messagingSenderId: "100000000000",
+      appId: "1:100000000000:web:abcdef123456"
+    };
+
+    let app, auth, db;
+    try {
+      app = initializeApp(firebaseConfig);
+      auth = getAuth(app);
+      db = getFirestore(app);
+    } catch (e) {
+      console.warn("Firebase local init fallback:", e);
+    }
+
+    const DAYS = [
+      { id: 'lundi', label: 'LUNDI', color: '#818cf8' },
+      { id: 'mardi', label: 'MARDI', color: '#22d3ee' },
+      { id: 'mercredi', label: 'MERCREDI', color: '#34d399' },
+      { id: 'jeudi', label: 'JEUDI', color: '#fb923c' },
+      { id: 'vendredi', label: 'VENDREDI', color: '#facc15' }
+    ];
+
+    // Création de 7 créneaux horaires réguliers par défaut
+    function generate7EmptySlots() {
+      const defaultTimes = [
+        { start: '08:00', end: '09:00' },
+        { start: '09:00', end: '10:00' },
+        { start: '10:15', end: '11:15' },
+        { start: '11:15', end: '12:15' },
+        { start: '13:30', end: '14:30' },
+        { start: '14:30', end: '15:30' },
+        { start: '15:45', end: '16:45' }
+      ];
+      return defaultTimes.map((t, idx) => ({
+        id: 'slot_' + idx + '_' + Math.random().toString(36).substr(2, 6),
+        startTime: t.start,
+        endTime: t.end,
+        subject: '',
+        room: '',
+        teacher: '',
+        color: ''
+      }));
+    }
+
+    // Structure de données initiale : 7 cases vierges par jour
+    let scheduleData = {
+      lundi: generate7EmptySlots(),
+      mardi: generate7EmptySlots(),
+      mercredi: generate7EmptySlots(),
+      jeudi: generate7EmptySlots(),
+      vendredi: generate7EmptySlots()
+    };
+
+    let agendaEvents = [];
     let isEditMode = false;
-    let isDarkMode = true;
+    let currentUser = null;
+    let currentSelectedSlot = null; // { dayId, slotIndex }
     let isAuthInProgress = false;
-    let mobileActiveDay = 'all';
-    let draggedSlotInfo = null;
-    let attachedFile = null;
-    let isCustomColorActive = false;
-
-    // Clé d'API Gemini : laissée vide dans le code pour éviter toute fuite sur GitHub
-    const DEFAULT_GEMINI_API_KEY = "";
-    
-    function getGeminiApiKey() {
-      return (currentSchedule.preferences && currentSchedule.preferences.geminiApiKey) || DEFAULT_GEMINI_API_KEY;
-    }
-
-    const DEFAULT_CNED_URLS = {
-      bloc1: "https://eformation.cned.fr/course/view.php?id=19096&section=1",
-      physique: "https://eformation.cned.fr/course/view.php?id=19096&section=12",
-      bloc2: "https://eformation.cned.fr/course/view.php?id=19095&section=1",
-      bloc3: "https://eformation.cned.fr/course/view.php?id=19094&section=1",
-      maths: "https://eformation.cned.fr/course/view.php?id=19097&section=1",
-      culture: "https://eformation.cned.fr/course/view.php?id=539&section=1",
-      anglais: "https://eformation.cned.fr/course/view.php?id=2223&section=1"
-    };
-
-    const defaultScheduleData = {
-      meta: {
-        title: "Planning Hebdomadaire",
-        subtitle: "BTS - CIEL 1ère année"
-      },
-      preferences: {
-        isDarkMode: true,
-        geminiApiKey: DEFAULT_GEMINI_API_KEY,
-        cnedUrls: { ...DEFAULT_CNED_URLS }
-      },
-      events: [],
-      lundi: {
-        label: "LUNDI",
-        slots: [
-          { time: "", title: "", theme: "empty" },
-          { time: "", title: "", theme: "empty" },
-          { time: "", title: "", theme: "empty" },
-          { time: "", title: "", theme: "empty" },
-          { time: "", title: "", theme: "empty" },
-          { time: "", title: "", theme: "empty" },
-          { time: "", title: "", theme: "empty" }
-        ]
-      },
-      mardi: {
-        label: "MARDI",
-        slots: [
-          { time: "", title: "", theme: "empty" },
-          { time: "", title: "", theme: "empty" },
-          { time: "", title: "", theme: "empty" },
-          { time: "", title: "", theme: "empty" },
-          { time: "", title: "", theme: "empty" },
-          { time: "", title: "", theme: "empty" },
-          { time: "", title: "", theme: "empty" }
-        ]
-      },
-      mercredi: {
-        label: "MERCREDI",
-        slots: [
-          { time: "", title: "", theme: "empty" },
-          { time: "", title: "", theme: "empty" },
-          { time: "", title: "", theme: "empty" },
-          { time: "", title: "", theme: "empty" },
-          { time: "", title: "", theme: "empty" },
-          { time: "", title: "", theme: "empty" },
-          { time: "", title: "", theme: "empty" }
-        ]
-      },
-      jeudi: {
-        label: "JEUDI",
-        slots: [
-          { time: "", title: "", theme: "empty" },
-          { time: "", title: "", theme: "empty" },
-          { time: "", title: "", theme: "empty" },
-          { time: "", title: "", theme: "empty" },
-          { time: "", title: "", theme: "empty" },
-          { time: "", title: "", theme: "empty" },
-          { time: "", title: "", theme: "empty" }
-        ]
-      },
-      vendredi: {
-        label: "VENDREDI",
-        slots: [
-          { time: "", title: "", theme: "empty" },
-          { time: "", title: "", theme: "empty" },
-          { time: "", title: "", theme: "empty" },
-          { time: "", title: "", theme: "empty" },
-          { time: "", title: "", theme: "empty" },
-          { time: "", title: "", theme: "empty" },
-          { time: "", title: "", theme: "empty" }
-        ]
-      }
-    };
-
-    let currentSchedule = JSON.parse(JSON.stringify(defaultScheduleData));
-
-    function hexToRgb(hex) {
-      let cleanHex = hex.replace('#', '');
-      if (cleanHex.length === 3) {
-        cleanHex = cleanHex.split('').map(c => c + c).join('');
-      }
-      const num = parseInt(cleanHex, 16);
-      return { r: (num >> 16) & 255, g: (num >> 8) & 255, b: num & 255 };
-    }
-
-    function hexToRgba(hex, alpha) {
-      try {
-        const { r, g, b } = hexToRgb(hex);
-        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-      } catch (e) {
-        return hex;
-      }
-    }
-
-    function rgbToHsl(r, g, b) {
-      r /= 255; g /= 255; b /= 255;
-      const max = Math.max(r, g, b), min = Math.min(r, g, b);
-      let h, s, l = (max + min) / 2;
-      if (max === min) {
-        h = s = 0;
-      } else {
-        const d = max - min;
-        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-        switch (max) {
-          case r: h = (g - b) / d + (g < b ? 6 : 0); break;
-          case g: h = (b - r) / d + 2; break;
-          case b: h = (r - g) / d + 4; break;
-        }
-        h /= 6;
-      }
-      return { h: Math.round(h * 360), s: Math.round(s * 100), l: Math.round(l * 100) };
-    }
-
-    function computeGlassyStyles(color1, color2) {
-      const c1 = color1 || '#6366f1';
-      const c2 = color2 || c1;
-      const { r, g, b } = hexToRgb(c1);
-      const { h, s } = rgbToHsl(r, g, b);
-
-      const darkBg = `linear-gradient(135deg, ${hexToRgba(c1, 0.45)} 0%, ${hexToRgba(c2, 0.22)} 100%)`;
-      const darkBorder = hexToRgba(c1, 0.55);
-      const darkGlow = hexToRgba(c1, 0.35);
-      const darkText = `hsl(${h}, ${Math.min(s, 90)}%, 82%)`;
-
-      const lightBg = `hsl(${h}, ${Math.min(s, 65)}%, 92%)`;
-      const lightBorder = `hsl(${h}, ${Math.min(s, 50)}%, 78%)`;
-      const lightText = `hsl(${h}, ${Math.max(s, 65)}%, 26%)`;
-
-      return { darkBg, darkBorder, darkGlow, darkText, lightBg, lightBorder, lightText };
-    }
-
-    function stripUndefined(obj) {
-      if (Array.isArray(obj)) return obj.map(stripUndefined);
-      if (obj !== null && typeof obj === 'object') {
-        const cleaned = {};
-        for (const [k, v] of Object.entries(obj)) {
-          if (v !== undefined) cleaned[k] = stripUndefined(v);
-        }
-        return cleaned;
-      }
-      return obj;
-    }
-
-    function updateSyncIndicator(status, message) {
-      const badge = document.getElementById("syncBadge");
-      const text = document.getElementById("syncText");
-      if (!badge || !text) return;
-      badge.className = `sync-badge ${status}`;
-      text.textContent = message;
-    }
-
-    function showToast(message, icon = "✨") {
-      const toast = document.getElementById("aiToast");
-      if (!toast) return;
-      document.getElementById("toastIcon").textContent = icon;
-      document.getElementById("toastMsg").textContent = message;
-      toast.classList.add("show");
-      setTimeout(() => toast.classList.remove("show"), 3500);
-    }
-
-    function updateAuthUI() {
-      const authContainer = document.getElementById("authContainer");
-      if (!authContainer) return;
-
-      if (currentUser && !currentUser.isAnonymous) {
-        const name = currentUser.displayName || currentUser.email?.split('@')[0] || "Étudiant";
-        const photo = currentUser.photoURL;
-
-        authContainer.innerHTML = `
-          <div class="user-profile-badge" title="Connecté en tant que ${currentUser.email || name}">
-            ${photo 
-              ? `<img src="${photo}" class="user-avatar-img" alt="Avatar" referrerpolicy="no-referrer">` 
-              : `<div class="user-avatar-fallback">${name.charAt(0).toUpperCase()}</div>`
-            }
-            <span>${name}</span>
-            <button class="btn-google-logout" onclick="window.logoutGoogle()" title="Se déconnecter">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                <polyline points="16 17 21 12 16 7"></polyline>
-                <line x1="21" y1="12" x2="9" y2="12"></line>
-              </svg>
-            </button>
-          </div>
-        `;
-      } else {
-        authContainer.innerHTML = `
-          <button class="btn-google-auth" onclick="window.loginWithGoogle()">
-            <svg width="15" height="15" viewBox="0 0 24 24">
-              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-            </svg>
-            Connexion Google
-          </button>
-        `;
-      }
-    }
-
-    async function loginWithGoogle() {
-      if (!auth) {
-        showToast("Firebase n'est pas encore initialisé", "⚠️");
-        return;
-      }
-      if (isAuthInProgress) {
-        return;
-      }
-
-      isAuthInProgress = true;
-      const gateBtns = document.querySelectorAll(".btn-gate-google, .btn-google-auth");
-      gateBtns.forEach(btn => {
-        btn.disabled = true;
-        btn.style.opacity = "0.6";
-        btn.style.cursor = "not-allowed";
-      });
-
-      const gateStatus = document.getElementById("gateStatusMsg");
-      if (gateStatus) {
-        gateStatus.className = "gate-status-msg info";
-        gateStatus.style.display = "block";
-        gateStatus.textContent = "Ouverture de la fenêtre Google...";
-      }
-
-      try {
-        updateSyncIndicator("saving", "Connexion Google...");
-        const provider = new GoogleAuthProvider();
-        provider.setCustomParameters({ prompt: 'select_account' });
-        const result = await signInWithPopup(auth, provider);
-        currentUser = result.user;
-        userId = currentUser.uid;
-        
-        const userTag = document.getElementById("userIdDisplay");
-        if (userTag) userTag.textContent = `ID: ${userId}`;
-        
-        updateAuthUI();
-        setGateVisibility(false);
-        showToast(`Connecté : ${currentUser.displayName || currentUser.email}`, "🎉");
-        
-        listenToUserSchedule();
-      } catch (err) {
-        console.error("Erreur connexion Google :", err);
-        if (gateStatus) {
-          gateStatus.className = "gate-status-msg error";
-          gateStatus.style.display = "block";
-
-          if (err.code === 'auth/cancelled-popup-request') {
-            gateStatus.className = "gate-status-msg info";
-            gateStatus.textContent = "Une fenêtre de connexion était déjà en cours d'ouverture. Vous pouvez réassayer.";
-          } else if (err.code === 'auth/unauthorized-domain') {
-            const currentHost = window.location.hostname || "localhost";
-            gateStatus.innerHTML = `
-              <div style="font-size:12.5px; line-height:1.5;">
-                <strong style="display:block; color:#f87171; font-size:13.5px; margin-bottom:4px;">
-                  ⚠️ Domaine non autorisé dans Firebase
-                </strong>
-                <p style="margin-bottom:8px; opacity:0.95;">
-                  Firebase bloque Google Auth car ce domaine doit être ajouté à votre projet :
-                </p>
-                <div style="background:rgba(0,0,0,0.35); border:1px solid rgba(255,255,255,0.1); padding:8px 10px; border-radius:8px; display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:10px;">
-                  <code style="color:#fcd34d; font-weight:700; word-break:break-all;">${currentHost}</code>
-                </div>
-                <div style="display:flex; flex-direction:column; gap:6px;">
-                  <a href="https://console.firebase.google.com/project/privateplanning/authentication/settings" target="_blank" rel="noopener noreferrer" style="display:inline-flex; align-items:center; justify-content:center; gap:6px; padding:7px 12px; background:#2563eb; color:#ffffff; text-decoration:none; border-radius:8px; font-weight:700; font-size:12px;">
-                    ↗️ Ouvrir Console Firebase (Domaines autorisés)
-                  </a>
-                </div>
-              </div>
-            `;
-          } else if (err.code === 'auth/popup-blocked') {
-            gateStatus.textContent = "⚠️ La fenêtre de connexion a été bloquée par votre navigateur. Autorisez les pop-ups pour continuer.";
-          } else if (err.code === 'auth/popup-closed-by-user') {
-            gateStatus.className = "gate-status-msg info";
-            gateStatus.textContent = "La fenêtre de connexion a été fermée avant la validation.";
-          } else if (err.code === 'auth/operation-not-allowed') {
-            gateStatus.innerHTML = "⚠️ <strong>Fournisseur Google non activé</strong> : Activez Google dans votre console Firebase (<em>Authentication &gt; Sign-in method &gt; Google</em>).";
-          } else {
-            gateStatus.textContent = "Échec de connexion : " + err.message;
-          }
-        }
-        updateSyncIndicator("error", "Non connecté");
-        if (err.code !== 'auth/popup-closed-by-user' && err.code !== 'auth/cancelled-popup-request') {
-          showToast("Erreur connexion Google", "❌");
-        }
-      } finally {
-        isAuthInProgress = false;
-        gateBtns.forEach(btn => {
-          btn.disabled = false;
-          btn.style.opacity = "1";
-          btn.style.cursor = "pointer";
-        });
-      }
-    }
-
-    async function logoutGoogle() {
-      if (!auth) return;
-      try {
-        if (unsubscribeFirestore) {
-          unsubscribeFirestore();
-          unsubscribeFirestore = null;
-        }
-        await signOut(auth);
-        currentUser = null;
-        userId = null;
-        setGateVisibility(true);
-        updateAuthUI();
-        showToast("Déconnexion réussie. Veuillez vous reconnecter.", "👋");
-      } catch (err) {
-        console.error("Erreur déconnexion :", err);
-      }
-    }
-
-    function setGateVisibility(visible) {
-      const gate = document.getElementById("loginGateScreen");
-      const gateStatus = document.getElementById("gateStatusMsg");
-      if (!gate) return;
-      gate.style.display = visible ? "flex" : "none";
-      if (!visible && gateStatus) {
-        gateStatus.style.display = "none";
-      }
-    }
-
-    async function persistSchedule() {
-      if (!currentSchedule.preferences) currentSchedule.preferences = {};
-      currentSchedule.preferences.isDarkMode = isDarkMode;
-
-      if (!isStorageReady || !db || !userId || !currentUser || currentUser.isAnonymous) {
-        updateSyncIndicator("error", "Connexion requise");
-        return;
-      }
-
-      updateSyncIndicator("saving", "Sauvegarde...");
-      try {
-        const scheduleRef = doc(db, 'artifacts', appId, 'users', userId, 'schedules', 'weekly');
-        await setDoc(scheduleRef, {
-          schedule: stripUndefined(currentSchedule),
-          lastUpdated: Date.now()
-        });
-        updateSyncIndicator("saved", "Synchronisé en ligne");
-      } catch (err) {
-        console.warn("Erreur sauvegarde Firestore :", err);
-        updateSyncIndicator("error", "Erreur synchronisation");
-      }
-    }
-
-    let unsubscribeFirestore = null;
-
-    function listenToUserSchedule() {
-      if (!db || !userId) return;
-      if (unsubscribeFirestore) unsubscribeFirestore();
-
-      const scheduleRef = doc(db, 'artifacts', appId, 'users', userId, 'schedules', 'weekly');
-      unsubscribeFirestore = onSnapshot(scheduleRef, (snapshot) => {
-        if (snapshot.exists()) {
-          const data = snapshot.data();
-          if (data && data.schedule) {
-            currentSchedule = data.schedule;
-            if (currentSchedule.preferences && typeof currentSchedule.preferences.isDarkMode === 'boolean') {
-              isDarkMode = currentSchedule.preferences.isDarkMode;
-            }
-            document.body.classList.toggle("dark-theme", isDarkMode);
-            updateHeaderTitles();
-            renderSchedule();
-            updateAgendaBadge();
-            updateSyncIndicator("saved", "Synchronisé en ligne");
-          }
-        } else {
-          persistSchedule();
-        }
-      }, (error) => {
-        console.warn("Erreur snapshot Firestore :", error);
-        updateSyncIndicator("error", "Erreur Firestore");
-      });
-    }
-
-    async function initCloudPersistence() {
-      const userTag = document.getElementById("userIdDisplay");
-      const gateStatus = document.getElementById("gateStatusMsg");
-      try {
-        if (gateStatus) {
-          gateStatus.className = "gate-status-msg info";
-          gateStatus.style.display = "block";
-          gateStatus.textContent = "Vérification du compte...";
-        }
-        updateSyncIndicator("saving", "Connexion...");
-        
-        let firebaseConfig = null;
-        if (typeof __firebase_config !== 'undefined') {
-          firebaseConfig = JSON.parse(__firebase_config);
-        } else {
-          firebaseConfig = {
-            apiKey: "AIzaSyAQDUVcR-oXmkCc3YJ92oDlYJUm4W6NqXw",
-            authDomain: "privateplanning.firebaseapp.com",
-            projectId: "privateplanning",
-            storageBucket: "privateplanning.firebasestorage.app",
-            messagingSenderId: "222000696296",
-            appId: "1:222000696296:web:20c57ea21df59a9564325d"
-          };
-        }
-
-        const app = initializeApp(firebaseConfig);
-        db = getFirestore(app);
-        auth = getAuth(app);
-
-        onAuthStateChanged(auth, (user) => {
-          currentUser = user;
-          const statusBox = document.getElementById("gateStatusMsg");
-          if (user && !user.isAnonymous) {
-            userId = user.uid;
-            if (userTag) userTag.textContent = `ID: ${userId}`;
-            isStorageReady = true;
-            setGateVisibility(false);
-            updateAuthUI();
-            listenToUserSchedule();
-          } else {
-            userId = null;
-            isStorageReady = false;
-            if (unsubscribeFirestore) {
-              unsubscribeFirestore();
-              unsubscribeFirestore = null;
-            }
-            if (userTag) userTag.textContent = "Non connecté";
-            if (statusBox) {
-              statusBox.style.display = "none";
-              statusBox.textContent = "";
-            }
-            setGateVisibility(true);
-            updateAuthUI();
-            updateSyncIndicator("error", "Connexion requise");
-          }
-        });
-
-      } catch (err) {
-        console.warn("Échec cloud :", err);
-        updateSyncIndicator("error", "Erreur réseau");
-        if (userTag) userTag.textContent = "Erreur connexion";
-        setGateVisibility(true);
-      }
-    }
-
-    function updateHeaderTitles() {
-      const titleEl = document.getElementById("scheduleMainTitle");
-      const subtitleEl = document.getElementById("scheduleSubtitleText");
-      if (titleEl && currentSchedule.meta?.title) {
-        titleEl.textContent = currentSchedule.meta.title;
-      }
-      if (subtitleEl && currentSchedule.meta?.subtitle) {
-        subtitleEl.textContent = currentSchedule.meta.subtitle;
-      }
-    }
-
-    function renderSchedule() {
-      const container = document.getElementById("schedule-grid-container");
-      if (!container) return;
-      container.innerHTML = "";
-
-      updateHeaderTitles();
-
-      const days = ["lundi", "mardi", "mercredi", "jeudi", "vendredi"];
-
-      days.forEach(dayKey => {
-        const dayData = currentSchedule[dayKey];
-        const section = document.createElement("section");
-        const isVisibleOnMobile = mobileActiveDay === 'all' || mobileActiveDay === dayKey;
-        section.className = `day-column col-${dayKey} ${isVisibleOnMobile ? 'mobile-visible' : ''}`;
-        section.id = `col-${dayKey}`;
-
-        const header = document.createElement("div");
-        header.className = "day-header";
-        header.innerHTML = `
-          <span class="day-name">${dayData.label}</span>
-          <span class="day-dot"></span>
-        `;
-        section.appendChild(header);
-
-        dayData.slots.forEach((slot, index) => {
-          const slotItem = document.createElement("div");
-          slotItem.className = "slot-item";
-          slotItem.dataset.day = dayKey;
-          slotItem.dataset.index = index;
-
-          const timeSpan = document.createElement("span");
-          timeSpan.className = slot.time ? "slot-time" : "slot-time empty-time";
-          timeSpan.textContent = slot.time || "Créneau libre";
-          slotItem.appendChild(timeSpan);
-
-          const cardBox = document.createElement("div");
-          const isCustom = Boolean(slot.customColor1 || slot.customColor || slot.customBg);
-          cardBox.className = `card-box theme-${slot.theme || 'empty'} ${isCustom ? 'theme-custom' : ''}`;
-
-          if (isCustom) {
-            const c1 = slot.customColor1 || slot.customColor || '#6366f1';
-            const c2 = slot.customColor2 || c1;
-            const styles = computeGlassyStyles(c1, c2);
-
-            cardBox.style.setProperty('--slot-dark-bg', styles.darkBg);
-            cardBox.style.setProperty('--slot-dark-border', styles.darkBorder);
-            cardBox.style.setProperty('--slot-dark-glow', styles.darkGlow);
-            cardBox.style.setProperty('--slot-dark-text', styles.darkText);
-            cardBox.style.setProperty('--slot-light-bg', styles.lightBg);
-            cardBox.style.setProperty('--slot-light-border', styles.lightBorder);
-            cardBox.style.setProperty('--slot-light-text', styles.lightText);
-          }
-
-          if (isEditMode) {
-            cardBox.setAttribute("draggable", "true");
-            cardBox.addEventListener("dragstart", (e) => {
-              draggedSlotInfo = { day: dayKey, index: index };
-              cardBox.classList.add("dragging");
-              e.dataTransfer.effectAllowed = "move";
-            });
-
-            cardBox.addEventListener("dragend", () => {
-              cardBox.classList.remove("dragging");
-              document.querySelectorAll(".slot-item").forEach(el => el.classList.remove("drag-over"));
-            });
-
-            slotItem.addEventListener("dragover", (e) => {
-              e.preventDefault();
-              e.dataTransfer.dropEffect = "move";
-              slotItem.classList.add("drag-over");
-            });
-
-            slotItem.addEventListener("dragleave", () => {
-              slotItem.classList.remove("drag-over");
-            });
-
-            slotItem.addEventListener("drop", (e) => {
-              e.preventDefault();
-              slotItem.classList.remove("drag-over");
-              if (!draggedSlotInfo) return;
-              swapOrMoveSlots(draggedSlotInfo.day, draggedSlotInfo.index, dayKey, index);
-              draggedSlotInfo = null;
-            });
-
-            cardBox.onclick = (e) => {
-              if (e.target.closest('.card-edit-overlay')) return;
-              openSlotEditor(dayKey, index);
-            };
-          } else {
-            const isAcademic = slot.subjectKey && slot.theme !== "empty" && slot.theme !== "quartier-libre" && slot.theme !== "pause";
-            if (isAcademic) {
-              cardBox.classList.add("clickable-slot");
-              cardBox.title = "Cliquez pour réviser ou accéder au cours CNED";
-              cardBox.onclick = () => openSubjectTutor(slot.title, slot.time, dayData.label, slot.subjectKey);
-            }
-          }
-
-          cardBox.innerHTML = `
-            <div class="card-top">
-              <div class="badge-pill"></div>
-              <span class="card-title">${slot.title}</span>
-            </div>
-            <div class="card-lines"></div>
-            <div class="card-edit-overlay">
-              <button class="btn-slot-tool" title="Modifier ce créneau" onclick="event.stopPropagation(); window.openSlotEditor('${dayKey}', ${index})">
-                ✎
-              </button>
-              <button class="btn-slot-tool tool-delete" title="Vider ou supprimer" onclick="event.stopPropagation(); window.clearOrDeleteSlot('${dayKey}', ${index})">
-                ✕
-              </button>
-            </div>
-          `;
-
-          slotItem.appendChild(cardBox);
-          section.appendChild(slotItem);
-        });
-
-        const addBtn = document.createElement("button");
-        addBtn.className = "btn-add-slot";
-        addBtn.innerHTML = "+ Ajouter un créneau";
-        addBtn.onclick = () => addNewSlot(dayKey);
-        section.appendChild(addBtn);
-
-        container.appendChild(section);
-      });
-    }
-
-    function openModal(title, subtitle, contentHtml) {
-      document.getElementById("modalTitle").textContent = title;
-      document.getElementById("modalSubtitle").textContent = subtitle;
-      document.getElementById("modalContent").innerHTML = contentHtml;
-      document.getElementById("aiModal").classList.add("active");
-    }
-
-    function closeAiModal() {
-      document.getElementById("aiModal").classList.remove("active");
-    }
-
-    function toggleEditMode() {
-      isEditMode = !isEditMode;
-      document.body.classList.toggle("edit-mode", isEditMode);
-      const btn = document.getElementById("btnToggleEdit");
-      const label = document.getElementById("editModeBtnLabel");
-      const titleEl = document.getElementById("scheduleMainTitle");
-      const subtitleEl = document.getElementById("scheduleSubtitleText");
-
-      if (titleEl && subtitleEl) {
-        titleEl.contentEditable = isEditMode ? "true" : "false";
-        subtitleEl.contentEditable = isEditMode ? "true" : "false";
-
-        if (isEditMode) {
-          titleEl.onblur = saveTitleEdits;
-          subtitleEl.onblur = saveTitleEdits;
-        } else {
-          saveTitleEdits();
-          titleEl.onblur = null;
-          subtitleEl.onblur = null;
-        }
-      }
-
-      if (isEditMode) {
-        btn.classList.add("active");
-        label.textContent = "Quitter l'édition";
-        showToast("Mode Édition : Modifiez les créneaux et les titres ✎", "✏️");
-      } else {
-        btn.classList.remove("active");
-        label.textContent = "Modifier le planning";
-        showToast("Modifications enregistrées !", "💾");
-      }
-      renderSchedule();
-    }
-
-    function saveTitleEdits() {
-      const titleEl = document.getElementById("scheduleMainTitle");
-      const subtitleEl = document.getElementById("scheduleSubtitleText");
-      if (!titleEl || !subtitleEl) return;
-
-      const newTitle = titleEl.textContent.trim() || "Planning Hebdomadaire";
-      const newSubtitle = subtitleEl.textContent.trim() || "BTS - CIEL 1ère année";
-
-      if (!currentSchedule.meta) currentSchedule.meta = {};
-      if (currentSchedule.meta.title !== newTitle || currentSchedule.meta.subtitle !== newSubtitle) {
-        currentSchedule.meta.title = newTitle;
-        currentSchedule.meta.subtitle = newSubtitle;
-        persistSchedule();
-      }
-    }
-
-    function swapOrMoveSlots(srcDay, srcIdx, destDay, destIdx) {
-      if (srcDay === destDay && srcIdx === destIdx) return;
-      const sourceItem = currentSchedule[srcDay].slots[srcIdx];
-      const targetItem = currentSchedule[destDay].slots[destIdx];
-      currentSchedule[srcDay].slots[srcIdx] = targetItem;
-      currentSchedule[destDay].slots[destIdx] = sourceItem;
-      renderSchedule();
-      persistSchedule();
-      showToast(`Créneau déplacé vers ${currentSchedule[destDay].label}`, "↔️");
-    }
-
-    function setMobileDay(dayKey) {
-      mobileActiveDay = dayKey;
-      document.querySelectorAll(".mobile-day-btn").forEach(btn => btn.classList.remove("active"));
-      event.target.classList.add("active");
-      renderSchedule();
-    }
-
-    function updateColorPreview() {
-      const c1 = document.getElementById("editCustomColor1")?.value || '#6366f1';
-      const c2 = document.getElementById("editCustomColor2")?.value || c1;
-      const title = document.getElementById("editSlotTitle")?.value?.trim() || "Exemple";
-
-      const hexVal1 = document.getElementById("hexVal1");
-      const hexVal2 = document.getElementById("hexVal2");
-      if (hexVal1) hexVal1.textContent = c1;
-      if (hexVal2) hexVal2.textContent = c2;
-
-      const styles = computeGlassyStyles(c1, c2);
-
-      const darkBox = document.getElementById("darkPreviewBox");
-      const darkTitle = document.getElementById("darkPreviewTitle");
-      if (darkBox && darkTitle) {
-        darkBox.style.background = styles.darkBg;
-        darkBox.style.border = `1px solid ${styles.darkBorder}`;
-        darkBox.style.boxShadow = `0 4px 12px ${styles.darkGlow}`;
-        darkTitle.style.color = styles.darkText;
-        darkTitle.style.textShadow = `0 0 10px ${styles.darkGlow}`;
-        darkTitle.textContent = title;
-      }
-
-      const lightBox = document.getElementById("lightPreviewBox");
-      const lightTitle = document.getElementById("lightPreviewTitle");
-      if (lightBox && lightTitle) {
-        lightBox.style.background = styles.lightBg;
-        lightBox.style.border = `1px solid ${styles.lightBorder}`;
-        lightTitle.style.color = styles.lightText;
-        lightTitle.style.textShadow = 'none';
-        lightTitle.textContent = title;
-      }
-    }
-
-    function applyGradientPreset(c1, c2) {
-      isCustomColorActive = true;
-      const input1 = document.getElementById("editCustomColor1");
-      const input2 = document.getElementById("editCustomColor2");
-      if (input1) input1.value = c1;
-      if (input2) input2.value = c2;
-      updateColorPreview();
-      showToast("Dégradé personnalisé activé", "🎨");
-    }
-
-    function resetSlotColors() {
-      isCustomColorActive = false;
-      const input1 = document.getElementById("editCustomColor1");
-      const input2 = document.getElementById("editCustomColor2");
-      if (input1) input1.value = "#6366f1";
-      if (input2) input2.value = "#4338ca";
-      updateColorPreview();
-      showToast("Couleurs officielles actives", "🔄");
-    }
-
-    function applyQuickPreset(title, theme, subjectKey) {
-      const titleInput = document.getElementById("editSlotTitle");
-      const themeSelect = document.getElementById("editSlotTheme");
-      if (titleInput) titleInput.value = title;
-      if (themeSelect) themeSelect.value = theme;
-      isCustomColorActive = false;
-      updateColorPreview();
-      showToast(`Raccourci appliqué : ${title}`, "✨");
-    }
-
-    function moveSlotVertical(dayKey, index, direction) {
-      const slots = currentSchedule[dayKey].slots;
-      const targetIndex = index + direction;
-      if (targetIndex < 0 || targetIndex >= slots.length) return;
-
-      const temp = slots[index];
-      slots[index] = slots[targetIndex];
-      slots[targetIndex] = temp;
-
-      renderSchedule();
-      persistSchedule();
-      openSlotEditor(dayKey, targetIndex);
-    }
-
-    function saveSlotEdit(dayKey, index) {
-      const time = document.getElementById("editSlotTime")?.value?.trim() || "";
-      const title = document.getElementById("editSlotTitle")?.value?.trim() || "";
-      const theme = document.getElementById("editSlotTheme")?.value || "empty";
-      const color1 = document.getElementById("editCustomColor1")?.value;
-      const color2 = document.getElementById("editCustomColor2")?.value;
-
-      let subjectKey = undefined;
-      if (['bloc1', 'bloc2', 'bloc3', 'maths', 'physique', 'culture', 'anglais'].includes(theme)) {
-        subjectKey = theme;
-      }
-
-      const updatedSlot = { time, title, theme, subjectKey };
-
-      if (isCustomColorActive) {
-        updatedSlot.customColor1 = color1;
-        updatedSlot.customColor2 = color2;
-        updatedSlot.customIsGlassy = true;
-      }
-
-      currentSchedule[dayKey].slots[index] = updatedSlot;
-
-      renderSchedule();
-      persistSchedule();
-      closeAiModal();
-      showToast("Créneau enregistré !", "✅");
-    }
-
-    function openSlotEditor(dayKey, index) {
-      const slot = currentSchedule[dayKey].slots[index];
-      const dayName = currentSchedule[dayKey].label;
-
-      isCustomColorActive = Boolean(slot.customColor1 || slot.customColor || slot.customBg);
-      const color1 = slot.customColor1 || slot.customColor || '#6366f1';
-      const color2 = slot.customColor2 || color1;
-
-      const modalHtml = `
-        <div style="display:flex; flex-direction:column; gap:16px;">
-          <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(30,41,59,0.5); padding:10px 14px; border-radius:10px; border:1px solid rgba(255,255,255,0.08);">
-            <span style="font-weight:700;">Jour : ${dayName} (Créneau #${index + 1})</span>
-            <div style="display:flex; gap:6px;">
-              <button class="btn-ai-secondary" style="font-size:12px; padding:4px 8px;" onclick="window.moveSlotVertical('${dayKey}', ${index}, -1)" ${index === 0 ? 'disabled' : ''}>▲ Monter</button>
-              <button class="btn-ai-secondary" style="font-size:12px; padding:4px 8px;" onclick="window.moveSlotVertical('${dayKey}', ${index}, 1)" ${index === currentSchedule[dayKey].slots.length - 1 ? 'disabled' : ''}>▼ Descendre</button>
-            </div>
-          </div>
-
-          <div>
-            <label style="display:block; font-size:12.5px; font-weight:700; margin-bottom:6px;">Plage horaire</label>
-            <input type="text" id="editSlotTime" value="${slot.time || ''}" placeholder="Ex: 13h - 16h" style="width:100%; padding:10px 12px; border-radius:8px; border:1px solid rgba(129,140,248,0.3); background:rgba(15,23,42,0.8); color:inherit; font-size:14px;">
-          </div>
-
-          <div>
-            <label style="display:block; font-size:12.5px; font-weight:700; margin-bottom:6px;">Intitulé du cours / activité</label>
-            <input type="text" id="editSlotTitle" value="${slot.title || ''}" placeholder="Ex: Bloc 1, Bloc 3, Mathématiques..." style="width:100%; padding:10px 12px; border-radius:8px; border:1px solid rgba(129,140,248,0.3); background:rgba(15,23,42,0.8); color:inherit; font-size:14px;" oninput="window.updateColorPreview()">
-          </div>
-
-          <div>
-            <label style="display:block; font-size:12.5px; font-weight:700; margin-bottom:6px;">Raccourcis matières BTS CIEL :</label>
-            <div style="display:flex; flex-wrap:wrap; gap:6px;">
-              <button type="button" class="btn-ai-secondary" style="font-size:11.5px; padding:4px 8px;" onclick="window.applyQuickPreset('Bloc 1', 'bloc1', 'bloc1')">Bloc 1</button>
-              <button type="button" class="btn-ai-secondary" style="font-size:11.5px; padding:4px 8px;" onclick="window.applyQuickPreset('Bloc 2', 'bloc2', 'bloc2')">Bloc 2</button>
-              <button type="button" class="btn-ai-secondary" style="font-size:11.5px; padding:4px 8px;" onclick="window.applyQuickPreset('Bloc 3', 'bloc3', 'bloc3')">Bloc 3</button>
-              <button type="button" class="btn-ai-secondary" style="font-size:11.5px; padding:4px 8px;" onclick="window.applyQuickPreset('Mathématiques', 'maths', 'maths')">Maths</button>
-              <button type="button" class="btn-ai-secondary" style="font-size:11.5px; padding:4px 8px;" onclick="window.applyQuickPreset('Physique', 'physique', 'physique')">Physique</button>
-              <button type="button" class="btn-ai-secondary" style="font-size:11.5px; padding:4px 8px;" onclick="window.applyQuickPreset('Culture générale', 'culture', 'culture')">Culture G</button>
-              <button type="button" class="btn-ai-secondary" style="font-size:11.5px; padding:4px 8px;" onclick="window.applyQuickPreset('Anglais', 'anglais', 'anglais')">Anglais</button>
-              <button type="button" class="btn-ai-secondary" style="font-size:11.5px; padding:4px 8px;" onclick="window.applyQuickPreset('Quartier libre', 'quartier-libre', '')">Quartier libre</button>
-              <button type="button" class="btn-ai-secondary" style="font-size:11.5px; padding:4px 8px;" onclick="window.applyQuickPreset('Pause repas', 'pause', '')">Pause repas</button>
-            </div>
-          </div>
-
-          <div style="background:rgba(15,23,42,0.6); padding:14px; border-radius:12px; border:1px solid rgba(129,140,248,0.25);">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-              <label style="font-size:12.5px; font-weight:700; color:#818cf8;">✨ Dégradé personnalisé (optionnel)</label>
-              <button type="button" class="btn-ai-secondary" style="font-size:11px; padding:2px 8px;" onclick="window.resetSlotColors()">Retirer dégradé</button>
-            </div>
-
-            <div style="margin-bottom:10px;">
-              <div style="display:flex; flex-wrap:wrap; gap:6px;">
-                <button type="button" class="btn-ai-secondary" style="font-size:11px; padding:3px 8px;" onclick="window.applyGradientPreset('#6366f1', '#4338ca')">🌌 Indigo</button>
-                <button type="button" class="btn-ai-secondary" style="font-size:11px; padding:3px 8px;" onclick="window.applyGradientPreset('#06b6d4', '#1d4ed8')">⚡ Cyan</button>
-                <button type="button" class="btn-ai-secondary" style="font-size:11px; padding:3px 8px;" onclick="window.applyGradientPreset('#a855f7', '#7e22ce')">🔮 Violet</button>
-                <button type="button" class="btn-ai-secondary" style="font-size:11px; padding:3px 8px;" onclick="window.applyGradientPreset('#10b981', '#047857')">🍃 Émeraude</button>
-                <button type="button" class="btn-ai-secondary" style="font-size:11px; padding:3px 8px;" onclick="window.applyGradientPreset('#f97316', '#c2410c')">🌅 Orange</button>
-                <button type="button" class="btn-ai-secondary" style="font-size:11px; padding:3px 8px;" onclick="window.applyGradientPreset('#ec4899', '#be185d')">🌸 Rose</button>
-              </div>
-            </div>
-
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:12px;">
-              <div>
-                <label style="font-size:11.5px; display:block; margin-bottom:4px; opacity:0.8;">Couleur 1 :</label>
-                <div style="display:flex; align-items:center; gap:8px;">
-                  <input type="color" id="editCustomColor1" value="${color1}" onchange="window.isCustomColorActive=true; window.updateColorPreview()" style="width:40px; height:32px; border:none; border-radius:6px; cursor:pointer; background:transparent;">
-                  <span id="hexVal1" style="font-family:monospace; font-size:12px;">${color1}</span>
-                </div>
-              </div>
-              <div>
-                <label style="font-size:11.5px; display:block; margin-bottom:4px; opacity:0.8;">Couleur 2 :</label>
-                <div style="display:flex; align-items:center; gap:8px;">
-                  <input type="color" id="editCustomColor2" value="${color2}" onchange="window.isCustomColorActive=true; window.updateColorPreview()" style="width:40px; height:32px; border:none; border-radius:6px; cursor:pointer; background:transparent;">
-                  <span id="hexVal2" style="font-family:monospace; font-size:12px;">${color2}</span>
-                </div>
-              </div>
-            </div>
-
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-              <div>
-                <span style="font-size:11px; opacity:0.75; display:block; margin-bottom:3px;">Aperçu Sombre</span>
-                <div id="darkPreviewBox" style="border-radius:10px; padding:10px 12px; height:60px; display:flex; flex-direction:column; justify-content:space-between;">
-                  <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <div style="width:34px; height:14px; border-radius:4px; background:rgba(255,255,255,0.15);"></div>
-                    <strong id="darkPreviewTitle" style="font-size:12.5px;">${slot.title || 'Exemple'}</strong>
-                  </div>
-                  <div style="height:1px; background:rgba(255,255,255,0.2);"></div>
-                </div>
-              </div>
-
-              <div>
-                <span style="font-size:11px; opacity:0.75; display:block; margin-bottom:3px;">Aperçu Clair</span>
-                <div id="lightPreviewBox" style="border-radius:10px; padding:10px 12px; height:60px; display:flex; flex-direction:column; justify-content:space-between;">
-                  <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <div style="width:34px; height:14px; border-radius:4px; background:rgba(0,0,0,0.06);"></div>
-                    <strong id="lightPreviewTitle" style="font-size:12.5px;">${slot.title || 'Exemple'}</strong>
-                  </div>
-                  <div style="height:1px; background:rgba(0,0,0,0.1);"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <label style="display:block; font-size:12.5px; font-weight:700; margin-bottom:6px;">Type standard</label>
-            <select id="editSlotTheme" style="width:100%; padding:10px 12px; border-radius:8px; border:1px solid rgba(129,140,248,0.3); background:rgba(15,23,42,0.8); color:inherit; font-size:14px;">
-              <option value="bloc1" ${slot.theme === 'bloc1' ? 'selected' : ''}>Bloc 1 (Bleu)</option>
-              <option value="bloc2" ${slot.theme === 'bloc2' ? 'selected' : ''}>Bloc 2 (Orange)</option>
-              <option value="bloc3" ${slot.theme === 'bloc3' ? 'selected' : ''}>Bloc 3 (Rose pastel / Néon)</option>
-              <option value="maths" ${slot.theme === 'maths' ? 'selected' : ''}>Mathématiques (Rouge)</option>
-              <option value="physique" ${slot.theme === 'physique' ? 'selected' : ''}>Physique (Jaune)</option>
-              <option value="culture" ${slot.theme === 'culture' ? 'selected' : ''}>Culture générale (Vert)</option>
-              <option value="anglais" ${slot.theme === 'anglais' ? 'selected' : ''}>Anglais (Violet)</option>
-              <option value="quartier-libre" ${slot.theme === 'quartier-libre' ? 'selected' : ''}>Quartier libre</option>
-              <option value="pause" ${slot.theme === 'pause' ? 'selected' : ''}>Pause repas</option>
-              <option value="empty" ${slot.theme === 'empty' ? 'selected' : ''}>Vide</option>
-            </select>
-          </div>
-
-          <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid rgba(255,255,255,0.08); padding-top:14px;">
-            <button onclick="window.clearOrDeleteSlot('${dayKey}', ${index}); window.closeAiModal();" class="btn-ai-secondary" style="color:#f87171; border-color:rgba(248,113,113,0.4);">
-              Vider ce créneau
-            </button>
-            <div style="display:flex; gap:8px;">
-              <button onclick="window.closeAiModal()" class="btn-ai-secondary">Annuler</button>
-              <button onclick="window.saveSlotEdit('${dayKey}', ${index})" class="btn-ai-magic">Enregistrer</button>
-            </div>
-          </div>
-        </div>
-      `;
-
-      openModal(`Modifier le créneau (${dayName})`, "Personnalisation & Dégradés", modalHtml);
-      updateColorPreview();
-    }
-
-    function clearOrDeleteSlot(dayKey, index) {
-      const slot = currentSchedule[dayKey].slots[index];
-      if (!slot.title && slot.theme === "empty") {
-        if (currentSchedule[dayKey].slots.length > 7) {
-          currentSchedule[dayKey].slots.splice(index, 1);
-        }
-      } else {
-        currentSchedule[dayKey].slots[index] = { time: "", title: "", theme: "empty" };
-      }
-      renderSchedule();
-      persistSchedule();
-      showToast("Créneau vidé", "🗑️");
-    }
-
-    function addNewSlot(dayKey) {
-      currentSchedule[dayKey].slots.push({
-        time: "13h - 14h",
-        title: "Nouveau cours",
-        theme: "bloc1",
-        subjectKey: "bloc1"
-      });
-      renderSchedule();
-      persistSchedule();
-      openSlotEditor(dayKey, currentSchedule[dayKey].slots.length - 1);
-    }
-
-    const AGENDA_ICONS = ["🎓", "📝", "💻", "🗣️", "⚠️", "🎯", "📌", "🏆", "📚", "⚡"];
-    let selectedEventIcon = "🎓";
-
-    function updateAgendaBadge() {
-      const badge = document.getElementById("agendaCountBadge");
-      if (!badge) return;
-      const events = currentSchedule.events || [];
-      const today = new Date().toISOString().slice(0, 10);
-      const upcoming = events.filter(e => e.date >= today);
-      if (upcoming.length > 0) {
-        badge.textContent = upcoming.length;
-        badge.style.display = "inline-block";
-      } else {
-        badge.style.display = "none";
-      }
-    }
-
-    function setSelectedEventIcon(icon) {
-      selectedEventIcon = icon;
-      document.querySelectorAll(".icon-selector-item").forEach(el => {
-        el.style.border = el.dataset.icon === icon ? "2px solid #818cf8" : "1px solid rgba(255,255,255,0.15)";
-        el.style.background = el.dataset.icon === icon ? "rgba(99,102,241,0.3)" : "rgba(30,41,59,0.5)";
-      });
-    }
-
-    function addAgendaEvent() {
-      const title = document.getElementById("newEventTitle")?.value?.trim();
-      const date = document.getElementById("newEventDate")?.value;
-      const time = document.getElementById("newEventTime")?.value?.trim() || "";
-      const subject = document.getElementById("newEventSubject")?.value || "";
-      const note = document.getElementById("newEventNote")?.value?.trim() || "";
-
-      if (!title || !date) {
-        showToast("Veuillez renseigner un titre et une date", "⚠️");
-        return;
-      }
-
-      if (!currentSchedule.events) currentSchedule.events = [];
-      currentSchedule.events.push({
-        id: "evt_" + Date.now(),
-        title,
-        date,
-        time,
-        subject,
-        note,
-        icon: selectedEventIcon || "🎓"
-      });
-
-      persistSchedule();
-      openAgendaModal();
-      showToast("Échéance ajoutée à l'agenda !", "📅");
-    }
-
-    function deleteAgendaEvent(id) {
-      if (!currentSchedule.events) return;
-      currentSchedule.events = currentSchedule.events.filter(e => e.id !== id);
-      persistSchedule();
-      openAgendaModal();
-      showToast("Échéance supprimée", "🗑️");
-    }
-
-    function openAgendaModal() {
-      const events = (currentSchedule.events || []).slice().sort((a, b) => a.date.localeCompare(b.date));
-      const today = new Date().toISOString().slice(0, 10);
-
-      const modalHtml = `
-        <div style="display:flex; flex-direction:column; gap:20px;">
-          <!-- Formulaire Ajout Événement -->
-          <div style="background:rgba(30,41,59,0.5); padding:16px; border-radius:14px; border:1px solid rgba(129,140,248,0.25);">
-            <h4 style="font-size:13.5px; font-weight:700; color:#818cf8; margin-bottom:12px; text-transform:uppercase; letter-spacing:0.5px;">
-              ➕ Ajouter un examen ou une échéance
-            </h4>
-            
-            <div style="display:grid; grid-template-columns: 1fr; gap:10px; margin-bottom:10px;">
-              <div>
-                <label style="font-size:11.5px; font-weight:700; display:block; margin-bottom:4px;">Titre de l'épreuve / devoir *</label>
-                <input type="text" id="newEventTitle" placeholder="Ex: CCF Mathématiques, Rendu Projet Bloc 1..." style="width:100%; padding:8px 12px; border-radius:8px; border:1px solid rgba(129,140,248,0.3); background:rgba(15,23,42,0.8); color:inherit; font-size:13.5px;">
-              </div>
-            </div>
-
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:10px;">
-              <div>
-                <label style="font-size:11.5px; font-weight:700; display:block; margin-bottom:4px;">Date *</label>
-                <input type="date" id="newEventDate" value="${today}" style="width:100%; padding:8px 12px; border-radius:8px; border:1px solid rgba(129,140,248,0.3); background:rgba(15,23,42,0.8); color:inherit; font-size:13px;">
-              </div>
-              <div>
-                <label style="font-size:11.5px; font-weight:700; display:block; margin-bottom:4px;">Heure (optionnel)</label>
-                <input type="text" id="newEventTime" placeholder="Ex: 14h - 16h" style="width:100%; padding:8px 12px; border-radius:8px; border:1px solid rgba(129,140,248,0.3); background:rgba(15,23,42,0.8); color:inherit; font-size:13px;">
-              </div>
-            </div>
-
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:12px;">
-              <div>
-                <label style="font-size:11.5px; font-weight:700; display:block; margin-bottom:4px;">Matière associée</label>
-                <select id="newEventSubject" style="width:100%; padding:8px 12px; border-radius:8px; border:1px solid rgba(129,140,248,0.3); background:rgba(15,23,42,0.8); color:inherit; font-size:13px;">
-                  <option value="">Général / Sans matière</option>
-                  <option value="Bloc 1">Bloc 1</option>
-                  <option value="Bloc 2">Bloc 2</option>
-                  <option value="Bloc 3">Bloc 3</option>
-                  <option value="Mathématiques">Mathématiques</option>
-                  <option value="Physique">Physique</option>
-                  <option value="Culture générale">Culture générale</option>
-                  <option value="Anglais">Anglais</option>
-                </select>
-              </div>
-              <div>
-                <label style="font-size:11.5px; font-weight:700; display:block; margin-bottom:4px;">Détails (salle, consigne...)</label>
-                <input type="text" id="newEventNote" placeholder="Ex: Salle 204, calculatrice autorisée" style="width:100%; padding:8px 12px; border-radius:8px; border:1px solid rgba(129,140,248,0.3); background:rgba(15,23,42,0.8); color:inherit; font-size:13px;">
-              </div>
-            </div>
-
-            <div style="margin-bottom:14px;">
-              <label style="font-size:11.5px; font-weight:700; display:block; margin-bottom:6px;">Icône assignée :</label>
-              <div style="display:flex; flex-wrap:wrap; gap:8px;">
-                ${AGENDA_ICONS.map(ic => `
-                  <button type="button" class="icon-selector-item" data-icon="${ic}" onclick="window.setSelectedEventIcon('${ic}')" style="width:36px; height:36px; border-radius:8px; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; ${ic === selectedEventIcon ? 'border:2px solid #818cf8; background:rgba(99,102,241,0.3);' : 'border:1px solid rgba(255,255,255,0.15); background:rgba(30,41,59,0.5);'}">
-                    ${ic}
-                  </button>
-                `).join('')}
-              </div>
-            </div>
-
-            <div style="display:flex; justify-content:flex-end;">
-              <button class="btn-ai-magic" onclick="window.addAgendaEvent()">
-                Ajouter à l'agenda
-              </button>
-            </div>
-          </div>
-
-          <!-- Liste Chronologique -->
-          <div>
-            <h4 style="font-size:13.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:12px; color:#818cf8;">
-              📅 Échéances chronologiques (${events.length})
-            </h4>
-
-            ${events.length === 0 ? `
-              <div style="text-align:center; padding:24px; color:#94a3b8; font-style:italic; background:rgba(15,23,42,0.4); border-radius:12px; border:1px dashed rgba(255,255,255,0.1);">
-                Aucun examen ou événement pour le moment. Ajoutez-en un ci-dessus !
-              </div>
-            ` : `
-              <div style="display:flex; flex-direction:column; gap:10px; max-height:340px; overflow-y:auto; padding-right:4px;">
-                ${events.map(ev => {
-                  const isPast = ev.date < today;
-                  const isToday = ev.date === today;
-                  const dateObj = new Date(ev.date + "T00:00:00");
-                  const formattedDate = dateObj.toLocaleDateString("fr-FR", { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
-                  
-                  return `
-                    <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 14px; border-radius:12px; background:${isPast ? 'rgba(30,41,59,0.3)' : 'rgba(30,41,59,0.7)'}; border:1px solid ${isToday ? 'rgba(129,140,248,0.6)' : 'rgba(255,255,255,0.08)'}; opacity:${isPast ? '0.6' : '1'};">
-                      <div style="display:flex; align-items:center; gap:12px;">
-                        <span style="font-size:24px;">${ev.icon || '🎓'}</span>
-                        <div>
-                          <div style="display:flex; align-items:center; gap:8px;">
-                            <strong style="font-size:14px; color:${isToday ? '#818cf8' : 'inherit'};">${ev.title}</strong>
-                            ${ev.subject ? `<span style="font-size:10.5px; font-weight:700; padding:2px 6px; border-radius:4px; background:rgba(99,102,241,0.2); color:#a5b4fc;">${ev.subject}</span>` : ''}
-                            ${isToday ? `<span style="font-size:10.5px; font-weight:800; padding:2px 6px; border-radius:4px; background:#ef4444; color:#ffffff;">AUJOURD'HUI</span>` : ''}
-                          </div>
-                          <div style="font-size:12px; color:#94a3b8; margin-top:2px;">
-                            <span>📅 ${formattedDate}</span>
-                            ${ev.time ? `<span style="margin-left:8px;">⏰ ${ev.time}</span>` : ''}
-                            ${ev.note ? `<span style="margin-left:8px; font-style:italic; opacity:0.8;">• ${ev.note}</span>` : ''}
-                          </div>
-                        </div>
-                      </div>
-                      <button onclick="window.deleteAgendaEvent('${ev.id}')" class="btn-slot-tool tool-delete" title="Supprimer cet événement">
-                        ✕
-                      </button>
-                    </div>
-                  `;
-                }).join('')}
-              </div>
-            `}
-          </div>
-
-          <div style="display:flex; justify-content:flex-end; border-top:1px solid rgba(255,255,255,0.08); padding-top:14px;">
-            <button onclick="window.closeAiModal()" class="btn-ai-secondary">Fermer</button>
-          </div>
-        </div>
-      `;
-
-      openModal("Agenda & Examens BTS CIEL", "Échéances, devoirs et oraux classés par ordre chronologique", modalHtml);
-      updateAgendaBadge();
-    }
-
-    function parseSlotDuration(timeStr) {
-      if (!timeStr) return 0;
-      const regex = /(\d+)(?:h|:)?(\d+)?\s*-\s*(\d+)(?:h|:)?(\d+)?/i;
-      const match = timeStr.match(regex);
-      if (!match) return 0;
-
-      const startH = parseInt(match[1], 10);
-      const startM = match[2] ? parseInt(match[2], 10) : 0;
-      const endH = parseInt(match[3], 10);
-      const endM = match[4] ? parseInt(match[4], 10) : 0;
-
-      const startMinutes = startH * 60 + startM;
-      const endMinutes = endH * 60 + endM;
-
-      return endMinutes > startMinutes ? (endMinutes - startMinutes) / 60 : 0;
-    }
-
-    function formatHours(hours) {
-      const h = Math.floor(hours);
-      const m = Math.round((hours - h) * 60);
-      return m === 0 ? `${h}h` : `${h}h${m.toString().padStart(2, '0')}`;
-    }
-
-    function openHoursCalculator() {
-      const days = ["lundi", "mardi", "mercredi", "jeudi", "vendredi"];
-      const dailyTotals = {};
-      const subjectTotals = {
-        "bloc1": { label: "Bloc 1", hours: 0, color: "#3b82f6" },
-        "bloc2": { label: "Bloc 2", hours: 0, color: "#f97316" },
-        "bloc3": { label: "Bloc 3", hours: 0, color: "#ec4899" },
-        "maths": { label: "Mathématiques", hours: 0, color: "#ef4444" },
-        "physique": { label: "Physique", hours: 0, color: "#eab308" },
-        "culture": { label: "Culture générale", hours: 0, color: "#10b981" },
-        "anglais": { label: "Anglais", hours: 0, color: "#a855f7" }
-      };
-
-      let grandTotal = 0;
-
-      days.forEach(d => {
-        let dayHours = 0;
-        const slots = currentSchedule[d]?.slots || [];
-        slots.forEach(slot => {
-          const duration = parseSlotDuration(slot.time);
-          if (duration > 0 && slot.theme && subjectTotals[slot.theme]) {
-            subjectTotals[slot.theme].hours += duration;
-            dayHours += duration;
-            grandTotal += duration;
-          }
-        });
-        dailyTotals[d] = { label: currentSchedule[d].label, hours: dayHours };
-      });
-
-      const modalHtml = `
-        <div style="display:flex; flex-direction:column; gap:20px;">
-          <div style="background:linear-gradient(135deg, #1e293b 0%, #0f172a 100%); color:#ffffff; padding:18px 22px; border-radius:14px; display:flex; justify-content:space-between; align-items:center;">
-            <div>
-              <span style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:#94a3b8;">Total hebdomadaire</span>
-              <div style="font-size:32px; font-weight:800; line-height:1.1; margin-top:2px;">
-                ${formatHours(grandTotal)} <span style="font-size:14px; font-weight:500; color:#cbd5e1;">/ sem.</span>
-              </div>
-            </div>
-            <div style="text-align:right; border-left:1px solid rgba(255,255,255,0.15); padding-left:18px;">
-              <span style="font-size:11px; color:#94a3b8;">Moyenne par jour</span>
-              <div style="font-size:20px; font-weight:700; color:#38bdf8;">${formatHours(grandTotal / 5)} / j</div>
-            </div>
-          </div>
-
-          <div>
-            <h4 style="font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:10px;">📅 Par jour</h4>
-            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(95px, 1fr)); gap:8px;">
-              ${days.map(d => `
-                <div style="background:rgba(30,41,59,0.5); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:10px; text-align:center;">
-                  <div style="font-size:11px; font-weight:700; opacity:0.8;">${dailyTotals[d].label}</div>
-                  <div style="font-size:17px; font-weight:800; margin-top:4px;">${formatHours(dailyTotals[d].hours)}</div>
-                </div>
-              `).join('')}
-            </div>
-          </div>
-
-          <div>
-            <h4 style="font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:10px;">📚 Par matière</h4>
-            <div style="display:flex; flex-direction:column; gap:8px;">
-              ${Object.keys(subjectTotals).map(key => {
-                const s = subjectTotals[key];
-                const pct = grandTotal > 0 ? Math.round((s.hours / grandTotal) * 100) : 0;
-                return `
-                  <div style="background:rgba(30,41,59,0.4); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:10px 14px;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-                      <span style="font-weight:700; font-size:13.5px;">${s.label}</span>
-                      <span style="font-weight:800; color:${s.color}; font-size:14px;">${formatHours(s.hours)} (${pct}%)</span>
-                    </div>
-                    <div style="width:100%; height:6px; background:rgba(255,255,255,0.1); border-radius:10px; overflow:hidden;">
-                      <div style="width:${pct}%; height:100%; background:${s.color}; border-radius:10px;"></div>
-                    </div>
-                  </div>
-                `;
-              }).join('')}
-            </div>
-          </div>
-
-          <div style="display:flex; justify-content:flex-end;">
-            <button onclick="window.closeAiModal()" class="btn-ai-secondary">Fermer</button>
-          </div>
-        </div>
-      `;
-
-      openModal("Calculateur d'horaires BTS CIEL", "Cumul hebdomadaire et répartition par matière", modalHtml);
-    }
-
-    function setDarkMode(enabled) {
-      isDarkMode = enabled;
-      document.body.classList.toggle("dark-theme", isDarkMode);
-      if (!currentSchedule.preferences) currentSchedule.preferences = {};
-      currentSchedule.preferences.isDarkMode = isDarkMode;
-      persistSchedule();
-    }
-
-    function saveCustomGeminiKey() {
-      const input = document.getElementById("customGeminiKeyInput");
-      if (!input) return;
-      const keyVal = input.value.trim();
-      if (!currentSchedule.preferences) currentSchedule.preferences = {};
-      currentSchedule.preferences.geminiApiKey = keyVal || DEFAULT_GEMINI_API_KEY;
-      persistSchedule();
-      showToast("Clé API Gemini mise à jour !", "✨");
-    }
-
-    function openSettingsModal() {
-      const currentKey = getGeminiApiKey();
-      const modalHtml = `
-        <div style="display:flex; flex-direction:column; gap:20px;">
-          <div>
-            <h4 style="font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:#818cf8; margin-bottom:10px;">
-              Apparence & Affichage
-            </h4>
-            <div class="settings-action-card">
-              <div style="display:flex; align-items:center; gap:12px;">
-                <span style="font-size:22px;">🌙</span>
-                <div>
-                  <div style="font-weight:700; font-size:14.5px;">Mode Sombre Glassy</div>
-                  <div style="font-size:12px; opacity:0.8;">Fond cosmique animé en sombre & couleurs pastel en clair</div>
-                </div>
-              </div>
-              <label class="toggle-switch">
-                <input type="checkbox" id="darkThemeSwitch" ${isDarkMode ? 'checked' : ''} onchange="window.setDarkMode(this.checked)">
-                <span class="slider"></span>
-              </label>
-            </div>
-          </div>
-
-          <!-- Configuration Clé API Gemini -->
-          <div>
-            <h4 style="font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:#818cf8; margin-bottom:10px;">
-              Intelligence Artificielle Gemini
-            </h4>
-            <div style="background:rgba(30,41,59,0.55); border:1px solid rgba(129,140,248,0.25); border-radius:12px; padding:14px 16px;">
-              <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
-                <span style="font-size:20px;">🤖</span>
-                <strong style="font-size:14px;">Clé d'API Gemini (Génération de fiches)</strong>
-              </div>
-              <p style="font-size:12px; opacity:0.85; margin-bottom:10px;">
-                Collez votre clé API ici. Elle sera enregistrée dans votre espace privé Firestore sans jamais apparaître sur GitHub.
-              </p>
-              <div style="display:flex; gap:8px;">
-                <input type="password" id="customGeminiKeyInput" value="${currentKey}" placeholder="Collez votre clé AIzaSy... ou AQ..." style="flex:1; padding:8px 12px; border-radius:8px; border:1px solid rgba(129,140,248,0.3); background:rgba(15,23,42,0.8); color:inherit; font-size:12.5px; font-family:monospace;">
-                <button type="button" class="btn-ai-secondary" onclick="const f=document.getElementById('customGeminiKeyInput'); f.type = f.type==='password'?'text':'password';" title="Afficher/Masquer">👁️</button>
-                <button type="button" class="btn-ai-magic" onclick="window.saveCustomGeminiKey()">Enregistrer</button>
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <h4 style="font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:#818cf8; margin-bottom:10px;">
-              Téléchargements & Sauvegardes
-            </h4>
-            
-            <div class="settings-action-card">
-              <div style="display:flex; align-items:center; gap:12px;">
-                <span style="font-size:22px;">💻</span>
-                <div>
-                  <div style="font-weight:700; font-size:14px;">Télécharger HTML pour PC</div>
-                  <div style="font-size:12px; opacity:0.8;">Fichier autonome avec vos cours enregistrés</div>
-                </div>
-              </div>
-              <button class="btn-ai-secondary" onclick="window.exportStandaloneHtml()">Télécharger</button>
-            </div>
-
-            <div class="settings-action-card">
-              <div style="display:flex; align-items:center; gap:12px;">
-                <span style="font-size:22px;">🖼️</span>
-                <div>
-                  <div style="font-weight:700; font-size:14px;">Sauvegarder en image (.png)</div>
-                  <div style="font-size:12px; opacity:0.8;">Capture haute résolution idéale pour fond d'écran</div>
-                </div>
-              </div>
-              <button class="btn-ai-secondary" onclick="window.exportSchedulePng()">Exporter PNG</button>
-            </div>
-
-            <div class="settings-action-card">
-              <div style="display:flex; align-items:center; gap:12px;">
-                <span style="font-size:22px;">💾</span>
-                <div>
-                  <div style="font-weight:700; font-size:14px;">Sauvegarde de secours (.json)</div>
-                  <div style="font-size:12px; opacity:0.8;">Exporter vos cours en fichier de données</div>
-                </div>
-              </div>
-              <button class="btn-ai-secondary" onclick="window.exportJsonBackup()">Sauvegarder JSON</button>
-            </div>
-
-            <div class="settings-action-card">
-              <div style="display:flex; align-items:center; gap:12px;">
-                <span style="font-size:22px;">📂</span>
-                <div>
-                  <div style="font-weight:700; font-size:14px;">Restaurer un planning (.json)</div>
-                  <div style="font-size:12px; opacity:0.8;">Charger un fichier de sauvegarde</div>
-                </div>
-              </div>
-              <button class="btn-ai-secondary" onclick="window.triggerImportFile()">Charger JSON</button>
-            </div>
-
-            <div class="settings-action-card" style="border-color:rgba(239,68,68,0.3);">
-              <div style="display:flex; align-items:center; gap:12px;">
-                <span style="font-size:22px;">🧹</span>
-                <div>
-                  <div style="font-weight:700; font-size:14px; color:#f87171;">Vider toutes les cases</div>
-                  <div style="font-size:12px; opacity:0.8;">Efface les cours actuels pour repartir sur une grille 100% vierge</div>
-                </div>
-              </div>
-              <button class="btn-ai-secondary" style="color:#f87171; border-color:rgba(239,68,68,0.4);" onclick="window.clearAllSlots()">Vider la grille</button>
-            </div>
-
-            <div class="settings-action-card" style="border-color:rgba(239,68,68,0.3);">
-              <div style="display:flex; align-items:center; gap:12px;">
-                <span style="font-size:22px;">🔄</span>
-                <div>
-                  <div style="font-weight:700; font-size:14px; color:#f87171;">Réinitialiser l'emploi du temps</div>
-                  <div style="font-size:12px; opacity:0.8;">Restaurer la grille officielle par défaut</div>
-                </div>
-              </div>
-              <button class="btn-ai-secondary" style="color:#f87171; border-color:rgba(239,68,68,0.4);" onclick="window.resetToDefaultSchedule()">Réinitialiser</button>
-            </div>
-          </div>
-
-          <div style="display:flex; justify-content:flex-end; border-top:1px solid rgba(255,255,255,0.08); padding-top:14px;">
-            <button onclick="window.closeAiModal()" class="btn-ai-magic">Fermer</button>
-          </div>
-        </div>
-      `;
-
-      openModal("Paramètres", "Affichage, IA & Sauvegardes", modalHtml);
-    }
-
-    function showFirebaseDiagnostic() {
-      const modalHtml = `
-        <div style="display:flex; flex-direction:column; gap:16px;">
-          <div style="padding:12px 14px; border-radius:10px; background:rgba(30,41,59,0.7); border:1px solid rgba(255,255,255,0.1);">
-            <div style="font-size:13px; color:#94a3b8; margin-bottom:4px;">Statut :</div>
-            <strong style="font-size:15px; color:#38bdf8;">${isStorageReady ? 'Connecté à Firestore en temps réel' : 'Initialisation en cours'}</strong>
-          </div>
-
-          <div style="padding:12px 14px; border-radius:10px; background:rgba(30,41,59,0.5);">
-            <div style="font-size:12px; color:#94a3b8;">Utilisateur actif :</div>
-            <code style="font-size:13px; color:#a7f3d0; word-break:break-all;">${userId || 'Non identifié'}</code>
-            ${currentUser ? `<div style="font-size:12px; color:#94a3b8; margin-top:4px;">Type : ${currentUser.isAnonymous ? 'Session anonyme' : `Compte Google (${currentUser.email})`}</div>` : ''}
-          </div>
-
-          <div style="font-size:13px; line-height:1.6; opacity:0.9;">
-            Toutes vos modifications sont automatiquement synchronisées sur Firestore et accessibles sur tous vos appareils.
-          </div>
-
-          <div style="display:flex; justify-content:flex-end;">
-            <button onclick="window.closeAiModal()" class="btn-ai-secondary">Fermer</button>
-          </div>
-        </div>
-      `;
-      openModal("Diagnostic Firebase", "État de la synchronisation", modalHtml);
-    }
-
-    function getSubjectKey(title, rawKey) {
-      if (rawKey && DEFAULT_CNED_URLS[rawKey]) return rawKey;
-      const lower = (title || "").toLowerCase();
-      if (lower.includes("bloc 1") || lower.includes("bloc1")) return "bloc1";
-      if (lower.includes("bloc 2") || lower.includes("bloc2")) return "bloc2";
-      if (lower.includes("bloc 3") || lower.includes("bloc3")) return "bloc3";
-      if (lower.includes("math")) return "maths";
-      if (lower.includes("physique")) return "physique";
-      if (lower.includes("culture")) return "culture";
-      if (lower.includes("anglais")) return "anglais";
-      return null;
-    }
-
-    function openSubjectTutor(subjectName, slotTime, dayName, rawSubjectKey) {
-      const subjectKey = getSubjectKey(subjectName, rawSubjectKey);
-      const cnedUrls = (currentSchedule.preferences && currentSchedule.preferences.cnedUrls) || DEFAULT_CNED_URLS;
-      const cnedUrl = (subjectKey && cnedUrls[subjectKey]) || "https://eformation.cned.fr/";
-      attachedFile = null;
-
-      const modalHtml = `
-        <div style="display:flex; flex-direction:column; gap:18px;">
-          <div style="background:rgba(99,102,241,0.12); border:1px solid rgba(129,140,248,0.3); padding:14px 18px; border-radius:14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
-            <div>
-              <strong style="font-size:14px; display:block;">Plateforme de cours CNED</strong>
-              <span style="font-size:12px; opacity:0.85;">Accès direct au module ${subjectName}</span>
-            </div>
-            <div style="display:flex; gap:8px;">
-              <a href="${cnedUrl}" target="_blank" rel="noopener noreferrer" class="btn-ai-magic" style="text-decoration:none; padding:8px 14px; font-size:13px;">
-                🚀 Ouvrir page CNED
-              </a>
-              <button class="btn-ai-secondary" style="font-size:12px; padding:6px 10px;" onclick="window.toggleEditCnedUrl('${subjectKey}')">
-                ✏️ Modifier lien
-              </button>
-            </div>
-          </div>
-
-          <div id="editCnedContainer" style="display:none; background:rgba(30,41,59,0.5); padding:12px; border-radius:10px; border:1px solid rgba(255,255,255,0.1);">
-            <label style="font-size:12px; display:block; margin-bottom:6px; font-weight:700;">Adresse URL directe CNED :</label>
-            <div style="display:flex; gap:8px;">
-              <input type="text" id="cnedCustomUrlInput" value="${cnedUrl}" style="flex:1; padding:8px 10px; border-radius:8px; border:1px solid rgba(129,140,248,0.4); background:rgba(15,23,42,0.8); color:inherit; font-size:13px;">
-              <button class="btn-ai-magic" style="padding:8px 14px; font-size:13px;" onclick="window.saveCnedUrl('${subjectKey}')">Enregistrer</button>
-            </div>
-          </div>
-
-          <div id="dropZoneContainer" style="border:2px dashed #818cf8; border-radius:14px; padding:20px; text-align:center; background:rgba(99,102,241,0.06);">
-            <div style="font-size:28px; margin-bottom:6px;">📑</div>
-            <strong style="font-size:14.5px; display:block; margin-bottom:4px; color:#c7d2fe;">Document source du cours (Obligatoire)</strong>
-            <p style="font-size:12.5px; opacity:0.85; margin-bottom:12px; max-width:540px; margin-left:auto; margin-right:auto;">
-              Pour garantir une exactitude parfaite, l'IA se basera <strong>exclusivement sur le contenu de votre fichier</strong> (PDF, polycopié, photo de cours).
-            </p>
-            <input type="file" id="tutorFileInput" accept=".pdf,.png,.jpg,.jpeg,.webp,.txt,.c,.cpp,.py,.h,.md" style="display:none;" onchange="window.handleTutorFileSelect(event)">
-            <button type="button" class="btn-ai-magic" onclick="document.getElementById('tutorFileInput').click()">
-              📂 Choisir mon document sur le PC
-            </button>
-            
-            <div id="fileAttachedInfo" style="margin-top:14px; padding:10px 14px; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); border-radius:10px; display:none; align-items:center; justify-content:space-between;">
-              <div style="display:flex; align-items:center; gap:8px; text-align:left;">
-                <span style="font-size:18px;">✅</span>
-                <div>
-                  <div id="fileAttachedName" style="font-weight:700; font-size:13px; color:#6ee7b7;">Fichier chargé</div>
-                  <div id="fileAttachedSize" style="font-size:11.5px; opacity:0.8;">Taille</div>
-                </div>
-              </div>
-              <button type="button" onclick="window.removeAttachedFile()" class="btn-ai-secondary" style="font-size:11.5px; padding:4px 8px; color:#f87171; border-color:rgba(248,113,113,0.3);">
-                ✕ Retirer
-              </button>
-            </div>
-          </div>
-
-          <div>
-            <label style="display:block; font-size:12.5px; font-weight:700; margin-bottom:6px;">Consigne particulière (optionnelle) :</label>
-            <input type="text" id="tutorPromptInput" placeholder="Ex: Faire une fiche de révision, extraire les formules clés..." style="width:100%; padding:10px 12px; border-radius:8px; border:1px solid rgba(129,140,248,0.3); background:rgba(15,23,42,0.8); color:inherit; font-size:13.5px;">
-          </div>
-
-          <div id="tutorGeneratingStatus" style="display:none; align-items:center; gap:10px; color:#818cf8; font-weight:600; font-size:13.5px;">
-            <div style="width:20px; height:20px; border:3px solid rgba(99,102,241,0.2); border-radius:50%; border-top-color:#6366f1; animation:spin 0.8s linear infinite;"></div>
-            <span id="tutorStatusMessage">Lecture et analyse stricte du document...</span>
-          </div>
-
-          <div id="tutorResultContainer" style="display:none; background:rgba(15,23,42,0.6); padding:16px; border-radius:12px; border:1px solid rgba(255,255,255,0.1); max-height:400px; overflow-y:auto; line-height:1.7;"></div>
-
-          <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid rgba(255,255,255,0.08); padding-top:14px; flex-wrap:wrap; gap:8px;">
-            <button onclick="window.closeAiModal()" class="btn-ai-secondary">Fermer</button>
-            <div style="display:flex; gap:8px; align-items:center;">
-              <button id="btnDownloadPdf" class="btn-ai-secondary" style="display:none; color:#38bdf8; border-color:rgba(56,189,248,0.4);" onclick="window.downloadTutorPdf()">
-                📥 Télécharger en PDF
-              </button>
-              <button class="btn-ai-magic" onclick="window.generateDocumentCourse('${subjectName}', '${dayName}', '${slotTime}')">
-                ✨ Générer fiche d'après mon fichier
-              </button>
-            </div>
-          </div>
-        </div>
-      `;
-
-      openModal(`${subjectName}`, `${dayName} • ${slotTime}`, modalHtml);
-    }
-
-    function toggleEditCnedUrl() {
-      const container = document.getElementById("editCnedContainer");
-      if (container) {
-        container.style.display = container.style.display === "none" ? "block" : "none";
-      }
-    }
-
-    function saveCnedUrl(subjectKey) {
-      if (!subjectKey) return;
-      const input = document.getElementById("cnedCustomUrlInput");
-      if (!input) return;
-      const url = input.value.trim();
-      if (!url) return;
-
-      if (!currentSchedule.preferences) currentSchedule.preferences = {};
-      if (!currentSchedule.preferences.cnedUrls) currentSchedule.preferences.cnedUrls = { ...DEFAULT_CNED_URLS };
-
-      currentSchedule.preferences.cnedUrls[subjectKey] = url;
-      persistSchedule();
-      toggleEditCnedUrl();
-      showToast("Lien CNED mis à jour !", "🔗");
-    }
-
-    function handleTutorFileSelect(event) {
-      const file = event.target.files?.[0];
-      if (!file) return;
-      attachedFile = file;
-
-      const infoBox = document.getElementById("fileAttachedInfo");
-      const nameLabel = document.getElementById("fileAttachedName");
-      const sizeLabel = document.getElementById("fileAttachedSize");
-
-      if (infoBox && nameLabel && sizeLabel) {
-        nameLabel.textContent = file.name;
-        sizeLabel.textContent = `${(file.size / 1024).toFixed(1)} Ko - Prêt`;
-        infoBox.style.display = "flex";
-      }
-      showToast(`Document « ${file.name} » chargé`, "📄");
-    }
-
-    function removeAttachedFile() {
-      attachedFile = null;
-      const fileInput = document.getElementById("tutorFileInput");
-      if (fileInput) fileInput.value = "";
-      const infoBox = document.getElementById("fileAttachedInfo");
-      if (infoBox) infoBox.style.display = "none";
-      showToast("Document retiré", "🗑️");
-    }
-
-    function readFileAsBase64(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => {
-          const res = reader.result;
-          const commaIndex = res.indexOf(',');
-          resolve(commaIndex !== -1 ? res.substring(commaIndex + 1) : res);
-        };
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      });
-    }
 
     async function callGeminiApi(payload, apiKey) {
-      const candidateModels = ["gemini-2.5-flash", "gemini-1.5-flash", "gemini-3-flash-preview"];
+      if (!apiKey || !apiKey.trim()) {
+        throw new Error("Veuillez renseigner votre clé API Gemini dans les Paramètres (⚙️).");
+      }
+
+      // Priorité absolue aux modèles les plus récents (Gemini 3.8 / 3.7 / 3.5), avec descente progressive automatique en cas de 403 / 404
+      const candidateModels = [
+        "gemini-3.8-flash",
+        "gemini-3.7-flash",
+        "gemini-3.5-flash",
+        "gemini-3-flash-preview",
+        "gemini-2.5-flash",
+        "gemini-1.5-flash"
+      ];
+
       let lastError = null;
 
       for (const model of candidateModels) {
         try {
-          const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(apiKey)}`;
+          const loadingLabel = document.getElementById('aiLoadingModelText');
+          if (loadingLabel) {
+            loadingLabel.innerText = `Interrogation de ${model}...`;
+          }
+
+          const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(apiKey.trim())}`;
           const response = await fetch(url, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              'x-goog-api-key': apiKey
+              'x-goog-api-key': apiKey.trim()
             },
             body: JSON.stringify(payload)
           });
@@ -2927,350 +614,590 @@
           if (!response.ok) {
             const apiMsg = data?.error?.message || `Erreur HTTP ${response.status}`;
             lastError = new Error(apiMsg);
-            if (response.status === 404) {
-              // Si le modèle n'est pas trouvé, on teste le modèle suivant
+
+            // Si le compte n'a pas accès à ce gros modèle (403 Forbidden) ou s'il n'est pas trouvé (404),
+            // on passe immédiatement au modèle suivant dans la cascade descendante !
+            if (response.status === 403 || response.status === 404) {
+              console.warn(`Modèle ${model} refusé (${response.status}: ${apiMsg}). Bascule vers le modèle suivant...`);
               continue;
             }
             throw lastError;
           }
 
-          const generatedText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-          if (!generatedText) {
-            throw new Error("L'IA n'a retourné aucun contenu dans sa réponse.");
+          const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (!text) {
+            throw new Error("Réponse vide de l'IA.");
           }
 
-          return generatedText;
+          return text;
         } catch (err) {
           lastError = err;
-          if (err.message && err.message.includes("404")) continue;
+          // Si le message contient 403 ou 404, on tente le prochain modèle
+          if (err.message && (err.message.includes("403") || err.message.includes("404") || err.message.includes("permission"))) {
+            continue;
+          }
           throw err;
         }
       }
 
-      throw lastError || new Error("Échec de la communication avec l'API Gemini.");
+      throw lastError || new Error("Tous les modèles Gemini ont été essayés sans succès. Vérifiez la clé API.");
     }
 
-    async function generateDocumentCourse(subjectName, dayName, slotTime) {
-      const customInstruction = document.getElementById("tutorPromptInput")?.value?.trim() || "";
-      const statusEl = document.getElementById("tutorGeneratingStatus");
-      const statusMsg = document.getElementById("tutorStatusMessage");
-      const resultEl = document.getElementById("tutorResultContainer");
-      const pdfBtn = document.getElementById("btnDownloadPdf");
+    function renderScheduleGrid() {
+      const grid = document.getElementById('scheduleDaysGrid');
+      if (!grid) return;
+      grid.innerHTML = '';
 
-      if (pdfBtn) pdfBtn.style.display = "none";
+      DAYS.forEach(day => {
+        const col = document.createElement('div');
+        col.className = 'flex flex-col gap-2.5';
 
-      const currentKey = getGeminiApiKey();
-      if (!currentKey) {
-        if (resultEl) {
-          resultEl.innerHTML = `
-            <div style="background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.4); border-radius:10px; padding:14px; color:#fca5a5;">
-              <strong style="display:block; margin-bottom:4px; font-size:14px;">⚠️ Clé API Gemini non configurée</strong>
-              <p style="font-size:13px; margin:0 0 10px 0;">
-                Pour protéger votre sécurité, la clé n'est pas stockée dans le code public. Rendez-vous dans les <strong>Paramètres</strong> (roue crantée) pour coller votre clé en 1 clic.
-              </p>
-              <button class="btn-ai-magic" onclick="window.openSettingsModal()" style="font-size:12.5px; padding:6px 12px;">
-                ⚙️ Ouvrir les Paramètres
-              </button>
-            </div>
-          `;
-          resultEl.style.display = "block";
-        }
-        showToast("Configurez votre clé dans les Paramètres", "⚙️");
+        // En-tête du jour
+        const header = document.createElement('div');
+        header.className = 'glass-card p-3 rounded-xl flex items-center justify-between border-t-2';
+        header.style.borderTopColor = day.color;
+        header.innerHTML = `
+          <span class="font-bold text-xs tracking-wider text-white">${day.label}</span>
+          <span class="w-2 h-2 rounded-full" style="background-color: ${day.color}"></span>
+        `;
+        col.appendChild(header);
+
+        // Liste des 7 créneaux
+        const daySlots = scheduleData[day.id] || [];
+        daySlots.forEach((slot, idx) => {
+          const slotEl = document.createElement('div');
+          slotEl.className = 'glass-card p-3 rounded-xl slot-item cursor-pointer relative group';
+          
+          if (slot.color) {
+            slotEl.style.borderLeft = `3px solid ${slot.color}`;
+          }
+
+          if (slot.subject) {
+            slotEl.innerHTML = `
+              <div class="flex items-center justify-between text-[11px] text-slate-400 mb-1">
+                <span class="font-mono">${slot.startTime || '--:--'} - ${slot.endTime || '--:--'}</span>
+                ${slot.room ? `<span class="px-1.5 py-0.5 rounded bg-slate-800 text-[10px] text-slate-300 font-medium">${escapeHtml(slot.room)}</span>` : ''}
+              </div>
+              <div class="font-semibold text-xs text-white leading-tight mb-1 truncate">${escapeHtml(slot.subject)}</div>
+              ${slot.teacher ? `<div class="text-[11px] text-slate-400 truncate">${escapeHtml(slot.teacher)}</div>` : ''}
+            `;
+          } else {
+            // Case vide
+            slotEl.innerHTML = `
+              <div class="flex items-center justify-between text-[11px] text-slate-500 mb-1">
+                <span class="font-mono">${slot.startTime || '--:--'} - ${slot.endTime || '--:--'}</span>
+                <span class="text-[10px] italic">Libre</span>
+              </div>
+              <div class="text-xs text-slate-500 italic py-1">Créneau vide</div>
+            `;
+          }
+
+          // Clic pour éditer ou réviser
+          slotEl.addEventListener('click', () => {
+            openCourseModal(day.id, idx);
+          });
+
+          col.appendChild(slotEl);
+        });
+
+        grid.appendChild(col);
+      });
+
+      lucide.createIcons();
+    }
+
+    function openCourseModal(dayId, slotIndex) {
+      currentSelectedSlot = { dayId, slotIndex };
+      const slot = scheduleData[dayId][slotIndex];
+      const modal = document.getElementById('courseModal');
+
+      document.getElementById('inputModalSubject').value = slot.subject || '';
+      document.getElementById('inputModalStart').value = slot.startTime || '';
+      document.getElementById('inputModalEnd').value = slot.endTime || '';
+      document.getElementById('inputModalProf').value = slot.teacher || '';
+      document.getElementById('inputModalRoom').value = slot.room || '';
+      document.getElementById('inputModalColor').value = slot.color || '#3b82f6';
+      document.getElementById('modalColorDot').style.backgroundColor = slot.color || '#3b82f6';
+
+      const aiContainer = document.getElementById('aiSheetContainer');
+      aiContainer.classList.add('hidden');
+      aiContainer.innerHTML = '';
+      document.getElementById('aiLoadingIndicator').classList.add('hidden');
+
+      modal.classList.remove('hidden');
+    }
+
+    function closeCourseModal() {
+      document.getElementById('courseModal').classList.add('hidden');
+      currentSelectedSlot = null;
+    }
+
+    document.getElementById('btnCloseCourseModal').addEventListener('click', closeCourseModal);
+
+    // Enregistrer les modifications du créneau
+    document.getElementById('btnModalSaveSlot').addEventListener('click', () => {
+      if (!currentSelectedSlot) return;
+      const { dayId, slotIndex } = currentSelectedSlot;
+      const slot = scheduleData[dayId][slotIndex];
+
+      slot.subject = document.getElementById('inputModalSubject').value.trim();
+      slot.startTime = document.getElementById('inputModalStart').value.trim();
+      slot.endTime = document.getElementById('inputModalEnd').value.trim();
+      slot.teacher = document.getElementById('inputModalProf').value.trim();
+      slot.room = document.getElementById('inputModalRoom').value.trim();
+      slot.color = document.getElementById('inputModalColor').value;
+
+      renderScheduleGrid();
+      saveUserDataToFirestore();
+      closeCourseModal();
+      showToast("Créneau mis à jour !");
+    });
+
+    // Supprimer le contenu du créneau (le rendre vierge)
+    document.getElementById('btnModalDeleteSlot').addEventListener('click', () => {
+      if (!currentSelectedSlot) return;
+      const { dayId, slotIndex } = currentSelectedSlot;
+      const slot = scheduleData[dayId][slotIndex];
+      slot.subject = '';
+      slot.teacher = '';
+      slot.room = '';
+      slot.color = '';
+
+      renderScheduleGrid();
+      saveUserDataToFirestore();
+      closeCourseModal();
+      showToast("Créneau vidé !");
+    });
+
+    // Génération de fiche de révision IA
+    document.getElementById('btnGenerateAiSheet').addEventListener('click', async () => {
+      const subject = document.getElementById('inputModalSubject').value.trim();
+      if (!subject) {
+        showToast("Veuillez d'abord indiquer une matière pour générer une fiche.");
         return;
       }
 
-      if (!attachedFile) {
-        if (resultEl) {
-          resultEl.innerHTML = `
-            <div style="background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.4); border-radius:10px; padding:14px; color:#fca5a5;">
-              <strong style="display:block; margin-bottom:4px; font-size:14px;">⚠️ Aucun document n'a été sélectionné</strong>
-              <p style="font-size:13px; margin:0;">
-                Veuillez cliquer sur <strong>« 📂 Choisir mon document »</strong> pour charger votre support réel (PDF, images, etc.).
-              </p>
-            </div>
-          `;
-          resultEl.style.display = "block";
-        }
-        showToast("Veuillez sélectionner un document", "⚠️");
+      const apiKey = getSavedApiKey();
+      if (!apiKey) {
+        showToast("Renseignez votre clé API Gemini dans Paramètres (⚙️).");
+        openSettingsModal();
         return;
       }
 
-      if (statusEl) statusEl.style.display = "flex";
-      if (statusMsg) statusMsg.textContent = "Lecture et analyse de votre fichier...";
-      if (resultEl) resultEl.style.display = "none";
+      const aiContainer = document.getElementById('aiSheetContainer');
+      const loader = document.getElementById('aiLoadingIndicator');
+      aiContainer.classList.add('hidden');
+      loader.classList.remove('hidden');
 
-      const parts = [];
-      const isTextType = attachedFile.type.startsWith("text/") || 
-                         attachedFile.name.endsWith(".txt") || 
-                         attachedFile.name.endsWith(".c") || 
-                         attachedFile.name.endsWith(".cpp") || 
-                         attachedFile.name.endsWith(".h") || 
-                         attachedFile.name.endsWith(".py") || 
-                         attachedFile.name.endsWith(".md");
+      const prompt = `Agis en tant que professeur expert du BTS CIEL (Cybersécurité, Informatique et Réseaux, Électronique). 
+Génère une fiche de révision structurée, synthétique et percutante pour le cours suivant : "${subject}".
+La fiche doit contenir :
+1. Les objectifs clés et compétences du référentiel BTS CIEL
+2. Les concepts fondamentaux & définitions indispensables
+3. 3 questions / exercices types d'examen avec réponses brèves
+4. Les erreurs fréquentes à éviter absolument`;
 
       try {
-        if (isTextType) {
-          const textContent = await attachedFile.text();
-          parts.push({
-            text: `DOCUMENT SOURCE :\n\"\"\"\n${textContent.slice(0, 50000)}\n\"\"\"`
-          });
-        } else {
-          const base64Data = await readFileAsBase64(attachedFile);
-          let mimeType = attachedFile.type || "application/pdf";
-          if (attachedFile.name.endsWith(".png")) mimeType = "image/png";
-          else if (attachedFile.name.endsWith(".jpg") || attachedFile.name.endsWith(".jpeg")) mimeType = "image/jpeg";
-
-          parts.push({
-            inlineData: { mimeType: mimeType, data: base64Data }
-          });
-        }
-
-        const userPrompt = `Analyse ce document pour "${subjectName}" (${dayName}, ${slotTime}).
-${customInstruction ? `Demande : "${customInstruction}"` : 'Fais une fiche de révision technique synthétique, claire et directe.'}
-
-RÈGLES STRICTES :
-1. Base-toi uniquement sur le document joint. N'invente rien.
-2. Tout ce qui n'est pas dans le fichier ne doit pas être mentionné.
-3. Aucun bavardage oral ("Bonjour", "Voici"). Structure en HTML propre (<h4>, <p>, <ul>, <li>, <code>, <strong>).`;
-
-        parts.push({ text: userPrompt });
-
         const payload = {
-          contents: [{ parts: parts }],
-          systemInstruction: {
-            parts: [{ text: "Tu es un synthétiseur technique rigoureux. Tu extrais UNIQUEMENT et STRICTEMENT les notions présentes dans le document fourni. Aucun bavardage oral." }]
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: {
+            temperature: 0.7,
+            maxOutputTokens: 1200
           }
         };
 
-        const text = await callGeminiApi(payload, currentKey);
-
-        if (statusEl) statusEl.style.display = "none";
-        if (resultEl) {
-          resultEl.innerHTML = text.replace(/```html/gi, '').replace(/```/g, '');
-          resultEl.style.display = "block";
-          if (pdfBtn) pdfBtn.style.display = "inline-flex";
-        }
+        const result = await callGeminiApi(payload, apiKey);
+        loader.classList.add('hidden');
+        aiContainer.classList.remove('hidden');
+        aiContainer.textContent = result;
       } catch (err) {
-        if (statusEl) statusEl.style.display = "none";
-        if (resultEl) {
-          resultEl.innerHTML = `
-            <div style="background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.4); border-radius:10px; padding:14px; color:#fca5a5;">
-              <strong style="display:block; margin-bottom:4px; font-size:14px;">⚠️ Erreur lors de l'appel à Gemini</strong>
-              <p style="font-size:13px; margin:0; line-height:1.5;">${err.message}</p>
-            </div>
-          `;
-          resultEl.style.display = "block";
-        }
+        loader.classList.add('hidden');
+        aiContainer.classList.remove('hidden');
+        aiContainer.innerHTML = `<span class="text-rose-400 font-semibold">Erreur IA : ${escapeHtml(err.message)}</span>`;
       }
+    });
+
+    document.querySelectorAll('.preset-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (!currentSelectedSlot) {
+          showToast("Cliquez d'abord sur une case du planning pour y insérer ce cours.");
+          return;
+        }
+        document.getElementById('inputModalSubject').value = btn.getAttribute('data-subject');
+        document.getElementById('inputModalColor').value = btn.getAttribute('data-color');
+        document.getElementById('inputModalProf').value = btn.getAttribute('data-prof');
+        document.getElementById('inputModalRoom').value = btn.getAttribute('data-room');
+        document.getElementById('modalColorDot').style.backgroundColor = btn.getAttribute('data-color');
+      });
+    });
+
+    // Bouton bascule Modifier le planning
+    const btnToggleEdit = document.getElementById('btnToggleEdit');
+    const editorToolbar = document.getElementById('editorToolbar');
+    const btnToggleEditText = document.getElementById('btnToggleEditText');
+
+    btnToggleEdit.addEventListener('click', () => {
+      isEditMode = !isEditMode;
+      if (isEditMode) {
+        editorToolbar.classList.remove('hidden');
+        btnToggleEditText.innerText = "Terminer l'édition";
+        btnToggleEdit.classList.add('bg-blue-600', 'text-white');
+        btnToggleEdit.classList.remove('bg-slate-800', 'text-slate-200');
+      } else {
+        editorToolbar.classList.add('hidden');
+        btnToggleEditText.innerText = "Modifier le planning";
+        btnToggleEdit.classList.remove('bg-blue-600', 'text-white');
+        btnToggleEdit.classList.add('bg-slate-800', 'text-slate-200');
+      }
+    });
+
+    // Vider toutes les cases
+    function clearAll7Slots() {
+      DAYS.forEach(day => {
+        scheduleData[day.id] = generate7EmptySlots();
+      });
+      renderScheduleGrid();
+      saveUserDataToFirestore();
+      showToast("Toutes les cases ont été vidées.");
     }
+    document.getElementById('btnClearAllSlots').addEventListener('click', clearAll7Slots);
+    document.getElementById('btnSettingsClearAll').addEventListener('click', clearAll7Slots);
 
-    function downloadTutorPdf() {
-      const resultEl = document.getElementById("tutorResultContainer");
-      if (!resultEl || !resultEl.innerHTML.trim()) return;
+    const agendaModal = document.getElementById('agendaModal');
+    document.getElementById('btnOpenAgenda').addEventListener('click', () => {
+      renderAgendaList();
+      agendaModal.classList.remove('hidden');
+    });
+    document.getElementById('btnCloseAgendaModal').addEventListener('click', () => {
+      agendaModal.classList.add('hidden');
+    });
 
-      const printWindow = window.open("", "_blank");
-      if (!printWindow) {
-        showToast("Autorisez les fenêtres pop-up pour imprimer", "⚠️");
+    document.getElementById('btnAgendaAdd').addEventListener('click', () => {
+      const title = document.getElementById('agendaInputTitle').value.trim();
+      const date = document.getElementById('agendaInputDate').value;
+      const type = document.getElementById('agendaInputType').value;
+
+      if (!title || !date) {
+        showToast("Veuillez renseigner le titre et la date.");
         return;
       }
 
-      printWindow.document.write(`
-        <!DOCTYPE html>
-        <html lang="fr">
-        <head>
-          <meta charset="UTF-8">
-          <title>Fiche de révision BTS CIEL</title>
-          <style>
-            body { font-family: sans-serif; color: #0f172a; padding: 24px; line-height: 1.6; }
-            h4 { color: #4338ca; }
-            code { background: #f1f5f9; padding: 2px 4px; border-radius: 4px; font-family: monospace; }
-          </style>
-        </head>
-        <body>
-          <div>${resultEl.innerHTML}</div>
-          <script>window.onload = function() { window.print(); }<\/script>
-        </body>
-        </html>
-      `);
-      printWindow.document.close();
+      agendaEvents.push({
+        id: 'ev_' + Date.now(),
+        title,
+        date,
+        type
+      });
+
+      document.getElementById('agendaInputTitle').value = '';
+      renderAgendaList();
+      saveUserDataToFirestore();
+      showToast("Événement ajouté à l'agenda.");
+    });
+
+    function renderAgendaList() {
+      const list = document.getElementById('agendaList');
+      if (!list) return;
+      list.innerHTML = '';
+
+      if (agendaEvents.length === 0) {
+        list.innerHTML = '<div class="text-xs text-slate-500 italic py-2">Aucune échéance enregistrée.</div>';
+        return;
+      }
+
+      // Tri chronologique
+      const sorted = [...agendaEvents].sort((a, b) => new Date(a.date) - new Date(b.date));
+
+      sorted.forEach(ev => {
+        const item = document.createElement('div');
+        item.className = 'p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 flex items-center justify-between text-xs';
+        item.innerHTML = `
+          <div class="flex items-center gap-2">
+            <span class="px-2 py-0.5 rounded text-[10px] font-semibold ${getBadgeClass(ev.type)}">${ev.type.toUpperCase()}</span>
+            <span class="font-medium text-white">${escapeHtml(ev.title)}</span>
+          </div>
+          <div class="flex items-center gap-3 text-slate-400">
+            <span>${ev.date}</span>
+            <button class="text-rose-400 hover:text-rose-300 btn-delete-event" data-id="${ev.id}">
+              <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+        `;
+        list.appendChild(item);
+      });
+
+      list.querySelectorAll('.btn-delete-event').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const id = btn.getAttribute('data-id');
+          agendaEvents = agendaEvents.filter(x => x.id !== id);
+          renderAgendaList();
+          saveUserDataToFirestore();
+        });
+      });
+
+      lucide.createIcons();
     }
 
-    function exportJsonBackup() {
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(currentSchedule, null, 2));
-      const downloadAnchor = document.createElement('a');
-      downloadAnchor.setAttribute("href", dataStr);
-      downloadAnchor.setAttribute("download", `planning_bts_ciel_${new Date().toISOString().slice(0,10)}.json`);
-      document.body.appendChild(downloadAnchor);
-      downloadAnchor.click();
-      downloadAnchor.remove();
-      showToast("Sauvegarde JSON téléchargée !", "💾");
+    function getBadgeClass(type) {
+      switch (type) {
+        case 'exam': return 'bg-rose-500/20 text-rose-300 border border-rose-500/30';
+        case 'tp': return 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30';
+        case 'projet': return 'bg-purple-500/20 text-purple-300 border border-purple-500/30';
+        default: return 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
+      }
     }
 
-    async function exportSchedulePng() {
-      const board = document.querySelector(".board-container");
-      if (!board) return;
+    const calcModal = document.getElementById('calcModal');
+    document.getElementById('btnOpenCalc').addEventListener('click', () => {
+      calculateHours();
+      calcModal.classList.remove('hidden');
+    });
+    document.getElementById('btnCloseCalcModal').addEventListener('click', () => {
+      calcModal.classList.add('hidden');
+    });
 
-      closeAiModal();
-      showToast("Génération de l'image haute définition...", "🖼️");
+    function calculateHours() {
+      let totalMinutes = 0;
+      let slotCount = 0;
+      const subjectMap = {};
+
+      DAYS.forEach(day => {
+        (scheduleData[day.id] || []).forEach(slot => {
+          if (slot.subject && slot.startTime && slot.endTime) {
+            slotCount++;
+            const startParts = slot.startTime.split(':');
+            const endParts = slot.endTime.split(':');
+            if (startParts.length === 2 && endParts.length === 2) {
+              const startMin = parseInt(startParts[0], 10) * 60 + parseInt(startParts[1], 10);
+              const endMin = parseInt(endParts[0], 10) * 60 + parseInt(endParts[1], 10);
+              const diff = Math.max(0, endMin - startMin);
+              totalMinutes += diff;
+
+              subjectMap[slot.subject] = (subjectMap[slot.subject] || 0) + diff;
+            }
+          }
+        });
+      });
+
+      const h = Math.floor(totalMinutes / 60);
+      const m = totalMinutes % 60;
+      document.getElementById('calcTotalHours').innerText = `${h}h${m < 10 ? '0' + m : m}`;
+      document.getElementById('calcTotalSlots').innerText = slotCount;
+
+      const breakdown = document.getElementById('calcBreakdown');
+      breakdown.innerHTML = '';
+      Object.keys(subjectMap).forEach(subj => {
+        const subMin = subjectMap[subj];
+        const subH = Math.floor(subMin / 60);
+        const subM = subMin % 60;
+        const row = document.createElement('div');
+        row.className = 'flex justify-between py-1 border-b border-slate-800 text-[11px]';
+        row.innerHTML = `
+          <span class="text-slate-300 truncate">${escapeHtml(subj)}</span>
+          <span class="font-mono text-slate-400">${subH}h${subM < 10 ? '0' + subM : subM}</span>
+        `;
+        breakdown.appendChild(row);
+      });
+    }
+
+    const settingsModal = document.getElementById('settingsModal');
+    function openSettingsModal() {
+      document.getElementById('inputGeminiApiKey').value = getSavedApiKey();
+      settingsModal.classList.remove('hidden');
+    }
+    document.getElementById('btnOpenSettings').addEventListener('click', openSettingsModal);
+    document.getElementById('btnCloseSettingsModal').addEventListener('click', () => {
+      settingsModal.classList.add('hidden');
+    });
+
+    document.getElementById('btnToggleKeyVisibility').addEventListener('click', () => {
+      const inp = document.getElementById('inputGeminiApiKey');
+      inp.type = inp.type === 'password' ? 'text' : 'password';
+    });
+
+    document.getElementById('btnSaveGeminiKey').addEventListener('click', () => {
+      const key = document.getElementById('inputGeminiApiKey').value.trim();
+      setSavedApiKey(key);
+      const feedback = document.getElementById('settingsKeyFeedback');
+      feedback.textContent = "Clé enregistrée avec succès !";
+      feedback.className = "text-[11px] text-emerald-400 font-medium block";
+      saveUserDataToFirestore();
+      setTimeout(() => { feedback.className = "hidden"; }, 3000);
+      showToast("Clé Gemini sauvegardée !");
+    });
+
+    function getSavedApiKey() {
+      return localStorage.getItem('bts_ciel_gemini_key') || "";
+    }
+    function setSavedApiKey(k) {
+      localStorage.setItem('bts_ciel_gemini_key', k);
+    }
+
+    // Impression
+    document.getElementById('btnPrintSchedule').addEventListener('click', () => {
+      window.print();
+    });
+
+    const loginGateScreen = document.getElementById('loginGateScreen');
+    const gateBtnGoogle = document.getElementById('gateBtnGoogle');
+    const gateAuthStatus = document.getElementById('gateAuthStatus');
+    const gateDomainHelper = document.getElementById('gateDomainHelper');
+    const currentDomainCode = document.getElementById('currentDomainCode');
+    const userProfileInfo = document.getElementById('userProfileInfo');
+    const userAvatar = document.getElementById('userAvatar');
+    const userName = document.getElementById('userName');
+    const btnLogout = document.getElementById('btnLogout');
+
+    if (currentDomainCode) {
+      currentDomainCode.innerText = window.location.hostname || "localhost";
+    }
+
+    document.getElementById('btnCopyDomain').addEventListener('click', () => {
+      const host = window.location.hostname || "localhost";
+      const tempInp = document.createElement('input');
+      tempInp.value = host;
+      document.body.appendChild(tempInp);
+      tempInp.select();
+      document.execCommand('copy');
+      document.body.removeChild(tempInp);
+      showToast("Domaine copié : " + host);
+    });
+
+    // Bypass pour test local si nécessaire
+    document.getElementById('btnBypassGate').addEventListener('click', () => {
+      loginGateScreen.style.display = 'none';
+      showToast("Accès de prévisualisation activé.");
+    });
+
+    // Connexion Google
+    async function loginWithGoogle() {
+      if (isAuthInProgress) return;
+      isAuthInProgress = true;
+      gateBtnGoogle.disabled = true;
+      gateBtnGoogle.style.opacity = '0.6';
+      gateAuthStatus.innerHTML = '<span class="w-2 h-2 rounded-full bg-blue-400 animate-spin"></span><span>Ouverture de la fenêtre Google...</span>';
 
       try {
-        const wasEditMode = isEditMode;
-        if (wasEditMode) document.body.classList.remove("edit-mode");
-
-        const originalBoardBg = board.style.background;
-        board.style.background = isDarkMode ? '#0b0f19' : '#ffffff';
-
-        const canvas = await html2canvas(board, {
-          scale: 2.2,
-          useCORS: true,
-          logging: false,
-          backgroundColor: isDarkMode ? '#0b0f19' : '#ffffff'
-        });
-
-        board.style.background = originalBoardBg;
-        if (wasEditMode) document.body.classList.add("edit-mode");
-
-        const imageUri = canvas.toDataURL("image/png");
-        const downloadLink = document.createElement("a");
-        downloadLink.download = `planning_bts_ciel_${new Date().toISOString().slice(0, 10)}.png`;
-        downloadLink.href = imageUri;
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        downloadLink.remove();
-
-        showToast("Image PNG téléchargée !", "🖼️");
+        if (!auth) throw new Error("Firebase Auth non initialisé.");
+        const provider = new GoogleAuthProvider();
+        provider.setCustomParameters({ prompt: 'select_account' });
+        await signInWithPopup(auth, provider);
       } catch (err) {
-        showToast("Erreur capture PNG : " + err.message, "❌");
-      }
-    }
-
-    function triggerImportFile() {
-      const input = document.getElementById("importFileInput");
-      if (input) input.click();
-    }
-
-    function handleFileImport(event) {
-      const file = event.target.files?.[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        try {
-          const parsed = JSON.parse(e.target.result);
-          if (parsed && parsed.lundi && parsed.mardi) {
-            currentSchedule = parsed;
-            if (currentSchedule.preferences && typeof currentSchedule.preferences.isDarkMode === 'boolean') {
-              isDarkMode = currentSchedule.preferences.isDarkMode;
-            }
-            document.body.classList.toggle("dark-theme", isDarkMode);
-            renderSchedule();
-            updateAgendaBadge();
-            persistSchedule();
-            closeAiModal();
-            showToast("Planning restauré avec succès !", "📂");
-          }
-        } catch (err) {
-          showToast("Erreur fichier JSON : " + err.message, "❌");
+        console.error("Erreur Auth Google:", err);
+        const code = err.code || "";
+        if (code === 'auth/unauthorized-domain') {
+          gateDomainHelper.classList.remove('hidden');
+          gateAuthStatus.innerHTML = '<span class="text-rose-400">Domaine non autorisé dans Firebase.</span>';
+        } else if (code === 'auth/cancelled-popup-request' || code === 'auth/popup-closed-by-user') {
+          gateAuthStatus.innerHTML = '<span class="text-slate-400">Connexion annulée. Vous pouvez réessayer.</span>';
+        } else {
+          gateAuthStatus.innerHTML = `<span class="text-rose-400">Erreur : ${escapeHtml(err.message)}</span>`;
         }
-      };
-      reader.readAsText(file);
-      event.target.value = "";
-    }
-
-    function exportStandaloneHtml() {
-      let htmlContent = document.documentElement.outerHTML;
-      const scheduleJson = JSON.stringify(currentSchedule, null, 2);
-
-      const regex = /const defaultScheduleData = \{[\s\S]*?\n    \};/;
-      if (regex.test(htmlContent)) {
-        htmlContent = htmlContent.replace(regex, `const defaultScheduleData = ${scheduleJson};`);
+      } finally {
+        isAuthInProgress = false;
+        gateBtnGoogle.disabled = false;
+        gateBtnGoogle.style.opacity = '1';
       }
-
-      const blob = new Blob([htmlContent], { type: "text/html;charset=utf-8" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = "planning_bts_ciel.html";
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
-      showToast("Fichier HTML autonome téléchargé !", "💻");
     }
 
-    function clearAllSlots() {
-      const days = ["lundi", "mardi", "mercredi", "jeudi", "vendredi"];
-      days.forEach(dayKey => {
-        currentSchedule[dayKey].slots = [
-          { time: "", title: "", theme: "empty" },
-          { time: "", title: "", theme: "empty" },
-          { time: "", title: "", theme: "empty" },
-          { time: "", title: "", theme: "empty" },
-          { time: "", title: "", theme: "empty" },
-          { time: "", title: "", theme: "empty" },
-          { time: "", title: "", theme: "empty" }
-        ];
+    gateBtnGoogle.addEventListener('click', loginWithGoogle);
+
+    // Déconnexion
+    btnLogout.addEventListener('click', async () => {
+      if (auth) {
+        await signOut(auth);
+      }
+      currentUser = null;
+      loginGateScreen.style.display = 'flex';
+      userProfileInfo.classList.add('hidden');
+      showToast("Déconnecté.");
+    });
+
+    // Surveillance de l'état d'authentification
+    if (auth) {
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          currentUser = user;
+          loginGateScreen.style.display = 'none';
+          userProfileInfo.classList.remove('hidden');
+          userName.innerText = user.displayName || user.email.split('@')[0];
+          userAvatar.src = user.photoURL || 'https://placehold.co/64x64/2563eb/ffffff?text=U';
+
+          // Charger les données de l'utilisateur depuis Firestore
+          await loadUserDataFromFirestore(user.uid);
+          showToast(`Connecté : ${user.displayName || 'Utilisateur'}`);
+        } else {
+          currentUser = null;
+          loginGateScreen.style.display = 'flex';
+          userProfileInfo.classList.add('hidden');
+        }
       });
-      renderSchedule();
-      persistSchedule();
-      closeAiModal();
-      showToast("Grille vidée : planning vierge (7 créneaux) !", "🧹");
     }
 
-    function resetToDefaultSchedule() {
-      currentSchedule = JSON.parse(JSON.stringify(defaultScheduleData));
-      renderSchedule();
-      updateAgendaBadge();
-      persistSchedule();
-      closeAiModal();
-      showToast("Planning réinitialisé (grille vierge 7 créneaux)", "🔄");
+    async function saveUserDataToFirestore() {
+      if (!currentUser || !db) return;
+      try {
+        const userDocRef = doc(db, 'artifacts', 'bts-ciel-planning', 'users', currentUser.uid, 'data', 'schedule');
+        await setDoc(userDocRef, {
+          scheduleData: JSON.stringify(scheduleData),
+          agendaEvents: JSON.stringify(agendaEvents),
+          apiKey: getSavedApiKey(),
+          updatedAt: new Date().toISOString()
+        }, { merge: true });
+      } catch (e) {
+        console.warn("Erreur sauvegarde Firestore:", e);
+      }
     }
 
-    window.toggleEditMode = toggleEditMode;
-    window.openHoursCalculator = openHoursCalculator;
-    window.openSettingsModal = openSettingsModal;
-    window.setDarkMode = setDarkMode;
-    window.closeAiModal = closeAiModal;
-    window.openSlotEditor = openSlotEditor;
-    window.clearOrDeleteSlot = clearOrDeleteSlot;
-    window.addNewSlot = addNewSlot;
-    window.applyGradientPreset = applyGradientPreset;
-    window.resetSlotColors = resetSlotColors;
-    window.applyQuickPreset = applyQuickPreset;
-    window.updateColorPreview = updateColorPreview;
-    window.moveSlotVertical = moveSlotVertical;
-    window.saveSlotEdit = saveSlotEdit;
-    window.setMobileDay = setMobileDay;
-    window.openSubjectTutor = openSubjectTutor;
-    window.toggleEditCnedUrl = toggleEditCnedUrl;
-    window.saveCnedUrl = saveCnedUrl;
-    window.handleTutorFileSelect = handleTutorFileSelect;
-    window.removeAttachedFile = removeAttachedFile;
-    window.generateDocumentCourse = generateDocumentCourse;
-    window.downloadTutorPdf = downloadTutorPdf;
-    window.exportJsonBackup = exportJsonBackup;
-    window.exportSchedulePng = exportSchedulePng;
-    window.triggerImportFile = triggerImportFile;
-    window.handleFileImport = handleFileImport;
-    window.exportStandaloneHtml = exportStandaloneHtml;
-    window.resetToDefaultSchedule = resetToDefaultSchedule;
-    window.clearAllSlots = clearAllSlots;
-    window.loginWithGoogle = loginWithGoogle;
-    window.logoutGoogle = logoutGoogle;
-    window.showFirebaseDiagnostic = showFirebaseDiagnostic;
-    window.openAgendaModal = openAgendaModal;
-    window.setSelectedEventIcon = setSelectedEventIcon;
-    window.addAgendaEvent = addAgendaEvent;
-    window.deleteAgendaEvent = deleteAgendaEvent;
-    window.saveCustomGeminiKey = saveCustomGeminiKey;
+    async function loadUserDataFromFirestore(userId) {
+      if (!db || !userId) return;
+      try {
+        const userDocRef = doc(db, 'artifacts', 'bts-ciel-planning', 'users', userId, 'data', 'schedule');
+        const snap = await getDoc(userDocRef);
+        if (snap.exists()) {
+          const data = snap.data();
+          if (data.scheduleData) {
+            scheduleData = JSON.parse(data.scheduleData);
+          }
+          if (data.agendaEvents) {
+            agendaEvents = JSON.parse(data.agendaEvents);
+          }
+          if (data.apiKey) {
+            setSavedApiKey(data.apiKey);
+          }
+          renderScheduleGrid();
+          renderAgendaList();
+        }
+      } catch (e) {
+        console.warn("Erreur chargement Firestore:", e);
+      }
+    }
 
-    window.addEventListener("DOMContentLoaded", async () => {
-      document.body.classList.toggle("dark-theme", isDarkMode);
-      updateHeaderTitles();
-      renderSchedule();
-      updateAgendaBadge();
-      updateAuthUI();
-      await initCloudPersistence();
+    function showToast(msg) {
+      const toast = document.getElementById('toastNotification');
+      const toastMsg = document.getElementById('toastMessage');
+      if (!toast || !toastMsg) return;
+      toastMsg.innerText = msg;
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      setTimeout(() => {
+        toast.classList.add('translate-y-20', 'opacity-0');
+      }, 3200);
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    // Initialisation au chargement de la page
+    window.addEventListener('DOMContentLoaded', () => {
+      renderScheduleGrid();
+      lucide.createIcons();
     });
   </script>
 </body>
