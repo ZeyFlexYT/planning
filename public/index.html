@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Planning Hebdomadaire - BTS Ciel 1ère année</title>
+  <title>Planning Hebdomadaire - BTS CIEL 1ère année</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500&display=swap" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous"></script>
   <style>
     * {
       box-sizing: border-box;
@@ -15,90 +15,57 @@
       padding: 0;
     }
 
+    :root {
+      --bg-light: #eef2f7;
+      --card-bg-light: #f8fafc;
+      --text-main-light: #0f172a;
+      --text-sub-light: #475569;
+      --board-bg-light: #ffffff;
+      --board-border-light: #e2e8f0;
+      --slot-empty-light: #f1f5f9;
+      
+      --accent-indigo: #6366f1;
+      --accent-violet: #8b5cf6;
+      --accent-cyan: #06b6d4;
+    }
+
     body {
-      background-color: #e9eef5;
       font-family: 'Plus Jakarta Sans', sans-serif;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 30px 15px;
-      color: #1e293b;
+      justify-content: flex-start;
+      padding: 24px 16px;
+      color: #0f172a;
+      background-color: #f1f5f9;
+      transition: background-color 0.4s ease, color 0.4s ease;
+      overflow-x: hidden;
     }
 
-    .action-bar {
-      width: 100%;
-      max-width: 1460px;
-      display: flex;
-      justify-content: flex-end;
-      gap: 12px;
-      margin-bottom: 16px;
+    body.dark-theme {
+      background: radial-gradient(circle at 15% 20%, #1e1b4b 0%, #0b0f19 50%, #030712 100%);
+      background-attachment: fixed;
+      color: #f8fafc;
+      position: relative;
     }
 
-    .btn-print {
-      background: #1e293b;
-      color: #ffffff;
-      border: none;
-      padding: 10px 18px;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      transition: all 0.2s ease;
-      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.15);
+    body.dark-theme::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background: 
+        radial-gradient(circle at 85% 15%, rgba(139, 92, 246, 0.18) 0%, transparent 45%),
+        radial-gradient(circle at 20% 80%, rgba(6, 182, 212, 0.14) 0%, transparent 40%),
+        radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.12) 0%, transparent 60%);
+      z-index: 0;
+      animation: ambientGlow 14s ease-in-out infinite alternate;
     }
 
-    .btn-print:hover {
-      background: #334155;
-      transform: translateY(-1px);
-    }
-
-    .btn-ai-magic {
-      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-      color: #ffffff;
-      border: none;
-      padding: 10px 18px;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      transition: all 0.2s ease;
-      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
-    }
-
-    .btn-ai-magic:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 6px 16px rgba(99, 102, 241, 0.35);
-      filter: brightness(1.05);
-    }
-
-    .btn-ai-secondary {
-      background: #ffffff;
-      color: #334155;
-      border: 1px solid #cbd5e1;
-      padding: 10px 16px;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      transition: all 0.2s ease;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04);
-    }
-
-    .btn-ai-secondary:hover {
-      background: #f8fafc;
-      border-color: #94a3b8;
-      transform: translateY(-1px);
+    @keyframes ambientGlow {
+      0% { opacity: 0.75; transform: scale(1); }
+      100% { opacity: 1; transform: scale(1.05); }
     }
 
     .action-bar {
@@ -109,7 +76,9 @@
       justify-content: space-between;
       align-items: center;
       gap: 12px;
-      margin-bottom: 16px;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 10;
     }
 
     .action-bar-left, .action-bar-right {
@@ -117,6 +86,119 @@
       flex-wrap: wrap;
       gap: 10px;
       align-items: center;
+    }
+
+    .btn-toggle-edit {
+      background: #ffffff;
+      color: #0f172a;
+      border: 1.5px solid #6366f1;
+      padding: 9px 16px;
+      border-radius: 10px;
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 8px rgba(99, 102, 241, 0.12);
+    }
+
+    body.dark-theme .btn-toggle-edit {
+      background: rgba(30, 41, 59, 0.8);
+      color: #e2e8f0;
+      border-color: rgba(129, 140, 248, 0.4);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    .btn-toggle-edit:hover {
+      background: #eef2ff;
+      transform: translateY(-1px);
+    }
+
+    body.dark-theme .btn-toggle-edit:hover {
+      background: rgba(49, 46, 129, 0.5);
+      border-color: #818cf8;
+    }
+
+    .btn-toggle-edit.active {
+      background: #4f46e5 !important;
+      color: #ffffff !important;
+      border-color: #4338ca !important;
+      box-shadow: 0 4px 14px rgba(79, 70, 229, 0.4);
+    }
+
+    .edit-mode-indicator {
+      display: none;
+      background: #e0e7ff;
+      color: #3730a3;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      align-items: center;
+      gap: 6px;
+      animation: pulseEdit 2s infinite ease-in-out;
+    }
+
+    body.dark-theme .edit-mode-indicator {
+      background: rgba(99, 102, 241, 0.25);
+      color: #c7d2fe;
+      border: 1px solid rgba(129, 140, 248, 0.4);
+    }
+
+    body.edit-mode .edit-mode-indicator {
+      display: inline-flex;
+    }
+
+    @keyframes pulseEdit {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.65; }
+    }
+
+    .btn-action-sm {
+      background: #ffffff;
+      color: #334155;
+      border: 1px solid #cbd5e1;
+      padding: 9px 14px;
+      border-radius: 10px;
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04);
+    }
+
+    body.dark-theme .btn-action-sm {
+      background: rgba(15, 23, 42, 0.7);
+      color: #e2e8f0;
+      border-color: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(8px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    }
+
+    .btn-action-sm:hover {
+      background: #f8fafc;
+      border-color: #94a3b8;
+      transform: translateY(-1px);
+    }
+
+    body.dark-theme .btn-action-sm:hover {
+      background: rgba(30, 41, 59, 0.9);
+      border-color: rgba(129, 140, 248, 0.5);
+    }
+
+    .btn-print-icon {
+      width: 38px;
+      height: 38px;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
     }
 
     .sync-badge {
@@ -128,9 +210,15 @@
       border: 1px solid #cbd5e1;
       padding: 6px 12px;
       border-radius: 20px;
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 600;
-      transition: all 0.3s ease;
+    }
+
+    body.dark-theme .sync-badge {
+      background: rgba(15, 23, 42, 0.6);
+      color: #94a3b8;
+      border-color: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(6px);
     }
 
     .sync-badge.saved {
@@ -139,10 +227,22 @@
       border-color: #a7f3d0;
     }
 
+    body.dark-theme .sync-badge.saved {
+      background: rgba(6, 95, 70, 0.25);
+      color: #6ee7b7;
+      border-color: rgba(16, 185, 129, 0.4);
+    }
+
     .sync-badge.saving {
       background: #eff6ff;
       color: #1e40af;
       border-color: #bfdbfe;
+    }
+
+    body.dark-theme .sync-badge.saving {
+      background: rgba(30, 58, 138, 0.35);
+      color: #93c5fd;
+      border-color: rgba(59, 130, 246, 0.4);
     }
 
     .sync-badge.error {
@@ -155,63 +255,382 @@
       font-size: 11px;
       color: #64748b;
       font-family: monospace;
-      padding: 3px 8px;
+      padding: 4px 8px;
       background: #ffffff;
       border-radius: 6px;
       border: 1px solid #e2e8f0;
     }
 
-    .btn-toggle-edit {
-      background: #ffffff;
-      color: #0f172a;
-      border: 1.5px solid #6366f1;
-      padding: 10px 18px;
+    body.dark-theme .user-id-tag {
+      background: rgba(15, 23, 42, 0.6);
+      color: #94a3b8;
+      border-color: rgba(255, 255, 255, 0.08);
+    }
+
+    body.edit-mode #scheduleMainTitle,
+    body.edit-mode #scheduleSubtitleText {
+      outline: 2px dashed rgba(129, 140, 248, 0.65) !important;
+      outline-offset: 4px;
       border-radius: 8px;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
+      cursor: text;
       transition: all 0.2s ease;
-      box-shadow: 0 2px 6px rgba(99, 102, 241, 0.15);
+      background: rgba(99, 102, 241, 0.18) !important;
+      padding: 2px 6px;
+      -webkit-text-fill-color: #ffffff !important;
+      color: #ffffff !important;
+      background-clip: border-box !important;
+      -webkit-background-clip: border-box !important;
     }
 
-    .btn-toggle-edit:hover {
-      background: #eef2ff;
-      transform: translateY(-1px);
+    body:not(.dark-theme).edit-mode #scheduleMainTitle,
+    body:not(.dark-theme).edit-mode #scheduleSubtitleText {
+      -webkit-text-fill-color: #0f172a !important;
+      color: #0f172a !important;
+      background: rgba(99, 102, 241, 0.08) !important;
     }
 
-    .btn-toggle-edit.active {
-      background: #4f46e5;
-      color: #ffffff;
-      border-color: #4338ca;
-      box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);
+    body.edit-mode #scheduleMainTitle:focus,
+    body.edit-mode #scheduleSubtitleText:focus {
+      outline: 2px solid #818cf8 !important;
+      background: rgba(99, 102, 241, 0.28) !important;
     }
 
-    .edit-mode-indicator {
+    .title-edit-hint {
       display: none;
-      background: #e0e7ff;
-      color: #3730a3;
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 12.5px;
+      font-size: 11px;
       font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: rgba(99, 102, 241, 0.25);
+      color: #c7d2fe;
+      border: 1px solid rgba(129, 140, 248, 0.4);
+      margin-left: 10px;
+      vertical-align: middle;
+      text-transform: none;
+      letter-spacing: normal;
+    }
+
+    body.edit-mode .title-edit-hint {
+      display: inline-block;
+    }
+
+    body:not(.dark-theme) .title-edit-hint {
+      background: #e0e7ff;
+      color: #4338ca;
+      border-color: #c7d2fe;
+    }
+
+    .board-container {
+      width: 100%;
+      max-width: 1460px;
+      border-radius: 26px;
+      padding: 36px 40px 45px 40px;
+      transition: all 0.3s ease;
+      position: relative;
+      z-index: 1;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 20px 45px rgba(15, 23, 42, 0.06);
+    }
+
+    body.dark-theme .board-container {
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.55), 0 0 35px rgba(99, 102, 241, 0.12);
+    }
+
+    .header-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 30px;
+    }
+
+    .title-group h1 {
+      font-size: 30px;
+      font-weight: 800;
+      letter-spacing: 0.8px;
+      color: #0f172a;
+      text-transform: uppercase;
+      line-height: 1.2;
+    }
+
+    body.dark-theme .title-group h1 {
+      color: #f8fafc;
+      background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 50%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    body.edit-mode.dark-theme .title-group h1 {
+      -webkit-text-fill-color: #ffffff !important;
+      color: #ffffff !important;
+    }
+
+    .title-group p {
+      font-size: 14.5px;
+      font-weight: 500;
+      color: #64748b;
+      margin-top: 6px;
+      letter-spacing: 0.2px;
+    }
+
+    body.dark-theme .title-group p {
+      color: #94a3b8;
+    }
+
+    .menu-icon {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      align-items: flex-end;
+      padding-top: 6px;
+    }
+
+    .menu-icon span {
+      display: block;
+      height: 3px;
+      background-color: #94a3b8;
+      border-radius: 4px;
+    }
+
+    .menu-icon span:nth-child(1) { width: 34px; }
+    .menu-icon span:nth-child(2) { width: 24px; }
+    .menu-icon span:nth-child(3) { width: 14px; }
+
+    .schedule-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 18px;
+    }
+
+    .day-column {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .day-header {
+      border-radius: 14px;
+      padding: 12px 16px;
+      display: flex;
       align-items: center;
-      gap: 6px;
-      animation: pulseEdit 2s infinite ease-in-out;
+      justify-content: space-between;
+      margin-bottom: 2px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
     }
 
-    body.edit-mode .edit-mode-indicator {
-      display: inline-flex;
+    body.dark-theme .day-header {
+      background: rgba(30, 41, 59, 0.5);
+      border-color: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(10px);
     }
 
-    @keyframes pulseEdit {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.75; }
+    .day-header .day-name {
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: #1e293b;
     }
 
-    /* Styles pour les cartes en mode édition */
+    body.dark-theme .day-header .day-name {
+      color: #f1f5f9;
+    }
+
+    .day-header .day-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 2px solid;
+    }
+
+    .col-lundi .day-dot { border-color: #9061f9; background-color: #d8b4fe; }
+    .col-mardi .day-dot { border-color: #06b6d4; background-color: #a5f3fc; }
+    .col-mercredi .day-dot { border-color: #10b981; background-color: #a7f3d0; }
+    .col-jeudi .day-dot { border-color: #f97316; background-color: #fdba74; }
+    .col-vendredi .day-dot { border-color: #eab308; background-color: #fde047; }
+
+    .slot-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .slot-time {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #475569;
+      padding-left: 2px;
+    }
+
+    body.dark-theme .slot-time {
+      color: #94a3b8;
+    }
+
+    .slot-time.empty-time {
+      visibility: hidden;
+    }
+
+    .card-box {
+      border-radius: 12px;
+      height: 64px;
+      padding: 10px 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      background-color: #f8fafc;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    body.dark-theme .card-box {
+      background: rgba(30, 41, 59, 0.4);
+      border-color: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(10px);
+    }
+
+    .card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .badge-pill {
+      width: 40px;
+      height: 18px;
+      border-radius: 6px;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      flex-shrink: 0;
+    }
+
+    body.dark-theme .badge-pill {
+      border-color: rgba(255, 255, 255, 0.12);
+    }
+
+    .col-lundi .badge-pill { background-color: #f3edff; }
+    .col-mardi .badge-pill { background-color: #e6f6fd; }
+    .col-mercredi .badge-pill { background-color: #eafbf1; }
+    .col-jeudi .badge-pill { background-color: #fff1e5; }
+    .col-vendredi .badge-pill { background-color: #fef8dd; }
+
+    body.dark-theme .col-lundi .badge-pill { background-color: rgba(147, 51, 234, 0.25); }
+    body.dark-theme .col-mardi .badge-pill { background-color: rgba(6, 182, 212, 0.25); }
+    body.dark-theme .col-mercredi .badge-pill { background-color: rgba(16, 185, 129, 0.25); }
+    body.dark-theme .col-jeudi .badge-pill { background-color: rgba(249, 115, 22, 0.25); }
+    body.dark-theme .col-vendredi .badge-pill { background-color: rgba(234, 179, 8, 0.25); }
+
+    .card-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #1e293b;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex-grow: 1;
+      text-align: right;
+    }
+
+    body.dark-theme .card-title {
+      color: #f1f5f9;
+    }
+
+    .card-lines {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(to right, rgba(203, 213, 225, 0.3), rgba(203, 213, 225, 0.7), rgba(203, 213, 225, 0.3));
+      margin-top: auto;
+      margin-bottom: 2px;
+    }
+
+    body.dark-theme .card-lines {
+      background: linear-gradient(to right, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
+    }
+
+    body:not(.dark-theme) .card-box.theme-bloc1 { background-color: #dbeafe; border-color: #bfdbfe; }
+    body:not(.dark-theme) .card-box.theme-bloc1 .card-title { color: #1e3a8a; font-weight: 700; }
+
+    body:not(.dark-theme) .card-box.theme-bloc2 { background-color: #fed7aa; border-color: #fdba74; }
+    body:not(.dark-theme) .card-box.theme-bloc2 .card-title { color: #9a3412; font-weight: 700; }
+
+    body:not(.dark-theme) .card-box.theme-bloc3 { background-color: #fce7f3; border-color: #fbcfe8; }
+    body:not(.dark-theme) .card-box.theme-bloc3 .card-title { color: #9d174d; font-weight: 700; }
+
+    body:not(.dark-theme) .card-box.theme-maths { background-color: #fee2e2; border-color: #fecaca; }
+    body:not(.dark-theme) .card-box.theme-maths .card-title { color: #991b1b; font-weight: 700; }
+
+    body:not(.dark-theme) .card-box.theme-physique { background-color: #fef08a; border-color: #fde047; }
+    body:not(.dark-theme) .card-box.theme-physique .card-title { color: #713f12; font-weight: 700; }
+
+    body:not(.dark-theme) .card-box.theme-culture { background-color: #dcfce7; border-color: #bbf7d0; }
+    body:not(.dark-theme) .card-box.theme-culture .card-title { color: #14532d; font-weight: 700; }
+
+    body:not(.dark-theme) .card-box.theme-anglais { background-color: #f3e8ff; border-color: #e9d5ff; }
+    body:not(.dark-theme) .card-box.theme-anglais .card-title { color: #581c87; font-weight: 700; }
+
+    body:not(.dark-theme) .card-box.theme-quartier-libre { background-color: #edf2f7; }
+    body:not(.dark-theme) .card-box.theme-quartier-libre .card-title { font-style: italic; color: #64748b; font-weight: 500; }
+
+    body:not(.dark-theme) .card-box.theme-pause { background-color: #f1f5f9; }
+    body:not(.dark-theme) .card-box.theme-pause .card-title { font-style: italic; font-weight: 600; color: #475569; }
+
+    body:not(.dark-theme) .card-box.theme-empty { background-color: #f8fafc; border: 1px dashed #cbd5e1; opacity: 0.7; }
+
+    body.dark-theme .card-box.theme-bloc1 { background: linear-gradient(135deg, rgba(30, 58, 138, 0.45) 0%, rgba(15, 23, 42, 0.65) 100%); border-color: rgba(96, 165, 250, 0.4); box-shadow: 0 4px 16px rgba(37, 99, 235, 0.15); }
+    body.dark-theme .card-box.theme-bloc1 .card-title { color: #93c5fd; text-shadow: 0 0 10px rgba(147, 197, 253, 0.4); }
+
+    body.dark-theme .card-box.theme-bloc2 { background: linear-gradient(135deg, rgba(154, 52, 18, 0.45) 0%, rgba(15, 23, 42, 0.65) 100%); border-color: rgba(251, 146, 60, 0.4); box-shadow: 0 4px 16px rgba(234, 88, 12, 0.15); }
+    body.dark-theme .card-box.theme-bloc2 .card-title { color: #fdba74; text-shadow: 0 0 10px rgba(253, 186, 116, 0.4); }
+
+    body.dark-theme .card-box.theme-bloc3 { background: linear-gradient(135deg, rgba(190, 24, 93, 0.45) 0%, rgba(15, 23, 42, 0.65) 100%); border-color: rgba(244, 114, 182, 0.4); box-shadow: 0 4px 16px rgba(236, 72, 153, 0.15); }
+    body.dark-theme .card-box.theme-bloc3 .card-title { color: #f472b6; text-shadow: 0 0 10px rgba(244, 114, 182, 0.4); }
+
+    body.dark-theme .card-box.theme-maths { background: linear-gradient(135deg, rgba(153, 27, 27, 0.45) 0%, rgba(15, 23, 42, 0.65) 100%); border-color: rgba(248, 113, 113, 0.4); box-shadow: 0 4px 16px rgba(220, 38, 38, 0.15); }
+    body.dark-theme .card-box.theme-maths .card-title { color: #fca5a5; text-shadow: 0 0 10px rgba(252, 165, 165, 0.4); }
+
+    body.dark-theme .card-box.theme-physique { background: linear-gradient(135deg, rgba(133, 77, 14, 0.45) 0%, rgba(15, 23, 42, 0.65) 100%); border-color: rgba(250, 204, 21, 0.4); box-shadow: 0 4px 16px rgba(202, 138, 4, 0.15); }
+    body.dark-theme .card-box.theme-physique .card-title { color: #fde047; text-shadow: 0 0 10px rgba(253, 224, 71, 0.4); }
+
+    body.dark-theme .card-box.theme-culture { background: linear-gradient(135deg, rgba(20, 83, 45, 0.45) 0%, rgba(15, 23, 42, 0.65) 100%); border-color: rgba(74, 222, 128, 0.4); box-shadow: 0 4px 16px rgba(22, 163, 74, 0.15); }
+    body.dark-theme .card-box.theme-culture .card-title { color: #86efac; text-shadow: 0 0 10px rgba(134, 239, 172, 0.4); }
+
+    body.dark-theme .card-box.theme-anglais { background: linear-gradient(135deg, rgba(88, 28, 135, 0.45) 0%, rgba(15, 23, 42, 0.65) 100%); border-color: rgba(192, 132, 252, 0.4); box-shadow: 0 4px 16px rgba(147, 51, 234, 0.15); }
+    body.dark-theme .card-box.theme-anglais .card-title { color: #d8b4fe; text-shadow: 0 0 10px rgba(216, 180, 254, 0.4); }
+
+    body.dark-theme .card-box.theme-quartier-libre { background: rgba(30, 41, 59, 0.35); border-color: rgba(255, 255, 255, 0.05); }
+    body.dark-theme .card-box.theme-quartier-libre .card-title { font-style: italic; color: #94a3b8; }
+
+    body.dark-theme .card-box.theme-pause { background: rgba(30, 41, 59, 0.5); border-color: rgba(255, 255, 255, 0.07); }
+    body.dark-theme .card-box.theme-pause .card-title { font-style: italic; color: #cbd5e1; }
+
+    body.dark-theme .card-box.theme-empty { background: rgba(15, 23, 42, 0.25); border: 1px dashed rgba(255, 255, 255, 0.1); }
+
+    body.dark-theme .card-box.theme-custom {
+      background: var(--slot-dark-bg, linear-gradient(135deg, rgba(99, 102, 241, 0.38) 0%, rgba(15, 23, 42, 0.72) 100%)) !important;
+      border-color: var(--slot-dark-border, rgba(129, 140, 248, 0.45)) !important;
+      box-shadow: 0 4px 16px var(--slot-dark-glow, rgba(99, 102, 241, 0.25)) !important;
+    }
+    body.dark-theme .card-box.theme-custom .card-title {
+      color: var(--slot-dark-text, #c7d2fe) !important;
+      text-shadow: 0 0 12px var(--slot-dark-glow, rgba(129, 140, 248, 0.4)) !important;
+      font-weight: 700;
+    }
+
+    body:not(.dark-theme) .card-box.theme-custom {
+      background: var(--slot-light-bg, #e0e7ff) !important;
+      border-color: var(--slot-light-border, #c7d2fe) !important;
+    }
+    body:not(.dark-theme) .card-box.theme-custom .card-title {
+      color: var(--slot-light-text, #3730a3) !important;
+      font-weight: 700 !important;
+    }
+
     body.edit-mode .card-box {
       cursor: grab !important;
       position: relative;
@@ -222,15 +641,15 @@
     }
 
     .card-box.dragging {
-      opacity: 0.4;
-      transform: scale(0.97);
-      border: 2px dashed #6366f1 !important;
+      opacity: 0.35;
+      transform: scale(0.96);
+      border: 2px dashed #818cf8 !important;
     }
 
     .slot-item.drag-over .card-box {
-      border: 2px solid #6366f1 !important;
-      background-color: #f5f3ff !important;
-      transform: translateY(-3px);
+      border: 2px solid #818cf8 !important;
+      background: rgba(99, 102, 241, 0.15) !important;
+      transform: translateY(-2px);
     }
 
     .card-edit-overlay {
@@ -247,7 +666,7 @@
     }
 
     .btn-slot-tool {
-      background: rgba(255, 255, 255, 0.92);
+      background: rgba(255, 255, 255, 0.95);
       border: 1px solid #cbd5e1;
       width: 22px;
       height: 22px;
@@ -256,22 +675,27 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      color: #475569;
+      color: #334155;
       font-size: 11px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
       transition: all 0.15s ease;
     }
 
+    body.dark-theme .btn-slot-tool {
+      background: rgba(30, 41, 59, 0.9);
+      border-color: rgba(255, 255, 255, 0.2);
+      color: #f1f5f9;
+    }
+
     .btn-slot-tool:hover {
-      background: #ffffff;
-      color: #4f46e5;
       transform: scale(1.1);
       border-color: #818cf8;
+      color: #6366f1;
     }
 
     .btn-slot-tool.tool-delete:hover {
-      color: #dc2626;
-      border-color: #f87171;
+      color: #ef4444;
+      border-color: #fca5a5;
     }
 
     .btn-add-slot {
@@ -289,17 +713,21 @@
       margin-top: 6px;
     }
 
+    body.dark-theme .btn-add-slot {
+      border-color: rgba(255, 255, 255, 0.15);
+      color: #94a3b8;
+    }
+
     body.edit-mode .btn-add-slot {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
     }
 
     .btn-add-slot:hover {
-      background: #ffffff;
-      border-color: #6366f1;
-      color: #4f46e5;
+      background: rgba(99, 102, 241, 0.1);
+      border-color: #818cf8;
+      color: #818cf8;
     }
 
     .card-box.clickable-slot {
@@ -307,16 +735,16 @@
     }
     .card-box.clickable-slot:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-      outline: 2px solid rgba(99, 102, 241, 0.4);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+      border-color: #818cf8;
     }
 
-    /* Modal Backdrop and Box */
     .ai-modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(15, 23, 42, 0.55);
-      backdrop-filter: blur(4px);
+      background: rgba(3, 7, 18, 0.7);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
       z-index: 999;
       display: flex;
       align-items: center;
@@ -334,12 +762,13 @@
 
     .ai-modal-card {
       background: #ffffff;
+      color: #0f172a;
       border-radius: 20px;
       width: 100%;
       max-width: 680px;
       max-height: 88vh;
       overflow-y: auto;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
       border: 1px solid #e2e8f0;
       display: flex;
       flex-direction: column;
@@ -347,12 +776,19 @@
       transition: transform 0.25s ease;
     }
 
+    body.dark-theme .ai-modal-card {
+      background: #0f172a;
+      color: #f8fafc;
+      border-color: rgba(255, 255, 255, 0.12);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 35px rgba(99, 102, 241, 0.2);
+    }
+
     .ai-modal-backdrop.active .ai-modal-card {
       transform: scale(1);
     }
 
     .ai-modal-header {
-      padding: 20px 24px;
+      padding: 18px 24px;
       border-bottom: 1px solid #e2e8f0;
       display: flex;
       justify-content: space-between;
@@ -361,39 +797,138 @@
       border-radius: 20px 20px 0 0;
     }
 
+    body.dark-theme .ai-modal-header {
+      background: #1e293b;
+      border-color: rgba(255, 255, 255, 0.08);
+    }
+
     .ai-modal-body {
       padding: 24px;
       font-size: 14.5px;
       line-height: 1.6;
+    }
+
+    .btn-ai-magic {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      color: #ffffff;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3);
+    }
+
+    .btn-ai-magic:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(99, 102, 241, 0.45);
+    }
+
+    .btn-ai-secondary {
+      background: #ffffff;
       color: #334155;
+      border: 1px solid #cbd5e1;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
     }
 
-    .ai-loading-spinner {
+    body.dark-theme .btn-ai-secondary {
+      background: rgba(30, 41, 59, 0.7);
+      color: #e2e8f0;
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .btn-ai-secondary:hover {
+      background: #f1f5f9;
+      border-color: #94a3b8;
+    }
+
+    body.dark-theme .btn-ai-secondary:hover {
+      background: rgba(49, 46, 129, 0.5);
+      border-color: #818cf8;
+    }
+
+    .toggle-switch {
+      position: relative;
       display: inline-block;
-      width: 20px;
+      width: 48px;
+      height: 26px;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background-color: #cbd5e1;
+      transition: 0.3s;
+      border-radius: 34px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
       height: 20px;
-      border: 3px solid rgba(99, 102, 241, 0.2);
+      width: 20px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: 0.3s;
       border-radius: 50%;
-      border-top-color: #6366f1;
-      animation: spin 0.8s linear infinite;
     }
 
-    @keyframes spin {
-      to { transform: rotate(360deg); }
+    input:checked + .slider {
+      background-color: #6366f1;
     }
 
-    /* Toast Notification */
+    input:checked + .slider:before {
+      transform: translateX(22px);
+    }
+
+    .settings-action-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      border-radius: 12px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      margin-bottom: 10px;
+    }
+
+    body.dark-theme .settings-action-card {
+      background: rgba(30, 41, 59, 0.55);
+      border-color: rgba(255, 255, 255, 0.08);
+    }
+
     .ai-toast {
       position: fixed;
       bottom: 24px;
       right: 24px;
-      background: #1e293b;
+      background: #0f172a;
       color: #f8fafc;
       padding: 12px 20px;
       border-radius: 12px;
       box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
-      font-size: 14px;
-      font-weight: 500;
+      font-size: 13.5px;
+      font-weight: 600;
       z-index: 1000;
       display: flex;
       align-items: center;
@@ -401,6 +936,7 @@
       transform: translateY(100px);
       opacity: 0;
       transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .ai-toast.show {
@@ -408,342 +944,78 @@
       opacity: 1;
     }
 
-    /* Conteneur principal */
-    .board-container {
-      background-color: #f7f9fd;
+    .mobile-day-bar {
+      display: none;
       width: 100%;
-      max-width: 1460px;
-      border-radius: 28px;
-      border: 1px solid #e2e8f0;
-      box-shadow: 0 20px 45px rgba(15, 23, 42, 0.08);
-      padding: 40px 45px 50px 45px;
-    }
-
-    /* En-tête */
-    .header-section {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 35px;
-    }
-
-    .title-group h1 {
-      font-size: 32px;
-      font-weight: 800;
-      letter-spacing: 0.8px;
-      color: #162033;
-      text-transform: uppercase;
-      line-height: 1.2;
-    }
-
-    .title-group p {
-      font-size: 15px;
-      font-weight: 500;
-      color: #64748b;
-      margin-top: 6px;
-      letter-spacing: 0.2px;
-    }
-
-    .menu-icon {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-      align-items: flex-end;
-      padding-top: 6px;
-    }
-
-    .menu-icon span {
-      display: block;
-      height: 3px;
-      background-color: #475569;
-      border-radius: 4px;
-    }
-
-    .menu-icon span:nth-child(1) { width: 34px; }
-    .menu-icon span:nth-child(2) { width: 24px; }
-    .menu-icon span:nth-child(3) { width: 14px; }
-
-    /* Grille des 5 jours */
-    .schedule-grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 20px;
-    }
-
-    .day-column {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    /* En-têtes de colonnes */
-    .day-header {
-      border-radius: 14px;
-      padding: 12px 18px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
-      margin-bottom: 4px;
-    }
-
-    .day-header .day-name {
-      font-size: 16px;
-      font-weight: 800;
-      letter-spacing: 1px;
-      color: #1e293b;
-    }
-
-    .day-header .day-dot {
-      width: 13px;
-      height: 13px;
-      border-radius: 50%;
-      border: 2px solid;
-    }
-
-    /* Thèmes de couleurs par jour */
-    .col-lundi .day-header {
-      background-color: #f0e8ff;
-    }
-    .col-lundi .day-dot {
-      border-color: #9061f9;
-      background-color: #d8b4fe;
-    }
-
-    .col-mardi .day-header {
-      background-color: #e4f5fc;
-    }
-    .col-mardi .day-dot {
-      border-color: #06b6d4;
-      background-color: #a5f3fc;
-    }
-
-    .col-mercredi .day-header {
-      background-color: #e7f8ee;
-    }
-    .col-mercredi .day-dot {
-      border-color: #10b981;
-      background-color: #a7f3d0;
-    }
-
-    .col-jeudi .day-header {
-      background-color: #ffeedf;
-    }
-    .col-jeudi .day-dot {
-      border-color: #f97316;
-      background-color: #fdba74;
-    }
-
-    .col-vendredi .day-header {
-      background-color: #fef5d2;
-    }
-    .col-vendredi .day-dot {
-      border-color: #eab308;
-      background-color: #fde047;
-    }
-
-    /* Cartes créneaux */
-    .slot-item {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
-
-    .slot-time {
-      font-size: 12px;
-      font-weight: 700;
-      color: #1e293b;
-      padding-left: 2px;
-    }
-
-    .slot-time.empty-time {
-      visibility: hidden;
-    }
-
-    .card-box {
-      border-radius: 12px;
-      height: 64px;
-      padding: 10px 14px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      position: relative;
-      background-color: #ebf1f7;
-      border: 1px solid rgba(226, 232, 240, 0.8);
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
-    }
-
-    .card-box:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-    }
-
-    .card-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      overflow-x: auto;
       gap: 8px;
+      margin-bottom: 16px;
+      padding-bottom: 4px;
     }
 
-    .badge-pill {
-      width: 44px;
-      height: 20px;
-      border-radius: 6px;
-      border: 1px solid rgba(0, 0, 0, 0.06);
-      flex-shrink: 0;
-    }
-
-    .col-lundi .badge-pill { background-color: #f3edff; border-color: #e4d4ff; }
-    .col-mardi .badge-pill { background-color: #e6f6fd; border-color: #c9effc; }
-    .col-mercredi .badge-pill { background-color: #eafbf1; border-color: #c4f4d7; }
-    .col-jeudi .badge-pill { background-color: #fff1e5; border-color: #fed7be; }
-    .col-vendredi .badge-pill { background-color: #fef8dd; border-color: #faeeb5; }
-
-    .card-title {
-      font-size: 13.5px;
-      font-weight: 600;
-      color: #1e293b;
+    .mobile-day-btn {
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      background: #ffffff;
+      color: #334155;
+      font-size: 12.5px;
+      font-weight: 700;
       white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      flex-grow: 1;
-      text-align: right;
+      cursor: pointer;
     }
 
-    .card-lines {
-      width: 100%;
-      height: 1px;
-      background: linear-gradient(to right, rgba(203, 213, 225, 0.4), rgba(203, 213, 225, 0.8), rgba(203, 213, 225, 0.4));
-      margin-top: auto;
-      margin-bottom: 4px;
+    body.dark-theme .mobile-day-btn {
+      background: rgba(30, 41, 59, 0.7);
+      border-color: rgba(255, 255, 255, 0.15);
+      color: #e2e8f0;
     }
 
-    /* Typologies de matières & activités */
-    .card-box.theme-quartier-libre {
-      background-color: #ebf1f7;
-    }
-    .card-box.theme-quartier-libre .card-title {
-      font-style: italic;
-      font-weight: 500;
-      color: #556987;
+    .mobile-day-btn.active {
+      background: #6366f1 !important;
+      color: #ffffff !important;
+      border-color: #4f46e5 !important;
     }
 
-    .card-box.theme-pause {
-      background-color: #edf3f8;
-    }
-    .card-box.theme-pause .card-title {
-      font-style: italic;
-      font-weight: 600;
-    }
-    .col-lundi .card-box.theme-pause .card-title { color: #8b5cf6; }
-    .col-mardi .card-box.theme-pause .card-title { color: #0284c7; }
-    .col-mercredi .card-box.theme-pause .card-title { color: #059669; }
-
-    .card-box.theme-bloc1 {
-      background-color: #dbeafe;
-      border-color: #bfdbfe;
-    }
-    .card-box.theme-bloc1 .card-title {
-      color: #1e3a8a;
-      font-weight: 700;
-    }
-
-    /* BLOC 2 - Orange pâle demandé */
-    .card-box.theme-bloc2 {
-      background-color: #fed7aa;
-      border-color: #fdba74;
-    }
-    .card-box.theme-bloc2 .card-title {
-      color: #9a3412;
-      font-weight: 700;
-    }
-
-    .card-box.theme-anglais {
-      background-color: #f3e8ff;
-      border-color: #e9d5ff;
-    }
-    .card-box.theme-anglais .card-title {
-      color: #581c87;
-      font-weight: 700;
-    }
-
-    .card-box.theme-culture {
-      background-color: #dcfce7;
-      border-color: #bbf7d0;
-    }
-    .card-box.theme-culture .card-title {
-      color: #14532d;
-      font-weight: 700;
-    }
-
-    .card-box.theme-physique {
-      background-color: #fef08a;
-      border-color: #fde047;
-    }
-    .card-box.theme-physique .card-title {
-      color: #713f12;
-      font-weight: 700;
-    }
-
-    .card-box.theme-maths {
-      background-color: #fee2e2;
-      border-color: #fecaca;
-    }
-    .card-box.theme-maths .card-title {
-      color: #991b1b;
-      font-weight: 700;
-    }
-
-    .card-box.theme-empty {
-      background-color: #edf2f7;
-      border: 1px dashed #cbd5e1;
-      opacity: 0.75;
-    }
-
-    /* Ajustements print */
-    @media print {
-      body {
-        background-color: #ffffff;
-        padding: 0;
+    @media (max-width: 980px) {
+      .schedule-grid {
+        grid-template-columns: 1fr;
       }
-      .action-bar {
+      .mobile-day-bar {
+        display: flex;
+      }
+      .day-column:not(.mobile-visible) {
         display: none;
       }
       .board-container {
-        box-shadow: none;
-        border: none;
-        padding: 10px;
-        max-width: 100%;
+        padding: 20px 16px;
       }
+    }
+
+    @media print {
+      body { background: #ffffff !important; color: #000000 !important; padding: 0; }
+      .action-bar, .mobile-day-bar { display: none !important; }
+      .board-container { box-shadow: none !important; border: none !important; padding: 0 !important; }
     }
   </style>
 </head>
-<body>
-
+<body class="dark-theme">
   <div class="action-bar">
     <div class="action-bar-left">
-      <button id="btnToggleEdit" class="btn-toggle-edit" onclick="toggleEditMode()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
-          <path d="m15 5 4 4"/>
+      <button id="btnToggleEdit" class="btn-toggle-edit" onclick="window.toggleEditMode()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path>
+          <path d="m15 5 4 4"></path>
         </svg>
         <span id="editModeBtnLabel">Éditer le planning</span>
       </button>
 
       <span class="edit-mode-indicator">
-        <span>● Mode Édition actif : Glissez-déposez ou cliquez sur un cours</span>
+        <span>● Mode Édition : Glissez-déposez ou cliquez sur un créneau</span>
       </span>
 
-      <button class="btn-ai-magic" onclick="openScheduleEditorModal()">
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/>
-        </svg>
-        Adapter via Gemini IA
-      </button>
-
-      <button class="btn-ai-secondary" onclick="openHoursCalculator()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <button class="btn-action-sm" onclick="window.openHoursCalculator()" title="Consulter la répartition et le total des heures de cours">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <rect x="4" y="2" width="16" height="20" rx="2"></rect>
           <line x1="8" y1="6" x2="16" y2="6"></line>
           <line x1="16" y1="14" x2="16" y2="18"></line>
@@ -757,77 +1029,65 @@
         </svg>
         Calculateur d'horaires
       </button>
+
+      <button class="btn-action-sm" onclick="window.openAgendaModal()" title="Consulter l'agenda et les examens à venir">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        Agenda &amp; Examens
+        <span id="agendaBadgeCount" style="display:none; background:#8b5cf6; color:#fff; font-size:10.5px; font-weight:800; border-radius:10px; padding:1px 6px; margin-left:2px;">0</span>
+      </button>
     </div>
 
     <div class="action-bar-right">
-      <button class="btn-ai-secondary" onclick="exportStandaloneHtml()" title="Télécharger le fichier HTML complet prêt à l'emploi sur votre PC">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-          <polyline points="7 10 12 15 17 10"/>
-          <line x1="12" y1="15" x2="12" y2="3"/>
+      <button class="btn-action-sm" onclick="window.openSettingsModal()" title="Paramètres d'affichage, thème sombre et exports">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
+          <circle cx="12" cy="12" r="3"></circle>
         </svg>
-        Télécharger HTML pour PC
+        Paramètres
       </button>
 
-      <button class="btn-ai-secondary" onclick="exportSchedulePng()" title="Exporter en image PNG haute définition (idéal fond d'écran)">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/>
-          <circle cx="9" cy="9" r="2"/>
-          <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
-        </svg>
-        Sauvegarder (.png)
-      </button>
-
-      <button class="btn-ai-secondary" onclick="exportJsonBackup()" title="Sauvegarder une copie de secours sur votre PC">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
-          <polyline points="17 21 17 13 7 13 7 21"/>
-          <polyline points="7 3 7 8 15 8"/>
-        </svg>
-        Sauvegarder (.json)
-      </button>
-
-      <button class="btn-ai-secondary" onclick="triggerImportFile()" title="Restaurer un planning depuis votre PC">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-          <polyline points="17 8 12 3 7 8"/>
-          <line x1="12" y1="3" x2="12" y2="15"/>
-        </svg>
-        Charger (.json)
-      </button>
-      <input type="file" id="importFileInput" accept=".json" style="display:none;" onchange="handleFileImport(event)">
-
-      <button class="btn-ai-secondary" onclick="resetToDefaultSchedule()" title="Restaurer l'emploi du temps par défaut">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
-          <path d="M3 3v5h5"/>
-        </svg>
-        Réinitialiser
-      </button>
-
-      <button class="btn-print" onclick="window.print()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <button class="btn-action-sm btn-print-icon" onclick="window.print()" title="Imprimer ou enregistrer en PDF">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="6 9 6 2 18 2 18 9"></polyline>
           <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
           <rect x="6" y="14" width="12" height="8"></rect>
         </svg>
-        Imprimer / Sauvegarder en PDF
       </button>
 
       <div id="syncBadge" class="sync-badge saved" title="Statut de sauvegarde">
         <span id="syncDot">●</span>
-        <span id="syncText">Sauvegardé</span>
+        <span id="syncText">Sauvegardé sur ce PC</span>
       </div>
-      <span id="userIdDisplay" class="user-id-tag" title="Identifiant unique de votre planning">Compte invité</span>
+      <span id="userIdDisplay" class="user-id-tag" title="Identifiant de synchronisation">Mémoire locale</span>
     </div>
   </div>
 
+  <div class="mobile-day-bar" id="mobileDayBar">
+    <button class="mobile-day-btn active" onclick="window.setMobileDay('all')">Toute la semaine</button>
+    <button class="mobile-day-btn" onclick="window.setMobileDay('lundi')">Lundi</button>
+    <button class="mobile-day-btn" onclick="window.setMobileDay('mardi')">Mardi</button>
+    <button class="mobile-day-btn" onclick="window.setMobileDay('mercredi')">Mercredi</button>
+    <button class="mobile-day-btn" onclick="window.setMobileDay('jeudi')">Jeudi</button>
+    <button class="mobile-day-btn" onclick="window.setMobileDay('vendredi')">Vendredi</button>
+  </div>
+
   <div class="board-container">
-    <!-- En-tête -->
     <header class="header-section">
       <div class="title-group">
-        <h1>Planning Hebdomadaire</h1>
-        <p>BTS - Ciel 1ère année &bull; <span style="color:#6366f1; font-weight:600;">✨ Cliquez sur un cours pour le tuteur IA</span></p>
+        <div style="display:flex; align-items:center; flex-wrap:wrap; gap:8px;">
+          <h1 id="scheduleMainTitle" contenteditable="false" spellcheck="false" title="Modifiable en mode édition">Planning Hebdomadaire</h1>
+          <span class="title-edit-hint">✎ Cliquez pour modifier</span>
+        </div>
+        <p>
+          <span id="scheduleSubtitleText" contenteditable="false" spellcheck="false" title="Modifiable en mode édition">BTS - CIEL 1ère année</span>
+          •
+          <span style="color:#818cf8; font-weight:600;">✨ Cliquez sur un cours pour réviser ou accéder au CNED</span>
+        </p>
       </div>
       <div class="menu-icon" aria-hidden="true">
         <span></span>
@@ -836,34 +1096,29 @@
       </div>
     </header>
 
-    <!-- Grille des 5 jours (remplie dynamiquement ou réactive) -->
-    <main class="schedule-grid" id="schedule-grid-container">
-      <!-- Les colonnes sont générées dynamiquement par JS pour permettre la modification IA instantanée -->
-    </main>
+    <main class="schedule-grid" id="schedule-grid-container"></main>
   </div>
 
-  <!-- Modal Universel IA -->
-  <div id="aiModal" class="ai-modal-backdrop" onclick="if(event.target === this) closeAiModal()">
+  <div id="aiModal" class="ai-modal-backdrop" onclick="if(event.target === this) window.closeAiModal()">
     <div class="ai-modal-card">
       <div class="ai-modal-header">
         <div style="display:flex; align-items:center; gap:10px;">
-          <div style="width:34px; height:34px; border-radius:10px; background:#e0e7ff; display:flex; align-items:center; justify-content:center; color:#4f46e5; font-weight:bold;">
+          <div style="width:34px; height:34px; border-radius:10px; background:rgba(99,102,241,0.2); display:flex; align-items:center; justify-content:center; color:#818cf8; font-weight:bold;">
             ✨
           </div>
           <div>
-            <h3 id="modalTitle" style="font-size:17px; font-weight:700; color:#0f172a;">Coach IA BTS CIEL</h3>
-            <p id="modalSubtitle" style="font-size:12px; color:#64748b;">Gemini 3 Flash Intelligence</p>
+            <h3 id="modalTitle" style="font-size:16.5px; font-weight:700;">Paramètres</h3>
+            <p id="modalSubtitle" style="font-size:12px; opacity:0.8;">Affichage, Thème &amp; Sauvegardes</p>
           </div>
         </div>
-        <button onclick="closeAiModal()" style="background:transparent; border:none; color:#94a3b8; cursor:pointer; font-size:22px; line-height:1;">&times;</button>
+        <button onclick="window.closeAiModal()" style="background:transparent; border:none; color:#94a3b8; cursor:pointer; font-size:22px; line-height:1;">×</button>
       </div>
-      <div id="modalContent" class="ai-modal-body">
-        <!-- Content inserted dynamically -->
-      </div>
+      <div id="modalContent" class="ai-modal-body"></div>
     </div>
   </div>
 
-  <!-- Toast Notification -->
+  <input type="file" id="importFileInput" accept=".json" style="display:none;" onchange="window.handleFileImport(event)">
+
   <div id="aiToast" class="ai-toast">
     <span id="toastIcon">✨</span>
     <span id="toastMsg">Action effectuée</span>
@@ -881,80 +1136,795 @@
     let userId = null;
     let isStorageReady = false;
 
-    /* Configuration Gemini API */
     const apiKey = "";
     const GEMINI_TEXT_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
 
+    let isDarkMode = true;
     let isEditMode = false;
     let draggedSlotInfo = null;
+    let mobileActiveDay = 'all';
+    let attachedFile = null;
+    let isCustomColorActive = false;
+    let selectedEventIcon = '🎓';
 
-    // Données par défaut du planning BTS CIEL (avec Bloc 2 et Quartier libre Mercredi)
+    const EVENT_ICONS = ['🎓', '📝', '💻', '🗣️', '⚠️', '📌', '📚', '🎯', '🏆', '⚡'];
+
+    const LOCAL_STORAGE_KEY = 'bts_ciel_schedule_backup_v4';
+
+    const DEFAULT_CNED_URLS = {
+      bloc1: "https://eformation.cned.fr/course/view.php?id=19096&section=1",
+      physique: "https://eformation.cned.fr/course/view.php?id=19096&section=12",
+      bloc2: "https://eformation.cned.fr/course/view.php?id=19095&section=1",
+      bloc3: "https://eformation.cned.fr/course/view.php?id=19094&section=1",
+      maths: "https://eformation.cned.fr/course/view.php?id=19097&section=1",
+      culture: "https://eformation.cned.fr/course/view.php?id=539&section=1",
+      anglais: "https://eformation.cned.fr/course/view.php?id=2223&section=1"
+    };
+
+    function hexToRgb(hex) {
+      let cleanHex = hex.replace('#', '');
+      if (cleanHex.length === 3) {
+        cleanHex = cleanHex.split('').map(c => c + c).join('');
+      }
+      const num = parseInt(cleanHex, 16);
+      return {
+        r: (num >> 16) & 255,
+        g: (num >> 8) & 255,
+        b: num & 255
+      };
+    }
+
+    function hexToRgba(hex, alpha) {
+      try {
+        const { r, g, b } = hexToRgb(hex);
+        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+      } catch (e) {
+        return hex;
+      }
+    }
+
+    function rgbToHsl(r, g, b) {
+      r /= 255; g /= 255; b /= 255;
+      const max = Math.max(r, g, b), min = Math.min(r, g, b);
+      let h, s, l = (max + min) / 2;
+      if (max === min) {
+        h = s = 0;
+      } else {
+        const d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        switch (max) {
+          case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+          case g: h = (b - r) / d + 2; break;
+          case b: h = (r - g) / d + 4; break;
+        }
+        h /= 6;
+      }
+      return { h: Math.round(h * 360), s: Math.round(s * 100), l: Math.round(l * 100) };
+    }
+
+    function computeGlassyStyles(color1, color2) {
+      const c1 = color1 || '#6366f1';
+      const c2 = color2 || c1;
+      const { r, g, b } = hexToRgb(c1);
+      const { h, s } = rgbToHsl(r, g, b);
+
+      const darkBg = `linear-gradient(135deg, ${hexToRgba(c1, 0.45)} 0%, ${hexToRgba(c2, 0.22)} 100%)`;
+      const darkBorder = hexToRgba(c1, 0.55);
+      const darkGlow = hexToRgba(c1, 0.35);
+      const darkText = `hsl(${h}, ${Math.min(s, 90)}%, 82%)`;
+
+      const lightBg = `hsl(${h}, ${Math.min(s, 65)}%, 92%)`;
+      const lightBorder = `hsl(${h}, ${Math.min(s, 50)}%, 78%)`;
+      const lightText = `hsl(${h}, ${Math.max(s, 65)}%, 26%)`;
+
+      return { darkBg, darkBorder, darkGlow, darkText, lightBg, lightBorder, lightText };
+    }
+
     const defaultScheduleData = {
-      lundi: {
-        label: "LUNDI",
-        slots: [
-          { time: "9h - 9h30", title: "Quartier libre", theme: "quartier-libre" },
-          { time: "9h30 - 12h", title: "Bloc 1", theme: "bloc1", subjectKey: "bloc1" },
-          { time: "12h - 12h30", title: "Pause repas", theme: "pause" },
-          { time: "12h30 - 14h", title: "Anglais", theme: "anglais", subjectKey: "anglais" },
-          { time: "14h - X", title: "Quartier libre", theme: "quartier-libre" },
-          { time: "", title: "", theme: "empty" },
-          { time: "", title: "", theme: "empty" }
+      "meta": {
+        "title": "Planning Hebdomadaire",
+        "subtitle": "BTS - CIEL 1ère année"
+      },
+      "preferences": {
+        "isDarkMode": true,
+        "cnedUrls": {
+          "bloc1": "https://eformation.cned.fr/course/view.php?id=19096&section=1",
+          "physique": "https://eformation.cned.fr/course/view.php?id=19096&section=12",
+          "bloc2": "https://eformation.cned.fr/course/view.php?id=19095&section=1",
+          "bloc3": "https://eformation.cned.fr/course/view.php?id=19094&section=1",
+          "maths": "https://eformation.cned.fr/course/view.php?id=19097&section=1",
+          "culture": "https://eformation.cned.fr/course/view.php?id=539&section=1",
+          "anglais": "https://eformation.cned.fr/course/view.php?id=2223&section=1"
+        }
+      },
+      "lundi": {
+        "label": "LUNDI",
+        "slots": [
+          { "time": "9h - 9h30", "title": "Quartier libre", "theme": "quartier-libre" },
+          { "time": "9h30 - 12h", "title": "Bloc 1", "theme": "bloc1", "subjectKey": "bloc1" },
+          { "time": "12h - 13h", "title": "Pause repas", "theme": "pause" },
+          { "time": "13h - 14h", "title": "Anglais", "theme": "anglais", "subjectKey": "anglais" },
+          { "time": "14h - X", "title": "Quartier libre", "theme": "quartier-libre" },
+          { "time": "", "title": "", "theme": "empty" },
+          { "time": "", "title": "", "theme": "empty" }
         ]
       },
-      mardi: {
-        label: "MARDI",
-        slots: [
-          { time: "X - 12h", title: "Quartier libre", theme: "quartier-libre" },
-          { time: "12h - 12h30", title: "Pause repas", theme: "pause" },
-          { time: "12h30 - 16h", title: "Culture générale", theme: "culture", subjectKey: "culture" },
-          { time: "16h - 17h", title: "Pause goûter / jeux", theme: "pause" },
-          { time: "17h - 19h", title: "Mathématiques", theme: "maths", subjectKey: "maths" },
-          { time: "19h - 21h", title: "Bloc 2", theme: "bloc2", subjectKey: "bloc2" },
-          { time: "21h - X", title: "Quartier libre", theme: "quartier-libre" }
+      "mardi": {
+        "label": "MARDI",
+        "slots": [
+          { "time": "X - 12h", "title": "Quartier libre", "theme": "quartier-libre" },
+          { "time": "12h - 13h", "title": "Pause repas", "theme": "pause" },
+          { "time": "13h - 16h", "title": "Culture générale", "theme": "culture", "subjectKey": "culture" },
+          { "time": "16h - 17h", "title": "Pause goûter / jeux", "theme": "pause" },
+          { "time": "17h - 19h", "title": "Mathématiques", "theme": "maths", "subjectKey": "maths" },
+          { "time": "19h - 21h", "title": "Bloc 2", "theme": "bloc2", "subjectKey": "bloc2" },
+          { "time": "21h - X", "title": "Quartier libre", "theme": "quartier-libre" }
         ]
       },
-      mercredi: {
-        label: "MERCREDI",
-        slots: [
-          { time: "7h - 7h30", title: "Quartier libre", theme: "quartier-libre" },
-          { time: "7h30 - 12h", title: "Physique", theme: "physique", subjectKey: "physique" },
-          { time: "12h - 12h30", title: "Pause repas", theme: "pause" },
-          { time: "12h30 - 16h", title: "Physique", theme: "physique", subjectKey: "physique" },
-          { time: "16h - 17h", title: "Pause goûter / jeux", theme: "pause" },
-          { time: "17h - 20h", title: "Mathématiques", theme: "maths", subjectKey: "maths" },
-          { time: "20h - X", title: "Quartier libre", theme: "quartier-libre" }
+      "mercredi": {
+        "label": "MERCREDI",
+        "slots": [
+          { "time": "7h - 7h30", "title": "Quartier libre", "theme": "quartier-libre" },
+          { "time": "7h30 - 12h", "title": "Physique", "theme": "physique", "subjectKey": "physique" },
+          { "time": "12h - 13h", "title": "Pause repas", "theme": "pause" },
+          { "time": "13h - 16h", "title": "Physique", "theme": "physique", "subjectKey": "physique" },
+          { "time": "16h - 17h", "title": "Pause goûter / jeux", "theme": "pause" },
+          { "time": "17h - 20h", "title": "Mathématiques", "theme": "maths", "subjectKey": "maths" },
+          { "time": "20h - X", "title": "Quartier libre", "theme": "quartier-libre" }
         ]
       },
-      jeudi: {
-        label: "JEUDI",
-        slots: [
-          { time: "X - 16h30", title: "Quartier libre", theme: "quartier-libre" },
-          { time: "16h30 - 20h", title: "Bloc 1", theme: "bloc1", subjectKey: "bloc1" },
-          { time: "20h - X", title: "Quartier libre", theme: "quartier-libre" },
-          { time: "", title: "", theme: "empty" },
-          { time: "", title: "", theme: "empty" },
-          { time: "", title: "", theme: "empty" },
-          { time: "", title: "", theme: "empty" }
+      "jeudi": {
+        "label": "JEUDI",
+        "slots": [
+          { "time": "X - 16h30", "title": "Quartier libre", "theme": "quartier-libre" },
+          { "time": "16h30 - 20h", "title": "Bloc 1", "theme": "bloc1", "subjectKey": "bloc1" },
+          { "time": "20h - X", "title": "Quartier libre", "theme": "quartier-libre" },
+          { "time": "", "title": "", "theme": "empty" },
+          { "time": "", "title": "", "theme": "empty" },
+          { "time": "", "title": "", "theme": "empty" },
+          { "time": "", "title": "", "theme": "empty" }
         ]
       },
-      vendredi: {
-        label: "VENDREDI",
-        slots: [
-          { time: "X - 14h30", title: "Quartier libre", theme: "quartier-libre" },
-          { time: "14h30 - 18h", title: "Bloc 1", theme: "bloc1", subjectKey: "bloc1" },
-          { time: "18h - X", title: "Quartier libre", theme: "quartier-libre" },
-          { time: "", title: "", theme: "empty" },
-          { time: "", title: "", theme: "empty" },
-          { time: "", title: "", theme: "empty" },
-          { time: "", title: "", theme: "empty" }
+      "vendredi": {
+        "label": "VENDREDI",
+        "slots": [
+          { "time": "X - 14h30", "title": "Quartier libre", "theme": "quartier-libre" },
+          { "time": "14h30 - 18h", "title": "Bloc 1", "theme": "bloc1", "subjectKey": "bloc1" },
+          { "time": "18h - X", "title": "Quartier libre", "theme": "quartier-libre" },
+          { "time": "", "title": "", "theme": "empty" },
+          { "time": "", "title": "", "theme": "empty" },
+          { "time": "", "title": "", "theme": "empty" },
+          { "time": "", "title": "", "theme": "empty" }
         ]
       }
     };
 
+    let currentSchedule = JSON.parse(JSON.stringify(defaultScheduleData));
+
+    function stripUndefined(obj) {
+      if (Array.isArray(obj)) return obj.map(stripUndefined);
+      if (obj !== null && typeof obj === 'object') {
+        const cleaned = {};
+        for (const [k, v] of Object.entries(obj)) {
+          if (v !== undefined) cleaned[k] = stripUndefined(v);
+        }
+        return cleaned;
+      }
+      return obj;
+    }
+
+    function updateSyncIndicator(status, message) {
+      const badge = document.getElementById("syncBadge");
+      const text = document.getElementById("syncText");
+      if (!badge || !text) return;
+      badge.className = `sync-badge ${status}`;
+      text.textContent = message;
+    }
+
+    function showToast(message, icon = "✨") {
+      const toast = document.getElementById("aiToast");
+      if (!toast) return;
+      document.getElementById("toastIcon").textContent = icon;
+      document.getElementById("toastMsg").textContent = message;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 3500);
+    }
+
+    async function persistSchedule() {
+      if (!currentSchedule.preferences) currentSchedule.preferences = {};
+      currentSchedule.preferences.isDarkMode = isDarkMode;
+
+      try {
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(currentSchedule));
+      } catch (e) {
+        console.warn("Écriture sauvegarde locale :", e);
+      }
+
+      if (!isStorageReady || !db || !userId) {
+        updateSyncIndicator("saved", "Sauvegardé sur ce PC");
+        return;
+      }
+
+      updateSyncIndicator("saving", "Sauvegarde...");
+      try {
+        const scheduleRef = doc(db, 'artifacts', appId, 'users', userId, 'schedules', 'weekly');
+        await setDoc(scheduleRef, {
+          schedule: stripUndefined(currentSchedule),
+          lastUpdated: Date.now()
+        });
+        updateSyncIndicator("saved", "Synchronisé en ligne");
+      } catch (err) {
+        console.warn("Erreur sauvegarde cloud :", err);
+        updateSyncIndicator("saved", "Sauvegardé sur ce PC");
+      }
+    }
+
+    async function initCloudPersistence() {
+      if (typeof __firebase_config === 'undefined') {
+        updateSyncIndicator("saved", "Sauvegardé sur ce PC");
+        const userTag = document.getElementById("userIdDisplay");
+        if (userTag) userTag.textContent = "Mémoire locale";
+        return;
+      }
+
+      try {
+        updateSyncIndicator("saving", "Connexion...");
+        const firebaseConfig = JSON.parse(__firebase_config);
+        const app = initializeApp(firebaseConfig);
+        db = getFirestore(app);
+        auth = getAuth(app);
+
+        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+          await signInWithCustomToken(auth, __initial_auth_token);
+        } else {
+          await signInAnonymously(auth);
+        }
+
+        currentUser = auth.currentUser;
+        userId = currentUser?.uid || crypto.randomUUID();
+
+        const userTag = document.getElementById("userIdDisplay");
+        if (userTag) userTag.textContent = `ID: ${userId}`;
+        isStorageReady = true;
+
+        const scheduleRef = doc(db, 'artifacts', appId, 'users', userId, 'schedules', 'weekly');
+        onSnapshot(scheduleRef, (snapshot) => {
+          if (snapshot.exists()) {
+            const data = snapshot.data();
+            if (data && data.schedule) {
+              currentSchedule = data.schedule;
+              if (currentSchedule.preferences && typeof currentSchedule.preferences.isDarkMode === 'boolean') {
+                isDarkMode = currentSchedule.preferences.isDarkMode;
+              }
+              document.body.classList.toggle("dark-theme", isDarkMode);
+              updateHeaderTitles();
+              renderSchedule();
+              updateSyncIndicator("saved", "Synchronisé en ligne");
+            }
+          } else {
+            persistSchedule();
+          }
+        }, (error) => {
+          console.warn("Erreur écoute cloud :", error);
+          updateSyncIndicator("saved", "Sauvegardé sur ce PC");
+        });
+      } catch (err) {
+        console.warn("Échec cloud :", err);
+        updateSyncIndicator("saved", "Sauvegardé sur ce PC");
+      }
+    }
+
+    function updateHeaderTitles() {
+      const titleEl = document.getElementById("scheduleMainTitle");
+      const subtitleEl = document.getElementById("scheduleSubtitleText");
+      if (titleEl && currentSchedule.meta?.title) {
+        titleEl.textContent = currentSchedule.meta.title;
+      }
+      if (subtitleEl && currentSchedule.meta?.subtitle) {
+        subtitleEl.textContent = currentSchedule.meta.subtitle;
+      }
+    }
+
+    function updateAgendaBadge() {
+      const badge = document.getElementById("agendaBadgeCount");
+      if (!badge) return;
+      const count = (currentSchedule.events || []).length;
+      if (count > 0) {
+        badge.textContent = count;
+        badge.style.display = "inline-block";
+      } else {
+        badge.style.display = "none";
+      }
+    }
+
+    function renderSchedule() {
+      const container = document.getElementById("schedule-grid-container");
+      if (!container) return;
+      container.innerHTML = "";
+
+      updateHeaderTitles();
+      updateAgendaBadge();
+
+      const days = ["lundi", "mardi", "mercredi", "jeudi", "vendredi"];
+
+      days.forEach(dayKey => {
+        const dayData = currentSchedule[dayKey];
+        const section = document.createElement("section");
+        const isVisibleOnMobile = mobileActiveDay === 'all' || mobileActiveDay === dayKey;
+        section.className = `day-column col-${dayKey} ${isVisibleOnMobile ? 'mobile-visible' : ''}`;
+        section.id = `col-${dayKey}`;
+
+        const header = document.createElement("div");
+        header.className = "day-header";
+        header.innerHTML = `
+          <span class="day-name">${dayData.label}</span>
+          <span class="day-dot"></span>
+        `;
+        section.appendChild(header);
+
+        dayData.slots.forEach((slot, index) => {
+          const slotItem = document.createElement("div");
+          slotItem.className = "slot-item";
+          slotItem.dataset.day = dayKey;
+          slotItem.dataset.index = index;
+
+          const timeSpan = document.createElement("span");
+          timeSpan.className = slot.time ? "slot-time" : "slot-time empty-time";
+          timeSpan.textContent = slot.time || "Créneau libre";
+          slotItem.appendChild(timeSpan);
+
+          const cardBox = document.createElement("div");
+          const isCustom = Boolean(slot.customColor1 || slot.customColor || slot.customBg);
+          cardBox.className = `card-box theme-${slot.theme || 'empty'} ${isCustom ? 'theme-custom' : ''}`;
+
+          if (isCustom) {
+            const c1 = slot.customColor1 || slot.customColor || '#6366f1';
+            const c2 = slot.customColor2 || c1;
+            const styles = computeGlassyStyles(c1, c2);
+
+            cardBox.style.setProperty('--slot-dark-bg', styles.darkBg);
+            cardBox.style.setProperty('--slot-dark-border', styles.darkBorder);
+            cardBox.style.setProperty('--slot-dark-glow', styles.darkGlow);
+            cardBox.style.setProperty('--slot-dark-text', styles.darkText);
+            cardBox.style.setProperty('--slot-light-bg', styles.lightBg);
+            cardBox.style.setProperty('--slot-light-border', styles.lightBorder);
+            cardBox.style.setProperty('--slot-light-text', styles.lightText);
+          }
+
+          if (isEditMode) {
+            cardBox.setAttribute("draggable", "true");
+            cardBox.addEventListener("dragstart", (e) => {
+              draggedSlotInfo = { day: dayKey, index: index };
+              cardBox.classList.add("dragging");
+              e.dataTransfer.effectAllowed = "move";
+            });
+
+            cardBox.addEventListener("dragend", () => {
+              cardBox.classList.remove("dragging");
+              document.querySelectorAll(".slot-item").forEach(el => el.classList.remove("drag-over"));
+            });
+
+            slotItem.addEventListener("dragover", (e) => {
+              e.preventDefault();
+              e.dataTransfer.dropEffect = "move";
+              slotItem.classList.add("drag-over");
+            });
+
+            slotItem.addEventListener("dragleave", () => {
+              slotItem.classList.remove("drag-over");
+            });
+
+            slotItem.addEventListener("drop", (e) => {
+              e.preventDefault();
+              slotItem.classList.remove("drag-over");
+              if (!draggedSlotInfo) return;
+              swapOrMoveSlots(draggedSlotInfo.day, draggedSlotInfo.index, dayKey, index);
+              draggedSlotInfo = null;
+            });
+
+            cardBox.onclick = (e) => {
+              if (e.target.closest('.card-edit-overlay')) return;
+              openSlotEditor(dayKey, index);
+            };
+          } else {
+            const isAcademic = slot.subjectKey && slot.theme !== "empty" && slot.theme !== "quartier-libre" && slot.theme !== "pause";
+            if (isAcademic) {
+              cardBox.classList.add("clickable-slot");
+              cardBox.title = "Cliquez pour réviser ou accéder au cours CNED";
+              cardBox.onclick = () => openSubjectTutor(slot.title, slot.time, dayData.label, slot.subjectKey);
+            }
+          }
+
+          cardBox.innerHTML = `
+            <div class="card-top">
+              <div class="badge-pill"></div>
+              <span class="card-title">${slot.title}</span>
+            </div>
+            <div class="card-lines"></div>
+            <div class="card-edit-overlay">
+              <button class="btn-slot-tool" title="Modifier ce créneau" onclick="event.stopPropagation(); window.openSlotEditor('${dayKey}', ${index})">
+                ✎
+              </button>
+              <button class="btn-slot-tool tool-delete" title="Vider ou supprimer" onclick="event.stopPropagation(); window.clearOrDeleteSlot('${dayKey}', ${index})">
+                ✕
+              </button>
+            </div>
+          `;
+
+          slotItem.appendChild(cardBox);
+          section.appendChild(slotItem);
+        });
+
+        const addBtn = document.createElement("button");
+        addBtn.className = "btn-add-slot";
+        addBtn.innerHTML = "+ Ajouter un créneau";
+        addBtn.onclick = () => addNewSlot(dayKey);
+        section.appendChild(addBtn);
+
+        container.appendChild(section);
+      });
+    }
+
+    function openModal(title, subtitle, contentHtml) {
+      document.getElementById("modalTitle").textContent = title;
+      document.getElementById("modalSubtitle").textContent = subtitle;
+      document.getElementById("modalContent").innerHTML = contentHtml;
+      document.getElementById("aiModal").classList.add("active");
+    }
+
+    function closeAiModal() {
+      document.getElementById("aiModal").classList.remove("active");
+    }
+
+    function toggleEditMode() {
+      isEditMode = !isEditMode;
+      document.body.classList.toggle("edit-mode", isEditMode);
+      const btn = document.getElementById("btnToggleEdit");
+      const label = document.getElementById("editModeBtnLabel");
+      const titleEl = document.getElementById("scheduleMainTitle");
+      const subtitleEl = document.getElementById("scheduleSubtitleText");
+
+      if (titleEl && subtitleEl) {
+        titleEl.contentEditable = isEditMode ? "true" : "false";
+        subtitleEl.contentEditable = isEditMode ? "true" : "false";
+
+        if (isEditMode) {
+          titleEl.onblur = saveTitleEdits;
+          subtitleEl.onblur = saveTitleEdits;
+        } else {
+          saveTitleEdits();
+          titleEl.onblur = null;
+          subtitleEl.onblur = null;
+        }
+      }
+
+      if (isEditMode) {
+        btn.classList.add("active");
+        label.textContent = "Quitter l'édition";
+        showToast("Mode Édition : Modifiez les titres, créneaux et dégradés ✎", "✏️");
+      } else {
+        btn.classList.remove("active");
+        label.textContent = "Éditer le planning";
+        showToast("Modifications enregistrées !", "💾");
+      }
+      renderSchedule();
+    }
+
+    function saveTitleEdits() {
+      const titleEl = document.getElementById("scheduleMainTitle");
+      const subtitleEl = document.getElementById("scheduleSubtitleText");
+      if (!titleEl || !subtitleEl) return;
+
+      const newTitle = titleEl.textContent.trim() || "Planning Hebdomadaire";
+      const newSubtitle = subtitleEl.textContent.trim() || "BTS - CIEL 1ère année";
+
+      if (!currentSchedule.meta) currentSchedule.meta = {};
+      if (currentSchedule.meta.title !== newTitle || currentSchedule.meta.subtitle !== newSubtitle) {
+        currentSchedule.meta.title = newTitle;
+        currentSchedule.meta.subtitle = newSubtitle;
+        persistSchedule();
+      }
+    }
+
+    function swapOrMoveSlots(srcDay, srcIdx, destDay, destIdx) {
+      if (srcDay === destDay && srcIdx === destIdx) return;
+      const sourceItem = currentSchedule[srcDay].slots[srcIdx];
+      const targetItem = currentSchedule[destDay].slots[destIdx];
+      currentSchedule[srcDay].slots[srcIdx] = targetItem;
+      currentSchedule[destDay].slots[destIdx] = sourceItem;
+      renderSchedule();
+      persistSchedule();
+      showToast(`Créneau déplacé vers ${currentSchedule[destDay].label}`, "↔️");
+    }
+
+    function setMobileDay(dayKey) {
+      mobileActiveDay = dayKey;
+      document.querySelectorAll(".mobile-day-btn").forEach(btn => btn.classList.remove("active"));
+      event.target.classList.add("active");
+      renderSchedule();
+    }
+
+    function updateColorPreview() {
+      const c1 = document.getElementById("editCustomColor1")?.value || '#6366f1';
+      const c2 = document.getElementById("editCustomColor2")?.value || c1;
+      const title = document.getElementById("editSlotTitle")?.value?.trim() || "Exemple";
+
+      const hexVal1 = document.getElementById("hexVal1");
+      const hexVal2 = document.getElementById("hexVal2");
+      if (hexVal1) hexVal1.textContent = c1;
+      if (hexVal2) hexVal2.textContent = c2;
+
+      const styles = computeGlassyStyles(c1, c2);
+
+      const darkBox = document.getElementById("darkPreviewBox");
+      const darkTitle = document.getElementById("darkPreviewTitle");
+      if (darkBox && darkTitle) {
+        darkBox.style.background = styles.darkBg;
+        darkBox.style.border = `1px solid ${styles.darkBorder}`;
+        darkBox.style.boxShadow = `0 4px 12px ${styles.darkGlow}`;
+        darkTitle.style.color = styles.darkText;
+        darkTitle.style.textShadow = `0 0 10px ${styles.darkGlow}`;
+        darkTitle.textContent = title;
+      }
+
+      const lightBox = document.getElementById("lightPreviewBox");
+      const lightTitle = document.getElementById("lightPreviewTitle");
+      if (lightBox && lightTitle) {
+        lightBox.style.background = styles.lightBg;
+        lightBox.style.border = `1px solid ${styles.lightBorder}`;
+        lightTitle.style.color = styles.lightText;
+        lightTitle.style.textShadow = 'none';
+        lightTitle.textContent = title;
+      }
+    }
+
+    function applyGradientPreset(c1, c2) {
+      isCustomColorActive = true;
+      const input1 = document.getElementById("editCustomColor1");
+      const input2 = document.getElementById("editCustomColor2");
+      if (input1) input1.value = c1;
+      if (input2) input2.value = c2;
+      updateColorPreview();
+      showToast("Dégradé personnalisé activé", "🎨");
+    }
+
+    function resetSlotColors() {
+      isCustomColorActive = false;
+      const input1 = document.getElementById("editCustomColor1");
+      const input2 = document.getElementById("editCustomColor2");
+      if (input1) input1.value = "#6366f1";
+      if (input2) input2.value = "#4338ca";
+      updateColorPreview();
+      showToast("Couleurs personnalisées retirées : couleur officielle active", "🔄");
+    }
+
+    function applyQuickPreset(title, theme, subjectKey) {
+      const titleInput = document.getElementById("editSlotTitle");
+      const themeSelect = document.getElementById("editSlotTheme");
+      if (titleInput) titleInput.value = title;
+      if (themeSelect) themeSelect.value = theme;
+
+      isCustomColorActive = false;
+
+      updateColorPreview();
+      showToast(`Raccourci appliqué : ${title} (couleur officielle)`, "✨");
+    }
+
+    function moveSlotVertical(dayKey, index, direction) {
+      const slots = currentSchedule[dayKey].slots;
+      const targetIndex = index + direction;
+      if (targetIndex < 0 || targetIndex >= slots.length) return;
+
+      const temp = slots[index];
+      slots[index] = slots[targetIndex];
+      slots[targetIndex] = temp;
+
+      renderSchedule();
+      persistSchedule();
+      openSlotEditor(dayKey, targetIndex);
+    }
+
+    function saveSlotEdit(dayKey, index) {
+      const time = document.getElementById("editSlotTime")?.value?.trim() || "";
+      const title = document.getElementById("editSlotTitle")?.value?.trim() || "";
+      const theme = document.getElementById("editSlotTheme")?.value || "empty";
+      const color1 = document.getElementById("editCustomColor1")?.value;
+      const color2 = document.getElementById("editCustomColor2")?.value;
+
+      let subjectKey = undefined;
+      if (['bloc1', 'bloc2', 'bloc3', 'maths', 'physique', 'culture', 'anglais'].includes(theme)) {
+        subjectKey = theme;
+      }
+
+      const updatedSlot = {
+        time,
+        title,
+        theme,
+        subjectKey
+      };
+
+      if (isCustomColorActive) {
+        updatedSlot.customColor1 = color1;
+        updatedSlot.customColor2 = color2;
+        updatedSlot.customIsGlassy = true;
+      }
+
+      currentSchedule[dayKey].slots[index] = updatedSlot;
+
+      renderSchedule();
+      persistSchedule();
+      closeAiModal();
+      showToast(isCustomColorActive ? "Créneau enregistré avec dégradé personnalisé !" : "Créneau enregistré avec couleur officielle !", "✅");
+    }
+
+    function openSlotEditor(dayKey, index) {
+      const slot = currentSchedule[dayKey].slots[index];
+      const dayName = currentSchedule[dayKey].label;
+
+      isCustomColorActive = Boolean(slot.customColor1 || slot.customColor || slot.customBg);
+      const color1 = slot.customColor1 || slot.customColor || '#6366f1';
+      const color2 = slot.customColor2 || color1;
+
+      const modalHtml = `
+        <div style="display:flex; flex-direction:column; gap:16px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(30,41,59,0.5); padding:10px 14px; border-radius:10px; border:1px solid rgba(255,255,255,0.08);">
+            <span style="font-weight:700;">Jour : ${dayName} (Créneau #${index + 1})</span>
+            <div style="display:flex; gap:6px;">
+              <button class="btn-ai-secondary" style="font-size:12px; padding:4px 8px;" onclick="window.moveSlotVertical('${dayKey}', ${index}, -1)" ${index === 0 ? 'disabled' : ''}>▲ Monter</button>
+              <button class="btn-ai-secondary" style="font-size:12px; padding:4px 8px;" onclick="window.moveSlotVertical('${dayKey}', ${index}, 1)" ${index === currentSchedule[dayKey].slots.length - 1 ? 'disabled' : ''}>▼ Descendre</button>
+            </div>
+          </div>
+
+          <div>
+            <label style="display:block; font-size:12.5px; font-weight:700; margin-bottom:6px;">Plage horaire</label>
+            <input type="text" id="editSlotTime" value="${slot.time || ''}" placeholder="Ex: 13h - 16h" style="width:100%; padding:10px 12px; border-radius:8px; border:1px solid rgba(129,140,248,0.3); background:rgba(15,23,42,0.8); color:inherit; font-family:inherit; font-size:14px;">
+          </div>
+
+          <div>
+            <label style="display:block; font-size:12.5px; font-weight:700; margin-bottom:6px;">Intitulé du cours / activité</label>
+            <input type="text" id="editSlotTitle" value="${slot.title || ''}" placeholder="Ex: Bloc 1, Bloc 3, Mathématiques..." style="width:100%; padding:10px 12px; border-radius:8px; border:1px solid rgba(129,140,248,0.3); background:rgba(15,23,42,0.8); color:inherit; font-family:inherit; font-size:14px;" oninput="window.updateColorPreview()">
+          </div>
+
+          <div>
+            <label style="display:block; font-size:12.5px; font-weight:700; margin-bottom:6px;">Raccourcis matières BTS CIEL (utilise directement la couleur officielle)</label>
+            <div style="display:flex; flex-wrap:wrap; gap:6px;">
+              <button type="button" class="btn-ai-secondary" style="font-size:11.5px; padding:4px 8px;" onclick="window.applyQuickPreset('Bloc 1', 'bloc1', 'bloc1')">Bloc 1</button>
+              <button type="button" class="btn-ai-secondary" style="font-size:11.5px; padding:4px 8px;" onclick="window.applyQuickPreset('Bloc 2', 'bloc2', 'bloc2')">Bloc 2</button>
+              <button type="button" class="btn-ai-secondary" style="font-size:11.5px; padding:4px 8px;" onclick="window.applyQuickPreset('Bloc 3', 'bloc3', 'bloc3')">Bloc 3</button>
+              <button type="button" class="btn-ai-secondary" style="font-size:11.5px; padding:4px 8px;" onclick="window.applyQuickPreset('Mathématiques', 'maths', 'maths')">Maths</button>
+              <button type="button" class="btn-ai-secondary" style="font-size:11.5px; padding:4px 8px;" onclick="window.applyQuickPreset('Physique', 'physique', 'physique')">Physique</button>
+              <button type="button" class="btn-ai-secondary" style="font-size:11.5px; padding:4px 8px;" onclick="window.applyQuickPreset('Culture générale', 'culture', 'culture')">Culture G</button>
+              <button type="button" class="btn-ai-secondary" style="font-size:11.5px; padding:4px 8px;" onclick="window.applyQuickPreset('Anglais', 'anglais', 'anglais')">Anglais</button>
+              <button type="button" class="btn-ai-secondary" style="font-size:11.5px; padding:4px 8px;" onclick="window.applyQuickPreset('Quartier libre', 'quartier-libre', '')">Quartier libre</button>
+              <button type="button" class="btn-ai-secondary" style="font-size:11.5px; padding:4px 8px;" onclick="window.applyQuickPreset('Pause repas', 'pause', '')">Pause repas</button>
+            </div>
+          </div>
+
+          <div style="background:rgba(15,23,42,0.6); padding:14px; border-radius:12px; border:1px solid rgba(129,140,248,0.25);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+              <label style="font-size:12.5px; font-weight:700; color:#818cf8;">✨ Dégradé personnalisé (optionnel)</label>
+              <button type="button" class="btn-ai-secondary" style="font-size:11px; padding:2px 8px;" onclick="window.resetSlotColors()">Retirer dégradé</button>
+            </div>
+
+            <div style="margin-bottom:10px;">
+              <span style="font-size:11.5px; opacity:0.8; display:block; margin-bottom:6px;">Préréglages d'ambiances :</span>
+              <div style="display:flex; flex-wrap:wrap; gap:6px;">
+                <button type="button" class="btn-ai-secondary" style="font-size:11px; padding:3px 8px;" onclick="window.applyGradientPreset('#6366f1', '#4338ca')">🌌 Indigo Cosmique</button>
+                <button type="button" class="btn-ai-secondary" style="font-size:11px; padding:3px 8px;" onclick="window.applyGradientPreset('#06b6d4', '#1d4ed8')">⚡ Cyber Cyan</button>
+                <button type="button" class="btn-ai-secondary" style="font-size:11px; padding:3px 8px;" onclick="window.applyGradientPreset('#a855f7', '#7e22ce')">🔮 Violet Néon</button>
+                <button type="button" class="btn-ai-secondary" style="font-size:11px; padding:3px 8px;" onclick="window.applyGradientPreset('#10b981', '#047857')">🍃 Émeraude</button>
+                <button type="button" class="btn-ai-secondary" style="font-size:11px; padding:3px 8px;" onclick="window.applyGradientPreset('#f97316', '#c2410c')">🌅 Crépuscule</button>
+                <button type="button" class="btn-ai-secondary" style="font-size:11px; padding:3px 8px;" onclick="window.applyGradientPreset('#ec4899', '#be185d')">🌸 Rose Pêche</button>
+                <button type="button" class="btn-ai-secondary" style="font-size:11px; padding:3px 8px;" onclick="window.applyGradientPreset('#eab308', '#a16207')">☀️ Ambre Doré</button>
+              </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:12px;">
+              <div>
+                <label style="font-size:11.5px; display:block; margin-bottom:4px; opacity:0.8;">Couleur départ :</label>
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <input type="color" id="editCustomColor1" value="${color1}" onchange="window.isCustomColorActive=true; window.updateColorPreview()" style="width:40px; height:32px; border:none; border-radius:6px; cursor:pointer; background:transparent;">
+                  <span id="hexVal1" style="font-family:monospace; font-size:12px;">${color1}</span>
+                </div>
+              </div>
+              <div>
+                <label style="font-size:11.5px; display:block; margin-bottom:4px; opacity:0.8;">Couleur fin :</label>
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <input type="color" id="editCustomColor2" value="${color2}" onchange="window.isCustomColorActive=true; window.updateColorPreview()" style="width:40px; height:32px; border:none; border-radius:6px; cursor:pointer; background:transparent;">
+                  <span id="hexVal2" style="font-family:monospace; font-size:12px;">${color2}</span>
+                </div>
+              </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+              <div>
+                <span style="font-size:11px; opacity:0.75; display:block; margin-bottom:3px;">Aperçu Mode Sombre (Glassy)</span>
+                <div id="darkPreviewBox" style="border-radius:10px; padding:10px 12px; height:60px; display:flex; flex-direction:column; justify-content:space-between;">
+                  <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div style="width:34px; height:14px; border-radius:4px; background:rgba(255,255,255,0.15);"></div>
+                    <strong id="darkPreviewTitle" style="font-size:12.5px;">${slot.title || 'Exemple'}</strong>
+                  </div>
+                  <div style="height:1px; background:rgba(255,255,255,0.2);"></div>
+                </div>
+              </div>
+
+              <div>
+                <span style="font-size:11px; opacity:0.75; display:block; margin-bottom:3px;">Aperçu Mode Clair (Pastel)</span>
+                <div id="lightPreviewBox" style="border-radius:10px; padding:10px 12px; height:60px; display:flex; flex-direction:column; justify-content:space-between;">
+                  <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div style="width:34px; height:14px; border-radius:4px; background:rgba(0,0,0,0.06);"></div>
+                    <strong id="lightPreviewTitle" style="font-size:12.5px;">${slot.title || 'Exemple'}</strong>
+                  </div>
+                  <div style="height:1px; background:rgba(0,0,0,0.1);"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <label style="display:block; font-size:12.5px; font-weight:700; margin-bottom:6px;">Type standard</label>
+            <select id="editSlotTheme" style="width:100%; padding:10px 12px; border-radius:8px; border:1px solid rgba(129,140,248,0.3); background:rgba(15,23,42,0.8); color:inherit; font-family:inherit; font-size:14px;">
+              <option value="bloc1" ${slot.theme === 'bloc1' ? 'selected' : ''}>Bloc 1 (Bleu doux)</option>
+              <option value="bloc2" ${slot.theme === 'bloc2' ? 'selected' : ''}>Bloc 2 (Orange pâle)</option>
+              <option value="bloc3" ${slot.theme === 'bloc3' ? 'selected' : ''}>Bloc 3 (Rose pastel / Néon)</option>
+              <option value="maths" ${slot.theme === 'maths' ? 'selected' : ''}>Mathématiques (Rouge pastel)</option>
+              <option value="physique" ${slot.theme === 'physique' ? 'selected' : ''}>Physique (Jaune pastel)</option>
+              <option value="culture" ${slot.theme === 'culture' ? 'selected' : ''}>Culture générale (Vert pastel)</option>
+              <option value="anglais" ${slot.theme === 'anglais' ? 'selected' : ''}>Anglais (Violet pastel)</option>
+              <option value="quartier-libre" ${slot.theme === 'quartier-libre' ? 'selected' : ''}>Quartier libre (Discret)</option>
+              <option value="pause" ${slot.theme === 'pause' ? 'selected' : ''}>Pause repas / détente</option>
+              <option value="empty" ${slot.theme === 'empty' ? 'selected' : ''}>Vide / Inoccupé</option>
+            </select>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid rgba(255,255,255,0.08); padding-top:14px;">
+            <button onclick="window.clearOrDeleteSlot('${dayKey}', ${index}); window.closeAiModal();" class="btn-ai-secondary" style="color:#f87171; border-color:rgba(248,113,113,0.4);">
+              Vider ce créneau
+            </button>
+            <div style="display:flex; gap:8px;">
+              <button onclick="window.closeAiModal()" class="btn-ai-secondary">Annuler</button>
+              <button onclick="window.saveSlotEdit('${dayKey}', ${index})" class="btn-ai-magic">Enregistrer</button>
+            </div>
+          </div>
+        </div>
+      `;
+
+      openModal(`Modifier le créneau (${dayName})`, "Personnalisation & Dégradés", modalHtml);
+      updateColorPreview();
+    }
+
+    function clearOrDeleteSlot(dayKey, index) {
+      const slot = currentSchedule[dayKey].slots[index];
+      if (!slot.title && slot.theme === "empty") {
+        if (currentSchedule[dayKey].slots.length > 5) {
+          currentSchedule[dayKey].slots.splice(index, 1);
+        }
+      } else {
+        currentSchedule[dayKey].slots[index] = {
+          time: "",
+          title: "",
+          theme: "empty"
+        };
+      }
+      renderSchedule();
+      persistSchedule();
+      showToast("Créneau vidé", "🗑️");
+    }
+
+    function addNewSlot(dayKey) {
+      currentSchedule[dayKey].slots.push({
+        time: "13h - 14h",
+        title: "Nouveau cours",
+        theme: "bloc1",
+        subjectKey: "bloc1"
+      });
+      renderSchedule();
+      persistSchedule();
+      openSlotEditor(dayKey, currentSchedule[dayKey].slots.length - 1);
+    }
+
     function parseSlotDuration(timeStr) {
       if (!timeStr) return 0;
-      // Analyse les formats de type "9h - 9h30", "12h30 - 16h", "17h - 20h"
       const regex = /(\d+)(?:h|:)?(\d+)?\s*-\s*(\d+)(?:h|:)?(\d+)?/i;
       const match = timeStr.match(regex);
       if (!match) return 0;
@@ -984,105 +1954,72 @@
       const days = ["lundi", "mardi", "mercredi", "jeudi", "vendredi"];
       const dailyTotals = {};
       const subjectTotals = {
-        "bloc1": { label: "Bloc 1", hours: 0, color: "#1e3a8a", bg: "#dbeafe", border: "#bfdbfe" },
-        "bloc2": { label: "Bloc 2", hours: 0, color: "#9a3412", bg: "#fed7aa", border: "#fdba74" },
-        "maths": { label: "Mathématiques", hours: 0, color: "#991b1b", bg: "#fee2e2", border: "#fecaca" },
-        "physique": { label: "Physique", hours: 0, color: "#713f12", bg: "#fef08a", border: "#fde047" },
-        "culture": { label: "Culture générale", hours: 0, color: "#14532d", bg: "#dcfce7", border: "#bbf7d0" },
-        "anglais": { label: "Anglais", hours: 0, color: "#581c87", bg: "#f3e8ff", border: "#e9d5ff" }
+        "bloc1": { label: "Bloc 1", hours: 0, color: "#3b82f6" },
+        "bloc2": { label: "Bloc 2", hours: 0, color: "#f97316" },
+        "bloc3": { label: "Bloc 3", hours: 0, color: "#ec4899" },
+        "maths": { label: "Mathématiques", hours: 0, color: "#ef4444" },
+        "physique": { label: "Physique", hours: 0, color: "#eab308" },
+        "culture": { label: "Culture générale", hours: 0, color: "#10b981" },
+        "anglais": { label: "Anglais", hours: 0, color: "#a855f7" }
       };
 
-      let grandTotalCourseHours = 0;
-      let totalPauseHours = 0;
+      let grandTotal = 0;
 
-      days.forEach(dayKey => {
-        let dayCourseHours = 0;
-        const slots = currentSchedule[dayKey]?.slots || [];
-
+      days.forEach(d => {
+        let dayHours = 0;
+        const slots = currentSchedule[d]?.slots || [];
         slots.forEach(slot => {
           const duration = parseSlotDuration(slot.time);
-          if (duration > 0) {
-            // Identifier les matières académiques
-            const isCourse = slot.theme && subjectTotals[slot.theme];
-            if (isCourse) {
-              subjectTotals[slot.theme].hours += duration;
-              dayCourseHours += duration;
-              grandTotalCourseHours += duration;
-            } else if (slot.theme === "pause") {
-              totalPauseHours += duration;
-            }
+          if (duration > 0 && slot.theme && subjectTotals[slot.theme]) {
+            subjectTotals[slot.theme].hours += duration;
+            dayHours += duration;
+            grandTotal += duration;
           }
         });
-
-        dailyTotals[dayKey] = {
-          label: currentSchedule[dayKey].label,
-          hours: dayCourseHours
-        };
+        dailyTotals[d] = { label: currentSchedule[d].label, hours: dayHours };
       });
 
-      // Rendu HTML du calculateur
       const modalHtml = `
-        <div style="display:flex; flex-direction:column; gap:22px;">
-          <!-- Synthèse globale -->
-          <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); color: #ffffff; padding: 20px 24px; border-radius: 16px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.2);">
+        <div style="display:flex; flex-direction:column; gap:20px;">
+          <div style="background:linear-gradient(135deg, #1e293b 0%, #0f172a 100%); color:#ffffff; padding:18px 22px; border-radius:14px; display:flex; justify-content:space-between; align-items:center;">
             <div>
-              <span style="font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #94a3b8;">Volume horaire de cours hebdomadaire</span>
-              <div style="font-size: 34px; font-weight: 800; line-height: 1.1; margin-top: 4px; color: #f8fafc;">
-                ${formatHours(grandTotalCourseHours)}
-                <span style="font-size: 15px; font-weight: 500; color: #cbd5e1;">/ semaine</span>
+              <span style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:#94a3b8;">Total hebdomadaire</span>
+              <div style="font-size:32px; font-weight:800; line-height:1.1; margin-top:2px;">
+                ${formatHours(grandTotal)} <span style="font-size:14px; font-weight:500; color:#cbd5e1;">/ sem.</span>
               </div>
             </div>
-            <div style="text-align: right; border-left: 1px solid #334155; padding-left: 20px;">
-              <span style="font-size: 12px; color: #94a3b8;">Moyenne par jour</span>
-              <div style="font-size: 20px; font-weight: 700; color: #38bdf8;">
-                ${formatHours(grandTotalCourseHours / 5)} / j
-              </div>
+            <div style="text-align:right; border-left:1px solid rgba(255,255,255,0.15); padding-left:18px;">
+              <span style="font-size:11px; color:#94a3b8;">Moyenne par jour</span>
+              <div style="font-size:20px; font-weight:700; color:#38bdf8;">${formatHours(grandTotal / 5)} / j</div>
             </div>
           </div>
 
-          <!-- Total quotidien -->
           <div>
-            <h4 style="font-size: 14px; font-weight: 700; color: #1e293b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-              <span>📅</span> Total quotidien des cours
-            </h4>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px;">
-              ${days.map(d => {
-                const day = dailyTotals[d];
-                return `
-                  <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px 10px; text-align: center;">
-                    <div style="font-size: 12px; font-weight: 700; color: #64748b; letter-spacing: 0.5px;">${day.label}</div>
-                    <div style="font-size: 20px; font-weight: 800; color: #0f172a; margin-top: 4px;">
-                      ${formatHours(day.hours)}
-                    </div>
-                  </div>
-                `;
-              }).join('')}
+            <h4 style="font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:10px;">📅 Par jour</h4>
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(95px, 1fr)); gap:8px;">
+              ${days.map(d => `
+                <div style="background:rgba(30,41,59,0.5); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:10px; text-align:center;">
+                  <div style="font-size:11px; font-weight:700; opacity:0.8;">${dailyTotals[d].label}</div>
+                  <div style="font-size:17px; font-weight:800; margin-top:4px;">${formatHours(dailyTotals[d].hours)}</div>
+                </div>
+              `).join('')}
             </div>
           </div>
 
-          <!-- Total par matière -->
           <div>
-            <h4 style="font-size: 14px; font-weight: 700; color: #1e293b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-              <span>📚</span> Répartition par matière
-            </h4>
-            <div style="display: flex; flex-direction: column; gap: 10px;">
+            <h4 style="font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:10px;">📚 Par matière</h4>
+            <div style="display:flex; flex-direction:column; gap:8px;">
               ${Object.keys(subjectTotals).map(key => {
                 const s = subjectTotals[key];
-                const percentage = grandTotalCourseHours > 0 ? Math.round((s.hours / grandTotalCourseHours) * 100) : 0;
+                const pct = grandTotal > 0 ? Math.round((s.hours / grandTotal) * 100) : 0;
                 return `
-                  <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px 16px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                      <div style="display: flex; align-items: center; gap: 8px;">
-                        <span style="display: inline-block; width: 12px; height: 12px; border-radius: 4px; background: ${s.bg}; border: 1.5px solid ${s.border};"></span>
-                        <strong style="font-size: 14px; color: #1e293b;">${s.label}</strong>
-                      </div>
-                      <div style="display: flex; align-items: baseline; gap: 8px;">
-                        <span style="font-size: 15px; font-weight: 800; color: ${s.color};">${formatHours(s.hours)}</span>
-                        <span style="font-size: 12px; font-weight: 600; color: #64748b;">(${percentage}%)</span>
-                      </div>
+                  <div style="background:rgba(30,41,59,0.4); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:10px 14px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                      <span style="font-weight:700; font-size:13.5px;">${s.label}</span>
+                      <span style="font-weight:800; color:${s.color}; font-size:14px;">${formatHours(s.hours)} (${pct}%)</span>
                     </div>
-                    <div style="width: 100%; height: 7px; background: #f1f5f9; border-radius: 10px; overflow: hidden;">
-                      <div style="width: ${percentage}%; height: 100%; background: ${s.color}; border-radius: 10px; transition: width 0.4s ease;"></div>
+                    <div style="width:100%; height:6px; background:rgba(255,255,255,0.1); border-radius:10px; overflow:hidden;">
+                      <div style="width:${pct}%; height:100%; background:${s.color}; border-radius:10px;"></div>
                     </div>
                   </div>
                 `;
@@ -1090,684 +2027,682 @@
             </div>
           </div>
 
-          <div style="display: flex; justify-content: flex-end; border-top: 1px solid #e2e8f0; padding-top: 14px;">
+          <div style="display:flex; justify-content:flex-end;">
             <button onclick="window.closeAiModal()" class="btn-ai-secondary">Fermer</button>
           </div>
         </div>
       `;
 
-      openModal("Calculateur d'horaires BTS CIEL", "Synthèse quotidienne, globale et par matière", modalHtml);
+      openModal("Calculateur d'horaires BTS CIEL", "Cumul hebdomadaire et répartition par matière", modalHtml);
     }
 
-    // Copie de travail réactive
-    let currentSchedule = JSON.parse(JSON.stringify(defaultScheduleData));
-
-    function updateSyncIndicator(status, message) {
-      const badge = document.getElementById("syncBadge");
-      const text = document.getElementById("syncText");
-      if (!badge || !text) return;
-
-      badge.className = `sync-badge ${status}`;
-      text.textContent = message;
+    function getDaysDifference(dateStr) {
+      if (!dateStr) return null;
+      const target = new Date(dateStr + 'T00:00:00');
+      const now = new Date();
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const diffTime = target.getTime() - today.getTime();
+      return Math.round(diffTime / (1000 * 60 * 60 * 24));
     }
 
-    async function persistSchedule() {
-      if (!isStorageReady || !db || !userId) return;
-      updateSyncIndicator("saving", "Sauvegarde en cours...");
-      try {
-        const scheduleRef = doc(db, 'artifacts', appId, 'users', userId, 'schedules', 'weekly');
-        await setDoc(scheduleRef, {
-          schedule: currentSchedule,
-          lastUpdated: Date.now()
-        });
-        updateSyncIndicator("saved", "Sauvegardé");
-      } catch (err) {
-        console.error("Erreur lors de la sauvegarde cloud :", err);
-        updateSyncIndicator("error", "Erreur sauvegarde");
+    function formatEventDate(dateStr) {
+      if (!dateStr) return '';
+      const d = new Date(dateStr + 'T00:00:00');
+      return d.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+    }
+
+    function selectEventIcon(icon) {
+      selectedEventIcon = icon;
+      EVENT_ICONS.forEach(i => {
+        const btn = document.getElementById(`iconChoice_${i}`);
+        if (btn) {
+          btn.style.border = (i === icon) ? '2px solid #818cf8' : '1px solid rgba(255,255,255,0.15)';
+          btn.style.background = (i === icon) ? 'rgba(99,102,241,0.25)' : 'rgba(30,41,59,0.5)';
+        }
+      });
+    }
+
+    function toggleAddEventForm(show) {
+      const form = document.getElementById("addEventForm");
+      const btnToggle = document.getElementById("btnShowAddEvent");
+      if (!form || !btnToggle) return;
+      if (show) {
+        form.style.display = "block";
+        btnToggle.style.display = "none";
+        const titleInput = document.getElementById("eventTitleInput");
+        if (titleInput) titleInput.focus();
+      } else {
+        form.style.display = "none";
+        btnToggle.style.display = "inline-flex";
       }
     }
 
-    async function initCloudPersistence() {
-      if (typeof __firebase_config === 'undefined') {
-        updateSyncIndicator("saved", "Mode hors-ligne");
+    function saveNewEvent() {
+      const title = document.getElementById("eventTitleInput")?.value?.trim();
+      const date = document.getElementById("eventDateInput")?.value;
+      const time = document.getElementById("eventTimeInput")?.value?.trim();
+      const subject = document.getElementById("eventSubjectSelect")?.value || "";
+      const notes = document.getElementById("eventNotesInput")?.value?.trim() || "";
+
+      if (!title) {
+        showToast("Veuillez renseigner un titre pour l'événement", "⚠️");
+        return;
+      }
+      if (!date) {
+        showToast("Veuillez sélectionner une date", "⚠️");
         return;
       }
 
-      try {
-        updateSyncIndicator("saving", "Connexion...");
-        const firebaseConfig = JSON.parse(__firebase_config);
-        const app = initializeApp(firebaseConfig);
-        db = getFirestore(app);
-        auth = getAuth(app);
+      if (!currentSchedule.events) currentSchedule.events = [];
 
-        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-          await signInWithCustomToken(auth, __initial_auth_token);
-        } else {
-          await signInAnonymously(auth);
-        }
+      currentSchedule.events.push({
+        id: 'evt_' + Date.now(),
+        title,
+        date,
+        time,
+        subject,
+        notes,
+        icon: selectedEventIcon || '🎓'
+      });
 
-        currentUser = auth.currentUser;
-        userId = currentUser?.uid || crypto.randomUUID();
-
-        const userTag = document.getElementById("userIdDisplay");
-        if (userTag) {
-          userTag.textContent = `ID: ${userId}`;
-        }
-
-        isStorageReady = true;
-
-        // Écoute en direct des changements
-        const scheduleRef = doc(db, 'artifacts', appId, 'users', userId, 'schedules', 'weekly');
-        onSnapshot(scheduleRef, (snapshot) => {
-          if (snapshot.exists()) {
-            const data = snapshot.data();
-            if (data && data.schedule) {
-              currentSchedule = data.schedule;
-              renderSchedule();
-              updateSyncIndicator("saved", "Synchronisé");
-            }
-          } else {
-            // Sauvegarder l'état initial
-            persistSchedule();
-          }
-        }, (error) => {
-          console.error("Erreur d'écoute de la synchronisation :", error);
-          updateSyncIndicator("error", "Erreur réseau");
-        });
-      } catch (err) {
-        console.warn("Échec d'initialisation du stockage cloud :", err);
-        updateSyncIndicator("saved", "Local");
-      }
-    }
-
-    function toggleEditMode() {
-      isEditMode = !isEditMode;
-      document.body.classList.toggle("edit-mode", isEditMode);
-      const btn = document.getElementById("btnToggleEdit");
-      const label = document.getElementById("editModeBtnLabel");
-
-      if (isEditMode) {
-        btn.classList.add("active");
-        label.textContent = "Quitter l'édition";
-        showToast("Mode Édition activé : vous pouvez déplacer et modifier les cours", "✏️");
-      } else {
-        btn.classList.remove("active");
-        label.textContent = "Éditer le planning";
-        showToast("Modifications enregistrées", "💾");
-      }
-      renderSchedule();
-    }
-
-    function resetToDefaultSchedule() {
-      currentSchedule = JSON.parse(JSON.stringify(defaultScheduleData));
-      renderSchedule();
       persistSchedule();
-      showToast("Planning réinitialisé aux valeurs d'origine", "🔄");
+      updateAgendaBadge();
+      openAgendaModal();
+      showToast("Événement ajouté avec succès !", "📅");
     }
 
-    function renderSchedule() {
-      const container = document.getElementById("schedule-grid-container");
-      if (!container) return;
-      container.innerHTML = "";
+    function deleteEvent(eventId) {
+      if (!currentSchedule.events) return;
+      currentSchedule.events = currentSchedule.events.filter(e => e.id !== eventId);
+      persistSchedule();
+      updateAgendaBadge();
+      openAgendaModal();
+      showToast("Événement supprimé", "🗑️");
+    }
 
-      const days = ["lundi", "mardi", "mercredi", "jeudi", "vendredi"];
+    function openAgendaModal() {
+      if (!currentSchedule.events) currentSchedule.events = [];
 
-      days.forEach(dayKey => {
-        const dayData = currentSchedule[dayKey];
-        const section = document.createElement("section");
-        section.className = `day-column col-${dayKey}`;
+      const sortedEvents = [...currentSchedule.events].sort((a, b) => {
+        const diff = (a.date || '').localeCompare(b.date || '');
+        if (diff !== 0) return diff;
+        return (a.time || '').localeCompare(b.time || '');
+      });
 
-        // Header
-        const header = document.createElement("div");
-        header.className = "day-header";
-        header.innerHTML = `
-          <span class="day-name">${dayData.label}</span>
-          <span class="day-dot"></span>
-        `;
-        section.appendChild(header);
-
-        // Slots
-        dayData.slots.forEach((slot, index) => {
-          const slotItem = document.createElement("div");
-          slotItem.className = "slot-item";
-          slotItem.dataset.day = dayKey;
-          slotItem.dataset.index = index;
-
-          const timeSpan = document.createElement("span");
-          timeSpan.className = slot.time ? "slot-time" : "slot-time empty-time";
-          timeSpan.textContent = slot.time || "Créneau libre";
-          slotItem.appendChild(timeSpan);
-
-          const cardBox = document.createElement("div");
-          cardBox.className = `card-box theme-${slot.theme || 'empty'}`;
-
-          // Drag and Drop en mode édition
-          if (isEditMode) {
-            cardBox.setAttribute("draggable", "true");
-            cardBox.addEventListener("dragstart", (e) => {
-              draggedSlotInfo = { day: dayKey, index: index };
-              cardBox.classList.add("dragging");
-              e.dataTransfer.effectAllowed = "move";
-            });
-
-            cardBox.addEventListener("dragend", () => {
-              cardBox.classList.remove("dragging");
-              document.querySelectorAll(".slot-item").forEach(el => el.classList.remove("drag-over"));
-            });
-
-            slotItem.addEventListener("dragover", (e) => {
-              e.preventDefault();
-              e.dataTransfer.dropEffect = "move";
-              slotItem.classList.add("drag-over");
-            });
-
-            slotItem.addEventListener("dragleave", () => {
-              slotItem.classList.remove("drag-over");
-            });
-
-            slotItem.addEventListener("drop", (e) => {
-              e.preventDefault();
-              slotItem.classList.remove("drag-over");
-              if (!draggedSlotInfo) return;
-
-              const targetDay = dayKey;
-              const targetIndex = index;
-              swapOrMoveSlots(draggedSlotInfo.day, draggedSlotInfo.index, targetDay, targetIndex);
-              draggedSlotInfo = null;
-            });
-
-            cardBox.onclick = (e) => {
-              if (e.target.closest('.card-edit-overlay')) return;
-              openSlotEditor(dayKey, index);
-            };
-          } else {
-            const isAcademic = slot.subjectKey && slot.theme !== "empty" && slot.theme !== "quartier-libre" && slot.theme !== "pause";
-            if (isAcademic) {
-              cardBox.classList.add("clickable-slot");
-              cardBox.title = "Cliquez pour voir la fiche & le quiz IA de ce créneau";
-              cardBox.onclick = () => openSubjectTutor(slot.title, slot.time, dayData.label);
-            }
-          }
-
-          cardBox.innerHTML = `
-            <div class="card-top">
-              <div class="badge-pill"></div>
-              <span class="card-title">${slot.title}</span>
+      const modalHtml = `
+        <div style="display:flex; flex-direction:column; gap:18px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+            <div>
+              <span style="font-size:13px; opacity:0.8;">Gardez une vision claire de vos examens, CCF et devoirs.</span>
             </div>
-            <div class="card-lines"></div>
-            <div class="card-edit-overlay">
-              <button class="btn-slot-tool" title="Modifier ce créneau" onclick="event.stopPropagation(); window.openSlotEditor('${dayKey}', ${index})">
-                ✎
+            <button id="btnShowAddEvent" class="btn-ai-magic" onclick="window.toggleAddEventForm(true)">
+              + Ajouter un événement
+            </button>
+          </div>
+
+          <div id="addEventForm" style="display:none; background:rgba(30,41,59,0.6); border:1px solid rgba(129,140,248,0.3); border-radius:14px; padding:18px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+              <strong style="font-size:14.5px; color:#c7d2fe;">Nouvel événement</strong>
+              <button onclick="window.toggleAddEventForm(false)" style="background:transparent; border:none; color:#94a3b8; font-size:18px; cursor:pointer;">✕</button>
+            </div>
+
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:12px;">
+              <div style="grid-column: span 2;">
+                <label style="display:block; font-size:12px; font-weight:700; margin-bottom:4px;">Titre de l'événement *</label>
+                <input type="text" id="eventTitleInput" placeholder="Ex: Devoir surveillé de Physique" style="width:100%; padding:9px 12px; border-radius:8px; border:1px solid rgba(129,140,248,0.3); background:rgba(15,23,42,0.8); color:inherit; font-size:13.5px;">
+              </div>
+
+              <div>
+                <label style="display:block; font-size:12px; font-weight:700; margin-bottom:4px;">Date *</label>
+                <input type="date" id="eventDateInput" style="width:100%; padding:8px 12px; border-radius:8px; border:1px solid rgba(129,140,248,0.3); background:rgba(15,23,42,0.8); color:inherit; font-size:13px;">
+              </div>
+
+              <div>
+                <label style="display:block; font-size:12px; font-weight:700; margin-bottom:4px;">Heure / Plage horaire</label>
+                <input type="text" id="eventTimeInput" placeholder="Ex: 14h - 16h" style="width:100%; padding:8px 12px; border-radius:8px; border:1px solid rgba(129,140,248,0.3); background:rgba(15,23,42,0.8); color:inherit; font-size:13px;">
+              </div>
+
+              <div>
+                <label style="display:block; font-size:12px; font-weight:700; margin-bottom:4px;">Matière associée</label>
+                <select id="eventSubjectSelect" style="width:100%; padding:9px 12px; border-radius:8px; border:1px solid rgba(129,140,248,0.3); background:rgba(15,23,42,0.8); color:inherit; font-size:13px;">
+                  <option value="">Général / Sans matière</option>
+                  <option value="Bloc 1">Bloc 1</option>
+                  <option value="Bloc 2">Bloc 2</option>
+                  <option value="Bloc 3">Bloc 3</option>
+                  <option value="Mathématiques">Mathématiques</option>
+                  <option value="Physique">Physique</option>
+                  <option value="Culture générale">Culture générale</option>
+                  <option value="Anglais">Anglais</option>
+                </select>
+              </div>
+
+              <div>
+                <label style="display:block; font-size:12px; font-weight:700; margin-bottom:4px;">Précisions (salle, matériel...)</label>
+                <input type="text" id="eventNotesInput" placeholder="Ex: Salle 204" style="width:100%; padding:9px 12px; border-radius:8px; border:1px solid rgba(129,140,248,0.3); background:rgba(15,23,42,0.8); color:inherit; font-size:13px;">
+              </div>
+            </div>
+
+            <div style="margin-bottom:16px;">
+              <label style="display:block; font-size:12px; font-weight:700; margin-bottom:6px;">Assigner une icône :</label>
+              <div style="display:flex; flex-wrap:wrap; gap:8px;">
+                ${EVENT_ICONS.map(icon => `
+                  <button type="button" id="iconChoice_${icon}" onclick="window.selectEventIcon('${icon}')" style="width:38px; height:38px; border-radius:8px; border:${icon === selectedEventIcon ? '2px solid #818cf8' : '1px solid rgba(255,255,255,0.15)'}; background:${icon === selectedEventIcon ? 'rgba(99,102,241,0.25)' : 'rgba(30,41,59,0.5)'}; font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.15s;">
+                    ${icon}
+                  </button>
+                `).join('')}
+              </div>
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:8px;">
+              <button type="button" onclick="window.toggleAddEventForm(false)" class="btn-ai-secondary">Annuler</button>
+              <button type="button" onclick="window.saveNewEvent()" class="btn-ai-magic">Enregistrer l'événement</button>
+            </div>
+          </div>
+
+          <div style="display:flex; flex-direction:column; gap:10px; max-height:440px; overflow-y:auto; padding-right:4px;">
+            ${sortedEvents.length === 0 ? `
+              <div style="text-align:center; padding:36px 16px; background:rgba(30,41,59,0.3); border:1px dashed rgba(255,255,255,0.1); border-radius:14px;">
+                <div style="font-size:32px; margin-bottom:8px;">📅</div>
+                <strong style="display:block; font-size:15px; margin-bottom:4px;">Aucun événement planifié</strong>
+                <p style="font-size:13px; opacity:0.75; max-width:380px; margin:0 auto 14px auto;">
+                  Cliquez sur « + Ajouter un événement » pour inscrire vos examens et devoirs.
+                </p>
+                <button class="btn-ai-secondary" onclick="window.toggleAddEventForm(true)">+ Ajouter maintenant</button>
+              </div>
+            ` : sortedEvents.map(evt => {
+              const diffDays = getDaysDifference(evt.date);
+              let countdownBadge = '';
+              if (diffDays === null) {
+                countdownBadge = '';
+              } else if (diffDays < 0) {
+                countdownBadge = `<span style="font-size:11px; font-weight:700; background:rgba(100,116,139,0.25); color:#94a3b8; padding:3px 8px; border-radius:6px;">Passé</span>`;
+              } else if (diffDays === 0) {
+                countdownBadge = `<span style="font-size:11px; font-weight:800; background:rgba(239,68,68,0.25); color:#fca5a5; border:1px solid rgba(239,68,68,0.4); padding:3px 8px; border-radius:6px; animation:pulseEdit 1.5s infinite;">Aujourd'hui ! 🚨</span>`;
+              } else if (diffDays === 1) {
+                countdownBadge = `<span style="font-size:11px; font-weight:800; background:rgba(249,115,22,0.25); color:#fdba74; border:1px solid rgba(249,115,22,0.4); padding:3px 8px; border-radius:6px;">Demain ⏳</span>`;
+              } else {
+                countdownBadge = `<span style="font-size:11px; font-weight:700; background:rgba(99,102,241,0.25); color:#c7d2fe; border:1px solid rgba(129,140,248,0.3); padding:3px 8px; border-radius:6px;">Dans ${diffDays} j</span>`;
+              }
+
+              return `
+                <div style="background:rgba(30,41,59,0.5); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:12px 16px; display:flex; align-items:center; justify-content:space-between; gap:12px; transition:all 0.2s;">
+                  <div style="display:flex; align-items:center; gap:14px; flex:1; min-width:0;">
+                    <div style="width:42px; height:42px; border-radius:10px; background:rgba(99,102,241,0.2); border:1px solid rgba(129,140,248,0.3); display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0;">
+                      ${evt.icon || '🎓'}
+                    </div>
+                    <div style="min-width:0;">
+                      <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                        <strong style="font-size:14.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${evt.title}</strong>
+                        ${evt.subject ? `<span style="font-size:11px; font-weight:700; background:rgba(255,255,255,0.1); padding:2px 6px; border-radius:4px;">${evt.subject}</span>` : ''}
+                      </div>
+                      <div style="font-size:12px; opacity:0.8; margin-top:2px; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                        <span>📅 ${formatEventDate(evt.date)}</span>
+                        ${evt.time ? `<span>⏰ ${evt.time}</span>` : ''}
+                        ${evt.notes ? `<span style="font-style:italic; opacity:0.9;">&bull; ${evt.notes}</span>` : ''}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div style="display:flex; align-items:center; gap:10px; flex-shrink:0;">
+                    ${countdownBadge}
+                    <button onclick="window.deleteEvent('${evt.id}')" title="Supprimer cet événement" style="background:transparent; border:1px solid rgba(255,255,255,0.1); color:#94a3b8; width:28px; height:28px; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.15s;" onmouseover="this.style.color='#f87171'; this.style.borderColor='rgba(248,113,113,0.4)'" onmouseout="this.style.color='#94a3b8'; this.style.borderColor='rgba(255,255,255,0.1)'">
+                      ✕
+                    </button>
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+
+          <div style="display:flex; justify-content:flex-end; border-top:1px solid rgba(255,255,255,0.08); padding-top:12px;">
+            <button onclick="window.closeAiModal()" class="btn-ai-secondary">Fermer</button>
+          </div>
+        </div>
+      `;
+
+      openModal("Agenda & Examens BTS CIEL", "Échéances et dates importantes classées chronologiquement", modalHtml);
+    }
+
+    function setDarkMode(enabled) {
+      isDarkMode = enabled;
+      document.body.classList.toggle("dark-theme", isDarkMode);
+      if (!currentSchedule.preferences) currentSchedule.preferences = {};
+      currentSchedule.preferences.isDarkMode = isDarkMode;
+      persistSchedule();
+    }
+
+    function openSettingsModal() {
+      const modalHtml = `
+        <div style="display:flex; flex-direction:column; gap:20px;">
+          <div>
+            <h4 style="font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:#818cf8; margin-bottom:10px;">
+              Apparence & Affichage
+            </h4>
+            <div class="settings-action-card">
+              <div style="display:flex; align-items:center; gap:12px;">
+                <span style="font-size:22px;">🌙</span>
+                <div>
+                  <div style="font-weight:700; font-size:14.5px;">Mode Sombre Glassy</div>
+                  <div style="font-size:12px; opacity:0.8;">Fond cosmique animé en sombre & couleurs pastel pâles en clair</div>
+                </div>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="darkThemeSwitch" ${isDarkMode ? 'checked' : ''} onchange="window.setDarkMode(this.checked)">
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <div>
+            <h4 style="font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:#818cf8; margin-bottom:10px;">
+              Téléchargements & Sauvegardes
+            </h4>
+            
+            <div class="settings-action-card">
+              <div style="display:flex; align-items:center; gap:12px;">
+                <span style="font-size:22px;">💻</span>
+                <div>
+                  <div style="font-weight:700; font-size:14px;">Télécharger HTML pour PC</div>
+                  <div style="font-size:12px; opacity:0.8;">Fichier autonome avec sauvegarde locale automatique sur votre ordinateur</div>
+                </div>
+              </div>
+              <button class="btn-ai-secondary" onclick="window.exportStandaloneHtml()">Télécharger</button>
+            </div>
+
+            <div class="settings-action-card">
+              <div style="display:flex; align-items:center; gap:12px;">
+                <span style="font-size:22px;">🖼️</span>
+                <div>
+                  <div style="font-weight:700; font-size:14px;">Sauvegarder en image (.png)</div>
+                  <div style="font-size:12px; opacity:0.8;">Capture haute résolution (2.5x) idéale pour votre fond d'écran</div>
+                </div>
+              </div>
+              <button class="btn-ai-secondary" onclick="window.exportSchedulePng()">Exporter PNG</button>
+            </div>
+
+            <div class="settings-action-card">
+              <div style="display:flex; align-items:center; gap:12px;">
+                <span style="font-size:22px;">💾</span>
+                <div>
+                  <div style="font-weight:700; font-size:14px;">Sauvegarde de secours (.json)</div>
+                  <div style="font-size:12px; opacity:0.8;">Exporter vos cours pour les conserver en fichier de données</div>
+                </div>
+              </div>
+              <button class="btn-ai-secondary" onclick="window.exportJsonBackup()">Sauvegarder JSON</button>
+            </div>
+
+            <div class="settings-action-card">
+              <div style="display:flex; align-items:center; gap:12px;">
+                <span style="font-size:22px;">📂</span>
+                <div>
+                  <div style="font-weight:700; font-size:14px;">Restaurer un planning (.json)</div>
+                  <div style="font-size:12px; opacity:0.8;">Charger un fichier de sauvegarde précédemment enregistré</div>
+                </div>
+              </div>
+              <button class="btn-ai-secondary" onclick="window.triggerImportFile()">Charger JSON</button>
+            </div>
+
+            <div class="settings-action-card" style="border-color:rgba(239,68,68,0.3);">
+              <div style="display:flex; align-items:center; gap:12px;">
+                <span style="font-size:22px;">🔄</span>
+                <div>
+                  <div style="font-weight:700; font-size:14px; color:#f87171;">Réinitialiser l'emploi du temps</div>
+                  <div style="font-size:12px; opacity:0.8;">Restaurer la grille officielle par défaut de BTS CIEL</div>
+                </div>
+              </div>
+              <button class="btn-ai-secondary" style="color:#f87171; border-color:rgba(239,68,68,0.4);" onclick="window.resetToDefaultSchedule()">Réinitialiser</button>
+            </div>
+          </div>
+
+          <div style="display:flex; justify-content:flex-end; border-top:1px solid rgba(255,255,255,0.08); padding-top:14px;">
+            <button onclick="window.closeAiModal()" class="btn-ai-magic">Fermer</button>
+          </div>
+        </div>
+      `;
+
+      openModal("Paramètres", "Affichage, Thème & Sauvegardes", modalHtml);
+    }
+
+    function getSubjectKey(title, rawKey) {
+      if (rawKey && DEFAULT_CNED_URLS[rawKey]) return rawKey;
+      const lower = (title || "").toLowerCase();
+      if (lower.includes("bloc 1") || lower.includes("bloc1")) return "bloc1";
+      if (lower.includes("bloc 2") || lower.includes("bloc2")) return "bloc2";
+      if (lower.includes("bloc 3") || lower.includes("bloc3")) return "bloc3";
+      if (lower.includes("math")) return "maths";
+      if (lower.includes("physique")) return "physique";
+      if (lower.includes("culture")) return "culture";
+      if (lower.includes("anglais")) return "anglais";
+      return null;
+    }
+
+    function openSubjectTutor(subjectName, slotTime, dayName, rawSubjectKey) {
+      const subjectKey = getSubjectKey(subjectName, rawSubjectKey);
+      const cnedUrls = (currentSchedule.preferences && currentSchedule.preferences.cnedUrls) || DEFAULT_CNED_URLS;
+      const cnedUrl = (subjectKey && cnedUrls[subjectKey]) || "https://eformation.cned.fr/";
+      attachedFile = null;
+
+      const modalHtml = `
+        <div style="display:flex; flex-direction:column; gap:18px;">
+          <div style="background:rgba(99,102,241,0.12); border:1px solid rgba(129,140,248,0.3); padding:14px 18px; border-radius:14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+            <div>
+              <strong style="font-size:14px; display:block;">Plateforme de cours CNED</strong>
+              <span style="font-size:12px; opacity:0.85;">Accès direct à votre module pour ${subjectName}</span>
+            </div>
+            <div style="display:flex; gap:8px;">
+              <a href="${cnedUrl}" target="_blank" rel="noopener noreferrer" class="btn-ai-magic" style="text-decoration:none; padding:8px 14px; font-size:13px;">
+                🚀 Ouvrir la page CNED
+              </a>
+              <button class="btn-ai-secondary" style="font-size:12px; padding:6px 10px;" onclick="window.toggleEditCnedUrl('${subjectKey}')">
+                ✏️ Modifier l'adresse
               </button>
-              <button class="btn-slot-tool tool-delete" title="Vider ou supprimer" onclick="event.stopPropagation(); window.clearOrDeleteSlot('${dayKey}', ${index})">
-                ✕
+            </div>
+          </div>
+
+          <div id="editCnedContainer" style="display:none; background:rgba(30,41,59,0.5); padding:12px; border-radius:10px; border:1px solid rgba(255,255,255,0.1);">
+            <label style="font-size:12px; display:block; margin-bottom:6px; font-weight:700;">Adresse URL directe CNED pour cette matière :</label>
+            <div style="display:flex; gap:8px;">
+              <input type="text" id="cnedCustomUrlInput" value="${cnedUrl}" style="flex:1; padding:8px 10px; border-radius:8px; border:1px solid rgba(129,140,248,0.4); background:rgba(15,23,42,0.8); color:inherit; font-size:13px;">
+              <button class="btn-ai-magic" style="padding:8px 14px; font-size:13px;" onclick="window.saveCnedUrl('${subjectKey}')">Enregistrer</button>
+            </div>
+          </div>
+
+          <div id="dropZoneContainer" style="border:2px dashed #818cf8; border-radius:14px; padding:20px; text-align:center; background:rgba(99,102,241,0.06); transition: all 0.2s ease;">
+            <div style="font-size:28px; margin-bottom:6px;">📑</div>
+            <strong style="font-size:14.5px; display:block; margin-bottom:4px; color:#c7d2fe;">Document source du cours (Obligatoire)</strong>
+            <p style="font-size:12.5px; opacity:0.85; margin-bottom:12px; max-width:540px; margin-left:auto; margin-right:auto;">
+              Pour éviter toute erreur, l'IA se basera <strong>exclusivement sur le contenu de votre fichier</strong> (PDF, polycopié texte, photo de cours, schéma ou code source).
+            </p>
+            <input type="file" id="tutorFileInput" accept=".pdf,.png,.jpg,.jpeg,.webp,.txt,.c,.cpp,.py,.h,.md" style="display:none;" onchange="window.handleTutorFileSelect(event)">
+            <div style="display:flex; justify-content:center; gap:8px; flex-wrap:wrap; align-items:center;">
+              <button type="button" class="btn-ai-magic" onclick="document.getElementById('tutorFileInput').click()">
+                📂 Choisir mon cours sur le PC (PDF, Image, Texte)
               </button>
+            </div>
+            
+            <div id="fileAttachedInfo" style="margin-top:14px; padding:10px 14px; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.4); border-radius:10px; display:none; align-items:center; justify-content:space-between;">
+              <div style="display:flex; align-items:center; gap:8px; text-align:left;">
+                <span style="font-size:18px;">✅</span>
+                <div>
+                  <div id="fileAttachedName" style="font-weight:700; font-size:13px; color:#6ee7b7;">Fichier chargé</div>
+                  <div id="fileAttachedSize" style="font-size:11.5px; opacity:0.8;">Taille</div>
+                </div>
+              </div>
+              <button type="button" onclick="window.removeAttachedFile()" class="btn-ai-secondary" style="font-size:11.5px; padding:4px 8px; color:#f87171; border-color:rgba(248,113,113,0.3);">
+                ✕ Retirer
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <label style="display:block; font-size:12.5px; font-weight:700; margin-bottom:6px;">Consigne particulière (optionnelle) :</label>
+            <input type="text" id="tutorPromptInput" placeholder="Ex: Résumer uniquement le chapitre 2, faire une fiche de révision, extraire les définitions clés..." style="width:100%; padding:10px 12px; border-radius:8px; border:1px solid rgba(129,140,248,0.3); background:rgba(15,23,42,0.8); color:inherit; font-size:13.5px;">
+          </div>
+
+          <div id="tutorGeneratingStatus" style="display:none; align-items:center; gap:10px; color:#818cf8; font-weight:600; font-size:13.5px;">
+            <div style="width:20px; height:20px; border:3px solid rgba(99,102,241,0.2); border-radius:50%; border-top-color:#6366f1; animation:spin 0.8s linear infinite;"></div>
+            <span id="tutorStatusMessage">Lecture et analyse stricte de votre document en cours...</span>
+          </div>
+
+          <div id="tutorResultContainer" style="display:none; background:rgba(15,23,42,0.6); padding:16px; border-radius:12px; border:1px solid rgba(255,255,255,0.1); max-height:400px; overflow-y:auto; line-height:1.7;"></div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid rgba(255,255,255,0.08); padding-top:14px; flex-wrap:wrap; gap:8px;">
+            <button onclick="window.closeAiModal()" class="btn-ai-secondary">Fermer</button>
+            <div style="display:flex; gap:8px; align-items:center;">
+              <button id="btnDownloadPdf" class="btn-ai-secondary" style="display:none; color:#38bdf8; border-color:rgba(56,189,248,0.4);" onclick="window.downloadTutorPdf()">
+                📥 Télécharger en PDF
+              </button>
+              <button class="btn-ai-magic" onclick="window.generateDocumentCourse('${subjectName}', '${dayName}', '${slotTime}')">
+                ✨ Générer la fiche d'après mon document
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+
+      openModal(`${subjectName}`, `${dayName} &bull; ${slotTime}`, modalHtml);
+    }
+
+    function toggleEditCnedUrl() {
+      const container = document.getElementById("editCnedContainer");
+      if (container) {
+        container.style.display = container.style.display === "none" ? "block" : "none";
+      }
+    }
+
+    function saveCnedUrl(subjectKey) {
+      if (!subjectKey) return;
+      const input = document.getElementById("cnedCustomUrlInput");
+      if (!input) return;
+      const url = input.value.trim();
+      if (!url) return;
+
+      if (!currentSchedule.preferences) currentSchedule.preferences = {};
+      if (!currentSchedule.preferences.cnedUrls) currentSchedule.preferences.cnedUrls = { ...DEFAULT_CNED_URLS };
+
+      currentSchedule.preferences.cnedUrls[subjectKey] = url;
+      persistSchedule();
+      toggleEditCnedUrl();
+      showToast("Lien CNED mis à jour et mémorisé !", "🔗");
+    }
+
+    function handleTutorFileSelect(event) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      attachedFile = file;
+
+      const infoBox = document.getElementById("fileAttachedInfo");
+      const nameLabel = document.getElementById("fileAttachedName");
+      const sizeLabel = document.getElementById("fileAttachedSize");
+
+      if (infoBox && nameLabel && sizeLabel) {
+        nameLabel.textContent = file.name;
+        sizeLabel.textContent = `${(file.size / 1024).toFixed(1)} Ko - Prêt pour l'extraction stricte`;
+        infoBox.style.display = "flex";
+      }
+      showToast(`Document « ${file.name} » chargé`, "📄");
+    }
+
+    function removeAttachedFile() {
+      attachedFile = null;
+      const fileInput = document.getElementById("tutorFileInput");
+      if (fileInput) fileInput.value = "";
+      const infoBox = document.getElementById("fileAttachedInfo");
+      if (infoBox) infoBox.style.display = "none";
+      showToast("Document retiré", "🗑️");
+    }
+
+    function readFileAsBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const res = reader.result;
+          const commaIndex = res.indexOf(',');
+          if (commaIndex !== -1) {
+            resolve(res.substring(commaIndex + 1));
+          } else {
+            resolve(res);
+          }
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function generateDocumentCourse(subjectName, dayName, slotTime) {
+      const customInstruction = document.getElementById("tutorPromptInput")?.value?.trim() || "";
+      const statusEl = document.getElementById("tutorGeneratingStatus");
+      const statusMsg = document.getElementById("tutorStatusMessage");
+      const resultEl = document.getElementById("tutorResultContainer");
+      const pdfBtn = document.getElementById("btnDownloadPdf");
+
+      if (pdfBtn) pdfBtn.style.display = "none";
+
+      if (!attachedFile) {
+        if (resultEl) {
+          resultEl.innerHTML = `
+            <div style="background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.4); border-radius:10px; padding:14px; color:#fca5a5;">
+              <strong style="display:block; margin-bottom:4px; font-size:14px;">⚠️ Aucun document de cours n'a été fourni</strong>
+              <p style="font-size:13px; margin:0;">
+                Veuillez cliquer sur <strong>« 📂 Choisir mon cours sur le PC »</strong> pour charger votre PDF, polycopié ou photo de cours.
+              </p>
             </div>
           `;
-
-          slotItem.appendChild(cardBox);
-          section.appendChild(slotItem);
-        });
-
-        // Bouton ajouter un créneau pour chaque jour en mode édition
-        const addBtn = document.createElement("button");
-        addBtn.className = "btn-add-slot";
-        addBtn.innerHTML = "+ Ajouter un créneau";
-        addBtn.onclick = () => addNewSlot(dayKey);
-        section.appendChild(addBtn);
-
-        container.appendChild(section);
-      });
-    }
-
-    function swapOrMoveSlots(srcDay, srcIdx, destDay, destIdx) {
-      if (srcDay === destDay && srcIdx === destIdx) return;
-      
-      const sourceItem = currentSchedule[srcDay].slots[srcIdx];
-      const targetItem = currentSchedule[destDay].slots[destIdx];
-
-      // Échange direct du contenu
-      currentSchedule[srcDay].slots[srcIdx] = targetItem;
-      currentSchedule[destDay].slots[destIdx] = sourceItem;
-
-      renderSchedule();
-      persistSchedule();
-      showToast(`Créneau déplacé vers ${currentSchedule[destDay].label}`, "↔️");
-    }
-
-    function addNewSlot(dayKey) {
-      currentSchedule[dayKey].slots.push({
-        time: "Horaire à définir",
-        title: "Nouveau cours",
-        theme: "bloc1",
-        subjectKey: "bloc1"
-      });
-      renderSchedule();
-      persistSchedule();
-      openSlotEditor(dayKey, currentSchedule[dayKey].slots.length - 1);
-    }
-
-    function clearOrDeleteSlot(dayKey, index) {
-      const slot = currentSchedule[dayKey].slots[index];
-      if (!slot.title && slot.theme === "empty") {
-        if (currentSchedule[dayKey].slots.length > 5) {
-          currentSchedule[dayKey].slots.splice(index, 1);
+          resultEl.style.display = "block";
         }
-      } else {
-        currentSchedule[dayKey].slots[index] = {
-          time: "",
-          title: "",
-          theme: "empty"
-        };
-      }
-      renderSchedule();
-      persistSchedule();
-      showToast("Créneau vidé", "🗑️");
-    }
-
-    function openSlotEditor(dayKey, index) {
-      const slot = currentSchedule[dayKey].slots[index];
-      const dayName = currentSchedule[dayKey].label;
-
-      const modalHtml = `
-        <div style="display:flex; flex-direction:column; gap:16px;">
-          <div style="display:flex; justify-content:space-between; align-items:center; background:#f8fafc; padding:10px 14px; border-radius:10px; border:1px solid #e2e8f0;">
-            <span style="font-weight:700; color:#1e293b;">Jour : ${dayName} (Créneau #${index + 1})</span>
-            <div style="display:flex; gap:6px;">
-              <button class="btn-ai-secondary" style="font-size:12px; padding:4px 8px;" onclick="window.moveSlotVertical('${dayKey}', ${index}, -1)" ${index === 0 ? 'disabled' : ''}>▲ Monter</button>
-              <button class="btn-ai-secondary" style="font-size:12px; padding:4px 8px;" onclick="window.moveSlotVertical('${dayKey}', ${index}, 1)" ${index === currentSchedule[dayKey].slots.length - 1 ? 'disabled' : ''}>▼ Descendre</button>
-            </div>
-          </div>
-
-          <div>
-            <label style="display:block; font-size:13px; font-weight:700; color:#334155; margin-bottom:6px;">Plage horaire</label>
-            <input type="text" id="editSlotTime" value="${slot.time || ''}" placeholder="Ex: 14h30 - 16h" style="width:100%; padding:10px 12px; border-radius:8px; border:1px solid #cbd5e1; font-family:inherit; font-size:14px;">
-          </div>
-
-          <div>
-            <label style="display:block; font-size:13px; font-weight:700; color:#334155; margin-bottom:6px;">Intitulé du cours / activité</label>
-            <input type="text" id="editSlotTitle" value="${slot.title || ''}" placeholder="Ex: Mathématiques, Bloc 1..." style="width:100%; padding:10px 12px; border-radius:8px; border:1px solid #cbd5e1; font-family:inherit; font-size:14px;">
-          </div>
-
-          <div>
-            <label style="display:block; font-size:13px; font-weight:700; color:#334155; margin-bottom:6px;">Raccourcis matières BTS CIEL</label>
-            <div style="display:flex; flex-wrap:wrap; gap:6px;">
-              <button type="button" class="btn-ai-secondary" style="font-size:12px; padding:4px 8px;" onclick="window.applyQuickPreset('Bloc 1', 'bloc1', 'bloc1')">Bloc 1</button>
-              <button type="button" class="btn-ai-secondary" style="font-size:12px; padding:4px 8px;" onclick="window.applyQuickPreset('Bloc 2', 'bloc2', 'bloc2')">Bloc 2</button>
-              <button type="button" class="btn-ai-secondary" style="font-size:12px; padding:4px 8px;" onclick="window.applyQuickPreset('Mathématiques', 'maths', 'maths')">Maths</button>
-              <button type="button" class="btn-ai-secondary" style="font-size:12px; padding:4px 8px;" onclick="window.applyQuickPreset('Physique', 'physique', 'physique')">Physique</button>
-              <button type="button" class="btn-ai-secondary" style="font-size:12px; padding:4px 8px;" onclick="window.applyQuickPreset('Culture générale', 'culture', 'culture')">Culture G</button>
-              <button type="button" class="btn-ai-secondary" style="font-size:12px; padding:4px 8px;" onclick="window.applyQuickPreset('Anglais', 'anglais', 'anglais')">Anglais</button>
-              <button type="button" class="btn-ai-secondary" style="font-size:12px; padding:4px 8px;" onclick="window.applyQuickPreset('Quartier libre', 'quartier-libre', '')">Quartier libre</button>
-              <button type="button" class="btn-ai-secondary" style="font-size:12px; padding:4px 8px;" onclick="window.applyQuickPreset('Pause repas', 'pause', '')">Pause repas</button>
-            </div>
-          </div>
-
-          <div>
-            <label style="display:block; font-size:13px; font-weight:700; color:#334155; margin-bottom:6px;">Type & Couleur visuelle</label>
-            <select id="editSlotTheme" style="width:100%; padding:10px 12px; border-radius:8px; border:1px solid #cbd5e1; font-family:inherit; font-size:14px; background:#ffffff;">
-              <option value="bloc1" ${slot.theme === 'bloc1' ? 'selected' : ''}>Bloc 1 (Bleu doux)</option>
-              <option value="bloc2" ${slot.theme === 'bloc2' ? 'selected' : ''}>Bloc 2 (Orange pâle)</option>
-              <option value="maths" ${slot.theme === 'maths' ? 'selected' : ''}>Mathématiques (Rouge pastel)</option>
-              <option value="physique" ${slot.theme === 'physique' ? 'selected' : ''}>Physique (Jaune pastel)</option>
-              <option value="culture" ${slot.theme === 'culture' ? 'selected' : ''}>Culture générale (Vert pastel)</option>
-              <option value="anglais" ${slot.theme === 'anglais' ? 'selected' : ''}>Anglais (Violet pastel)</option>
-              <option value="quartier-libre" ${slot.theme === 'quartier-libre' ? 'selected' : ''}>Quartier libre (Gris bleu discret)</option>
-              <option value="pause" ${slot.theme === 'pause' ? 'selected' : ''}>Pause (Italique pastel)</option>
-              <option value="empty" ${slot.theme === 'empty' ? 'selected' : ''}>Vide / Inoccupé</option>
-            </select>
-          </div>
-
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px; border-top:1px solid #e2e8f0; padding-top:14px;">
-            <button onclick="window.clearOrDeleteSlot('${dayKey}', ${index}); window.closeAiModal();" class="btn-ai-secondary" style="color:#ef4444; border-color:#fecaca;">
-              Vider ce créneau
-            </button>
-            <div style="display:flex; gap:8px;">
-              <button onclick="window.closeAiModal()" class="btn-ai-secondary">Annuler</button>
-              <button onclick="window.saveSlotEdit('${dayKey}', ${index})" class="btn-ai-magic">Enregistrer</button>
-            </div>
-          </div>
-        </div>
-      `;
-
-      openModal(`Modifier le créneau (${dayName})`, "Éditeur manuel du planning", modalHtml);
-    }
-
-    function applyQuickPreset(title, theme, subjectKey) {
-      const titleInput = document.getElementById("editSlotTitle");
-      const themeSelect = document.getElementById("editSlotTheme");
-      if (titleInput) titleInput.value = title;
-      if (themeSelect) themeSelect.value = theme;
-    }
-
-    function moveSlotVertical(dayKey, index, direction) {
-      const slots = currentSchedule[dayKey].slots;
-      const targetIndex = index + direction;
-      if (targetIndex < 0 || targetIndex >= slots.length) return;
-
-      const temp = slots[index];
-      slots[index] = slots[targetIndex];
-      slots[targetIndex] = temp;
-
-      renderSchedule();
-      persistSchedule();
-      openSlotEditor(dayKey, targetIndex);
-    }
-
-    function saveSlotEdit(dayKey, index) {
-      const time = document.getElementById("editSlotTime")?.value?.trim() || "";
-      const title = document.getElementById("editSlotTitle")?.value?.trim() || "";
-      const theme = document.getElementById("editSlotTheme")?.value || "empty";
-
-      let subjectKey = undefined;
-      if (['bloc1', 'bloc2', 'maths', 'physique', 'culture', 'anglais'].includes(theme)) {
-        subjectKey = theme;
-      }
-
-      currentSchedule[dayKey].slots[index] = {
-        time,
-        title,
-        theme,
-        subjectKey
-      };
-
-      renderSchedule();
-      persistSchedule();
-      closeAiModal();
-      showToast("Créneau mis à jour et sauvegardé !", "✅");
-    }
-
-    function showToast(message, icon = "✨") {
-      const toast = document.getElementById("aiToast");
-      if (!toast) return;
-      document.getElementById("toastIcon").textContent = icon;
-      document.getElementById("toastMsg").textContent = message;
-      toast.classList.add("show");
-      setTimeout(() => toast.classList.remove("show"), 3800);
-    }
-
-    function openModal(title, subtitle, contentHtml) {
-      document.getElementById("modalTitle").textContent = title;
-      document.getElementById("modalSubtitle").textContent = subtitle;
-      document.getElementById("modalContent").innerHTML = contentHtml;
-      document.getElementById("aiModal").classList.add("active");
-    }
-
-    function closeAiModal() {
-      document.getElementById("aiModal").classList.remove("active");
-    }
-
-    async function callGemini(payload, endpoint = GEMINI_TEXT_URL, maxRetries = 3) {
-      let delay = 1000;
-      for (let attempt = 0; attempt < maxRetries; attempt++) {
-        try {
-          const response = await fetch(endpoint, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-          });
-          if (response.status === 429) {
-            await new Promise(res => setTimeout(res, delay));
-            delay *= 2;
-            continue;
-          }
-          if (!response.ok) {
-            throw new Error(`Erreur réseau: ${response.status}`);
-          }
-          return await response.json();
-        } catch (err) {
-          if (attempt === maxRetries - 1) throw err;
-          await new Promise(res => setTimeout(res, delay));
-          delay *= 2;
-        }
-      }
-    }
-
-    async function openSubjectTutor(subjectName, slotTime, dayName) {
-      openModal(
-        `Tuteur BTS CIEL : ${subjectName}`,
-        `${dayName} &bull; ${slotTime}`,
-        `
-        <div style="text-align:center; padding: 40px 0;">
-          <div class="ai-loading-spinner"></div>
-          <p style="margin-top:14px; font-weight:600; color:#475569;">Génération de la fiche de révision et du mini-quiz BTS CIEL par Gemini...</p>
-        </div>
-        `
-      );
-
-      const prompt = `Tu es un professeur tuteur expert en BTS CIEL (Cybersécurité, Informatique et réseaux, Électronique) 1ère année.
-Pour le créneau "${subjectName}" (${dayName}, ${slotTime}), prépare une fiche d'accompagnement courte et percutante pour l'étudiant.
-Structure ta réponse en HTML stylé (sans balise <html> ni <head>, utilise des balises <h4>, <p>, <ul>, <li>, <strong>, avec des bordures et cartes claires) :
-1. 🎯 **Notions clés du programme BTS CIEL** pour ce cours (ex: Réseaux IP / Programmation C++ / Linux pour Bloc 1, Cartes à microcontrôleurs / Électronique analogique/numérique pour Bloc 2, équations différentielles/Fourier pour Maths, etc.).
-2. 💡 **Conseil d'efficacité & méthode** pour ce créneau spécifique.
-3. ⚡ **Mini-Quiz de vérification rapide (2 questions clés avec réponses pliables sous balise <details><summary>)**.
-Reste concis, motivant et direct.`;
-
-      try {
-        const payload = {
-          contents: [{ parts: [{ text: prompt }] }],
-          systemInstruction: {
-            parts: [{ text: "Tu es un professeur mentor en BTS CIEL. Rends le contenu clair, pédagogique, avec du HTML élégant et aéré." }]
-          }
-        };
-
-        const result = await callGemini(payload);
-        const text = result?.candidates?.[0]?.content?.parts?.[0]?.text || "Impossible de générer le contenu pour le moment.";
-
-        document.getElementById("modalContent").innerHTML = `
-          <div style="display:flex; flex-direction:column; gap:16px;">
-            <div style="background:#f1f5f9; padding:12px 16px; border-radius:10px; border-left:4px solid #6366f1; font-size:13.5px; color:#334155;">
-              <strong>Créneau sélectionné :</strong> ${subjectName} (${dayName} ${slotTime})
-            </div>
-            <div class="ai-tutor-body" style="font-size:14px; line-height:1.7;">
-              ${text.replace(/```html/g, '').replace(/```/g, '')}
-            </div>
-            <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:12px; border-top:1px solid #e2e8f0; padding-top:12px;">
-              <button onclick="window.closeAiModal()" class="btn-ai-secondary">Fermer</button>
-            </div>
-          </div>
-        `;
-      } catch (err) {
-        document.getElementById("modalContent").innerHTML = `
-          <div style="color:#ef4444; background:#fef2f2; padding:16px; border-radius:10px;">
-            <p><strong>Erreur de génération :</strong> ${err.message || 'Une erreur est survenue.'}</p>
-            <button onclick="window.closeAiModal()" class="btn-ai-secondary" style="margin-top:12px;">Fermer</button>
-          </div>
-        `;
-      }
-    }
-
-    function openScheduleEditorModal() {
-      const modalHtml = `
-        <div style="display:flex; flex-direction:column; gap:16px;">
-          <p style="color:#475569; font-size:14px;">
-            Décrivez en français ce que vous souhaitez adapter ou ajouter à votre emploi du temps. Gemini comprendra votre demande et modifiera automatiquement la grille.
-          </p>
-
-          <div style="display:flex; flex-wrap:wrap; gap:8px;">
-            <button class="btn-ai-secondary" style="font-size:12.5px; padding:6px 10px;" onclick="document.getElementById('aiInstruction').value = 'Ajoute 2h de révision C++ le jeudi de 20h à 22h'">
-              + 2h Révision C++ Jeudi
-            </button>
-            <button class="btn-ai-secondary" style="font-size:12.5px; padding:6px 10px;" onclick="document.getElementById('aiInstruction').value = 'Permute le créneau de Bloc 2 du mardi avec l\\'anglais du lundi'">
-              Permuter Bloc 2 & Anglais
-            </button>
-            <button class="btn-ai-secondary" style="font-size:12.5px; padding:6px 10px;" onclick="document.getElementById('aiInstruction').value = 'Ajoute une pause goûter de 30min le lundi à 16h'">
-              + Pause Lundi 16h
-            </button>
-          </div>
-
-          <textarea id="aiInstruction" rows="3" placeholder="Ex: 'Ajoute 2h de révision Réseaux le vendredi soir' ou 'Décale les maths de mercredi à 18h'..." style="width:100%; border:1px solid #cbd5e1; border-radius:10px; padding:12px; font-family:inherit; font-size:14px; outline:none;"></textarea>
-
-          <div id="reorganizeStatus" style="display:none; align-items:center; gap:10px; color:#6366f1; font-weight:600; font-size:13.5px;">
-            <div class="ai-loading-spinner"></div>
-            <span>Gemini analyse et réécrit l'emploi du temps...</span>
-          </div>
-
-          <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:8px;">
-            <button onclick="window.closeAiModal()" class="btn-ai-secondary">Annuler</button>
-            <button onclick="window.submitScheduleReorganization()" class="btn-ai-magic">
-              Appliquer les changements
-            </button>
-          </div>
-        </div>
-      `;
-
-      openModal("Adapter l'emploi du temps avec Gemini", "Modification intelligente en langage naturel", modalHtml);
-    }
-
-    async function submitScheduleReorganization() {
-      const input = document.getElementById("aiInstruction")?.value?.trim();
-      if (!input) {
-        showToast("Veuillez saisir une consigne pour Gemini", "⚠️");
+        showToast("Veuillez sélectionner un document de cours", "⚠️");
         return;
       }
 
-      const statusEl = document.getElementById("reorganizeStatus");
       if (statusEl) statusEl.style.display = "flex";
+      if (statusMsg) statusMsg.textContent = "Extraction et lecture stricte de votre document...";
+      if (resultEl) resultEl.style.display = "none";
 
-      const prompt = `Voici l'emploi du temps actuel de BTS CIEL au format JSON:
-${JSON.stringify(currentSchedule, null, 2)}
-
-L'utilisateur demande la modification suivante :
-"${input}"
-
-Génère la version mise à jour de tout l'objet d'emploi du temps au format JSON respectant strictement le schéma.
-Règles :
-- Les thèmes valides sont : "bloc1", "bloc2", "maths", "physique", "anglais", "culture", "quartier-libre", "pause", "empty".
-- Si c'est une matière d'enseignement, renseigne "subjectKey" ("bloc1", "bloc2", "maths", "physique", "anglais", "culture").
-- Conserve 7 créneaux par jour pour garder la régularité visuelle (les créneaux inoccupés ont time="", title="", theme="empty").
-- Reste fidèle aux modifications demandées tout en préservant le reste.`;
-
-      const payload = {
-        contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: {
-          responseMimeType: "application/json",
-          responseSchema: {
-            type: "OBJECT",
-            properties: {
-              lundi: {
-                type: "OBJECT",
-                properties: {
-                  label: { type: "STRING" },
-                  slots: {
-                    type: "ARRAY",
-                    items: {
-                      type: "OBJECT",
-                      properties: {
-                        time: { type: "STRING" },
-                        title: { type: "STRING" },
-                        theme: { type: "STRING" },
-                        subjectKey: { type: "STRING" }
-                      },
-                      required: ["time", "title", "theme"]
-                    }
-                  }
-                },
-                required: ["label", "slots"]
-              },
-              mardi: {
-                type: "OBJECT",
-                properties: {
-                  label: { type: "STRING" },
-                  slots: {
-                    type: "ARRAY",
-                    items: {
-                      type: "OBJECT",
-                      properties: {
-                        time: { type: "STRING" },
-                        title: { type: "STRING" },
-                        theme: { type: "STRING" },
-                        subjectKey: { type: "STRING" }
-                      },
-                      required: ["time", "title", "theme"]
-                    }
-                  }
-                },
-                required: ["label", "slots"]
-              },
-              mercredi: {
-                type: "OBJECT",
-                properties: {
-                  label: { type: "STRING" },
-                  slots: {
-                    type: "ARRAY",
-                    items: {
-                      type: "OBJECT",
-                      properties: {
-                        time: { type: "STRING" },
-                        title: { type: "STRING" },
-                        theme: { type: "STRING" },
-                        subjectKey: { type: "STRING" }
-                      },
-                      required: ["time", "title", "theme"]
-                    }
-                  }
-                },
-                required: ["label", "slots"]
-              },
-              jeudi: {
-                type: "OBJECT",
-                properties: {
-                  label: { type: "STRING" },
-                  slots: {
-                    type: "ARRAY",
-                    items: {
-                      type: "OBJECT",
-                      properties: {
-                        time: { type: "STRING" },
-                        title: { type: "STRING" },
-                        theme: { type: "STRING" },
-                        subjectKey: { type: "STRING" }
-                      },
-                      required: ["time", "title", "theme"]
-                    }
-                  }
-                },
-                required: ["label", "slots"]
-              },
-              vendredi: {
-                type: "OBJECT",
-                properties: {
-                  label: { type: "STRING" },
-                  slots: {
-                    type: "ARRAY",
-                    items: {
-                      type: "OBJECT",
-                      properties: {
-                        time: { type: "STRING" },
-                        title: { type: "STRING" },
-                        theme: { type: "STRING" },
-                        subjectKey: { type: "STRING" }
-                      },
-                      required: ["time", "title", "theme"]
-                    }
-                  }
-                },
-                required: ["label", "slots"]
-              }
-            },
-            required: ["lundi", "mardi", "mercredi", "jeudi", "vendredi"]
-          }
-        }
-      };
+      const parts = [];
+      const isTextType = attachedFile.type.startsWith("text/") || 
+                         attachedFile.name.endsWith(".txt") || 
+                         attachedFile.name.endsWith(".c") || 
+                         attachedFile.name.endsWith(".cpp") || 
+                         attachedFile.name.endsWith(".h") || 
+                         attachedFile.name.endsWith(".py") || 
+                         attachedFile.name.endsWith(".md");
 
       try {
-        const result = await callGemini(payload);
-        const candidate = result.candidates?.[0];
-        if (candidate?.content?.parts?.[0]?.text) {
-          const newSchedule = JSON.parse(candidate.content.parts[0].text);
-          currentSchedule = newSchedule;
-          renderSchedule();
-          persistSchedule();
-          closeAiModal();
-          showToast("Emploi du temps mis à jour avec succès !", "🎉");
+        if (isTextType) {
+          const textContent = await attachedFile.text();
+          parts.push({
+            text: `DOCUMENT SOURCE FOURNI PAR L'ÉTUDIANT (${attachedFile.name}) :\n"""\n${textContent.slice(0, 50000)}\n"""`
+          });
         } else {
-          throw new Error("Réponse inattendue de l'IA.");
+          if (statusMsg) statusMsg.textContent = "Traitement du fichier binaire (PDF/Image)...";
+          const base64Data = await readFileAsBase64(attachedFile);
+          let mimeType = attachedFile.type;
+          if (!mimeType || mimeType === "application/octet-stream") {
+            if (attachedFile.name.endsWith(".pdf")) mimeType = "application/pdf";
+            else if (attachedFile.name.endsWith(".png")) mimeType = "image/png";
+            else if (attachedFile.name.endsWith(".jpg") || attachedFile.name.endsWith(".jpeg")) mimeType = "image/jpeg";
+            else if (attachedFile.name.endsWith(".webp")) mimeType = "image/webp";
+            else mimeType = "application/pdf";
+          }
+
+          parts.push({
+            inlineData: {
+              mimeType: mimeType,
+              data: base64Data
+            }
+          });
+          parts.push({
+            text: `Le document ci-joint est le fichier de cours officiel nommé "${attachedFile.name}".`
+          });
+        }
+
+        const userPrompt = `Consigne de travail : Analyse le document ci-joint pour le cours de "${subjectName}" (${dayName}, ${slotTime}).
+${customInstruction ? `Demande spécifique de l'étudiant : "${customInstruction}"` : 'Fais une fiche de révision technique synthétique, claire et directe.'}
+
+RÈGLES D'EXTRACTION ABSOLUES ET STRICTES :
+1. BASE-TOI STRICTEMENT ET EXCLUSIVEMENT SUR CE DOCUMENT. N'INVENTE RIEN.
+2. Il est formellement interdit d'ajouter des théorèmes, des formules, du code ou des notions qui ne figurent PAS dans ce document fourni.
+3. Si une information ou réponse n'est pas dans le document, NE L'INVENTE PAS. Mentionne simplement que ce n'est pas abordé dans le fichier.
+4. Aucun bavardage oral, aucune introduction ("Bonjour", "Voici votre document"), aucune conclusion. Donne directement le document au format HTML épuré.
+5. Structure le document en HTML propre (balises <h4>, <p>, <ul>, <li>, <code>, <strong>, <table border="1"> si besoin de tableau, et <details><summary> pour les questions/réponses si tu en proposes d'après les exercices réels du document).`;
+
+        parts.push({ text: userPrompt });
+
+        if (statusMsg) statusMsg.textContent = "Gemini synthétise fidèlement votre cours...";
+
+        const response = await fetch(GEMINI_TEXT_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || "Impossible d'extraire le contenu du document.";
+
+        if (statusEl) statusEl.style.display = "none";
+        if (resultEl) {
+          resultEl.innerHTML = text.replace(/```html/gi, '').replace(/```/g, '');
+          resultEl.style.display = "block";
+          if (pdfBtn) pdfBtn.style.display = "inline-flex";
         }
       } catch (err) {
         if (statusEl) statusEl.style.display = "none";
-        showToast("Erreur lors de la mise à jour : " + err.message, "❌");
+        if (resultEl) {
+          resultEl.innerHTML = `<div style="color:#ef4444; padding:10px; background:rgba(239,68,68,0.1); border-radius:8px;">Erreur lors de l'analyse du document : ${err.message}</div>`;
+          resultEl.style.display = "block";
+        }
       }
+    }
+
+    function downloadTutorPdf() {
+      const resultEl = document.getElementById("tutorResultContainer");
+      if (!resultEl || !resultEl.innerHTML.trim()) {
+        showToast("Veuillez d'abord générer un document à exporter", "⚠️");
+        return;
+      }
+      const modalTitle = document.getElementById("modalTitle")?.textContent || "Fiche_Revision";
+      const modalSubtitle = document.getElementById("modalSubtitle")?.textContent || "BTS CIEL";
+
+      const printWindow = window.open("", "_blank");
+      if (!printWindow) {
+        showToast("Veuillez autoriser les fenêtres pop-up pour imprimer en PDF", "⚠️");
+        return;
+      }
+
+      const clone = resultEl.cloneNode(true);
+      clone.querySelectorAll("details").forEach(d => d.setAttribute("open", "true"));
+
+      printWindow.document.write(`
+        <!DOCTYPE html>
+        <html lang="fr">
+        <head>
+          <meta charset="UTF-8">
+          <title>${modalTitle} - ${modalSubtitle}</title>
+          <link rel="preconnect" href="https://fonts.googleapis.com">
+          <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+          <style>
+            * { box-sizing: border-box; }
+            body {
+              font-family: 'Plus Jakarta Sans', sans-serif;
+              color: #0f172a;
+              background: #ffffff;
+              padding: 32px;
+              max-width: 860px;
+              margin: 0 auto;
+              line-height: 1.65;
+            }
+            .print-header {
+              border-bottom: 2px solid #6366f1;
+              padding-bottom: 12px;
+              margin-bottom: 20px;
+            }
+            .print-header h1 { margin: 0; font-size: 24px; color: #4338ca; }
+            .print-header p { margin: 4px 0 0 0; color: #64748b; font-size: 13.5px; }
+            code { background: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 13px; color: #9333ea; }
+            details { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; margin: 12px 0; }
+            summary { font-weight: 700; cursor: pointer; color: #4f46e5; margin-bottom: 6px; }
+            h4, h3, h2 { color: #1e1b4b; margin-top: 1.4em; margin-bottom: 0.4em; }
+            ul, ol { padding-left: 20px; }
+            @media print {
+              body { padding: 0; max-width: 100%; }
+            }
+          </style>
+        </head>
+        <body>
+          <div class="print-header">
+            <h1>${modalTitle}</h1>
+            <p>${modalSubtitle} &bull; Fiche de révision BTS CIEL</p>
+          </div>
+          <div>${clone.innerHTML}</div>
+          <script>
+            window.onload = function() {
+              window.print();
+            };
+          <\/script>
+        </body>
+        </html>
+      `);
+      printWindow.document.close();
     }
 
     function exportJsonBackup() {
@@ -1778,38 +2713,45 @@ Règles :
       document.body.appendChild(downloadAnchor);
       downloadAnchor.click();
       downloadAnchor.remove();
-      showToast("Planning sauvegardé sur votre PC (.json) !", "💾");
+      showToast("Fichier JSON de sauvegarde téléchargé !", "💾");
     }
 
     async function exportSchedulePng() {
       const board = document.querySelector(".board-container");
       if (!board) return;
 
+      closeAiModal();
       showToast("Génération de l'image haute définition en cours...", "🖼️");
 
       try {
-        // Désactiver temporairement le mode édition pour capturer un planning propre
         const wasEditMode = isEditMode;
-        if (wasEditMode) {
-          document.body.classList.remove("edit-mode");
+        if (wasEditMode) document.body.classList.remove("edit-mode");
+
+        const originalBoardBg = board.style.background;
+        const originalBoardBorder = board.style.borderColor;
+
+        if (isDarkMode) {
+          board.style.background = '#0b0f19';
+          board.style.borderColor = 'rgba(255, 255, 255, 0.15)';
+        } else {
+          board.style.background = '#ffffff';
+          board.style.borderColor = '#cbd5e1';
         }
 
-        // Capture à haute résolution (scale 2.5) pour un rendu net sur écran 1080p ou 4K
         const canvas = await html2canvas(board, {
           scale: 2.5,
           useCORS: true,
           logging: false,
-          backgroundColor: '#f7f9fd'
+          backgroundColor: isDarkMode ? '#0b0f19' : '#ffffff'
         });
 
-        if (wasEditMode) {
-          document.body.classList.add("edit-mode");
-        }
+        board.style.background = originalBoardBg;
+        board.style.borderColor = originalBoardBorder;
+        if (wasEditMode) document.body.classList.add("edit-mode");
 
-        // Téléchargement direct du fichier PNG
         const imageUri = canvas.toDataURL("image/png");
         const downloadLink = document.createElement("a");
-        downloadLink.download = `planning_bts_ciel_fond_ecran_${new Date().toISOString().slice(0, 10)}.png`;
+        downloadLink.download = `planning_bts_ciel_${new Date().toISOString().slice(0, 10)}.png`;
         downloadLink.href = imageUri;
         document.body.appendChild(downloadLink);
         downloadLink.click();
@@ -1817,7 +2759,7 @@ Règles :
 
         showToast("Fond d'écran PNG téléchargé avec succès !", "🖼️");
       } catch (err) {
-        console.error("Erreur lors de la capture PNG :", err);
+        console.error("Erreur capture PNG :", err);
         showToast("Erreur lors de la capture d'image : " + err.message, "❌");
       }
     }
@@ -1837,9 +2779,14 @@ Règles :
           const parsed = JSON.parse(e.target.result);
           if (parsed && parsed.lundi && parsed.mardi && parsed.mercredi && parsed.jeudi && parsed.vendredi) {
             currentSchedule = parsed;
+            if (currentSchedule.preferences && typeof currentSchedule.preferences.isDarkMode === 'boolean') {
+              isDarkMode = currentSchedule.preferences.isDarkMode;
+            }
+            document.body.classList.toggle("dark-theme", isDarkMode);
             renderSchedule();
             persistSchedule();
-            showToast("Planning restauré avec succès depuis votre fichier !", "📂");
+            closeAiModal();
+            showToast("Planning restauré avec succès !", "📂");
           } else {
             showToast("Format de fichier JSON non reconnu", "⚠️");
           }
@@ -1854,8 +2801,7 @@ Règles :
     function exportStandaloneHtml() {
       let htmlContent = document.documentElement.outerHTML;
       const scheduleJson = JSON.stringify(currentSchedule, null, 2);
-      
-      // On remplace les données par défaut par vos données personnalisées actuelles
+
       const regex = /const defaultScheduleData = \{[\s\S]*?\n    \};/;
       if (regex.test(htmlContent)) {
         htmlContent = htmlContent.replace(regex, `const defaultScheduleData = ${scheduleJson};`);
@@ -1870,30 +2816,72 @@ Règles :
       a.click();
       a.remove();
       URL.revokeObjectURL(url);
-      showToast("Fichier HTML téléchargé avec vos cours sauvegardés !", "💻");
+      showToast("Fichier HTML autonome téléchargé avec vos cours enregistrés !", "💻");
+    }
+
+    function resetToDefaultSchedule() {
+      currentSchedule = JSON.parse(JSON.stringify(defaultScheduleData));
+      renderSchedule();
+      persistSchedule();
+      closeAiModal();
+      showToast("Planning réinitialisé aux valeurs par défaut", "🔄");
     }
 
     window.toggleEditMode = toggleEditMode;
-    window.openScheduleEditorModal = openScheduleEditorModal;
     window.openHoursCalculator = openHoursCalculator;
-    window.resetToDefaultSchedule = resetToDefaultSchedule;
+    window.openSettingsModal = openSettingsModal;
+    window.setDarkMode = setDarkMode;
     window.closeAiModal = closeAiModal;
     window.openSlotEditor = openSlotEditor;
     window.clearOrDeleteSlot = clearOrDeleteSlot;
     window.addNewSlot = addNewSlot;
+    window.applyGradientPreset = applyGradientPreset;
+    window.resetSlotColors = resetSlotColors;
     window.applyQuickPreset = applyQuickPreset;
+    window.updateColorPreview = updateColorPreview;
     window.moveSlotVertical = moveSlotVertical;
     window.saveSlotEdit = saveSlotEdit;
-    window.submitScheduleReorganization = submitScheduleReorganization;
+    window.setMobileDay = setMobileDay;
     window.openSubjectTutor = openSubjectTutor;
+    window.toggleEditCnedUrl = toggleEditCnedUrl;
+    window.saveCnedUrl = saveCnedUrl;
+    window.handleTutorFileSelect = handleTutorFileSelect;
+    window.removeAttachedFile = removeAttachedFile;
+    window.generateDocumentCourse = generateDocumentCourse;
+    window.downloadTutorPdf = downloadTutorPdf;
     window.exportJsonBackup = exportJsonBackup;
     window.exportSchedulePng = exportSchedulePng;
     window.triggerImportFile = triggerImportFile;
     window.handleFileImport = handleFileImport;
     window.exportStandaloneHtml = exportStandaloneHtml;
+    window.resetToDefaultSchedule = resetToDefaultSchedule;
+    window.openAgendaModal = openAgendaModal;
+    window.toggleAddEventForm = toggleAddEventForm;
+    window.selectEventIcon = selectEventIcon;
+    window.saveNewEvent = saveNewEvent;
+    window.deleteEvent = deleteEvent;
+    window.updateAgendaBadge = updateAgendaBadge;
 
     window.addEventListener("DOMContentLoaded", async () => {
+      try {
+        const localData = localStorage.getItem(LOCAL_STORAGE_KEY);
+        if (localData) {
+          const parsed = JSON.parse(localData);
+          if (parsed && parsed.lundi && parsed.mardi) {
+            currentSchedule = parsed;
+            if (currentSchedule.preferences && typeof currentSchedule.preferences.isDarkMode === 'boolean') {
+              isDarkMode = currentSchedule.preferences.isDarkMode;
+            }
+          }
+        }
+      } catch (e) {
+        console.warn("Lecture sauvegarde locale :", e);
+      }
+
+      document.body.classList.toggle("dark-theme", isDarkMode);
+      updateHeaderTitles();
       renderSchedule();
+      updateAgendaBadge();
       await initCloudPersistence();
     });
   </script>
