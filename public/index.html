@@ -1340,6 +1340,7 @@
     let isStorageReady = false;
     let isEditMode = false;
     let isDarkMode = true;
+    let isAuthInProgress = false;
     let mobileActiveDay = 'all';
     let draggedSlotInfo = null;
     let attachedFile = null;
@@ -1565,12 +1566,25 @@
         showToast("Firebase n'est pas encore initialisé", "⚠️");
         return;
       }
+      if (isAuthInProgress) {
+        return;
+      }
+
+      isAuthInProgress = true;
+      const gateBtns = document.querySelectorAll(".btn-gate-google, .btn-google-auth");
+      gateBtns.forEach(btn => {
+        btn.disabled = true;
+        btn.style.opacity = "0.6";
+        btn.style.cursor = "not-allowed";
+      });
+
       const gateStatus = document.getElementById("gateStatusMsg");
       if (gateStatus) {
         gateStatus.className = "gate-status-msg info";
         gateStatus.style.display = "block";
         gateStatus.textContent = "Ouverture de la fenêtre Google...";
       }
+
       try {
         updateSyncIndicator("saving", "Connexion Google...");
         const provider = new GoogleAuthProvider();
@@ -1593,7 +1607,10 @@
           gateStatus.className = "gate-status-msg error";
           gateStatus.style.display = "block";
 
-          if (err.code === 'auth/unauthorized-domain') {
+          if (err.code === 'auth/cancelled-popup-request') {
+            gateStatus.className = "gate-status-msg info";
+            gateStatus.textContent = "Une fenêtre de connexion était déjà en cours d'ouverture. Vous pouvez réassayer.";
+          } else if (err.code === 'auth/unauthorized-domain') {
             const currentHost = window.location.hostname || "localhost";
             gateStatus.innerHTML = `
               <div style="font-size:12.5px; line-height:1.5;">
@@ -1616,6 +1633,7 @@
           } else if (err.code === 'auth/popup-blocked') {
             gateStatus.textContent = "⚠️ La fenêtre de connexion a été bloquée par votre navigateur. Autorisez les pop-ups pour continuer.";
           } else if (err.code === 'auth/popup-closed-by-user') {
+            gateStatus.className = "gate-status-msg info";
             gateStatus.textContent = "La fenêtre de connexion a été fermée avant la validation.";
           } else if (err.code === 'auth/operation-not-allowed') {
             gateStatus.innerHTML = "⚠️ <strong>Fournisseur Google non activé</strong> : Activez Google dans votre console Firebase (<em>Authentication &gt; Sign-in method &gt; Google</em>).";
@@ -1624,7 +1642,16 @@
           }
         }
         updateSyncIndicator("error", "Non connecté");
-        showToast("Erreur connexion Google", "❌");
+        if (err.code !== 'auth/popup-closed-by-user' && err.code !== 'auth/cancelled-popup-request') {
+          showToast("Erreur connexion Google", "❌");
+        }
+      } finally {
+        isAuthInProgress = false;
+        gateBtns.forEach(btn => {
+          btn.disabled = false;
+          btn.style.opacity = "1";
+          btn.style.cursor = "pointer";
+        });
       }
     }
 
