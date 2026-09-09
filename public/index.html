@@ -1345,8 +1345,12 @@
     let attachedFile = null;
     let isCustomColorActive = false;
 
-    const apiKey = "";
-    const GEMINI_TEXT_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+    // Clé d'API Gemini : laissée vide dans le code pour éviter toute fuite sur GitHub
+    const DEFAULT_GEMINI_API_KEY = "";
+    
+    function getGeminiApiKey() {
+      return (currentSchedule.preferences && currentSchedule.preferences.geminiApiKey) || DEFAULT_GEMINI_API_KEY;
+    }
 
     const DEFAULT_CNED_URLS = {
       bloc1: "https://eformation.cned.fr/course/view.php?id=19096&section=1",
@@ -1365,6 +1369,7 @@
       },
       preferences: {
         isDarkMode: true,
+        geminiApiKey: DEFAULT_GEMINI_API_KEY,
         cnedUrls: { ...DEFAULT_CNED_URLS }
       },
       events: [],
@@ -1600,17 +1605,11 @@
                 </p>
                 <div style="background:rgba(0,0,0,0.35); border:1px solid rgba(255,255,255,0.1); padding:8px 10px; border-radius:8px; display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:10px;">
                   <code style="color:#fcd34d; font-weight:700; word-break:break-all;">${currentHost}</code>
-                  <button type="button" onclick="window.copyCurrentDomain()" style="padding:4px 8px; border-radius:6px; background:#4f46e5; color:#fff; border:none; font-size:11px; font-weight:700; cursor:pointer; white-space:nowrap;">
-                    Copier
-                  </button>
                 </div>
                 <div style="display:flex; flex-direction:column; gap:6px;">
                   <a href="https://console.firebase.google.com/project/privateplanning/authentication/settings" target="_blank" rel="noopener noreferrer" style="display:inline-flex; align-items:center; justify-content:center; gap:6px; padding:7px 12px; background:#2563eb; color:#ffffff; text-decoration:none; border-radius:8px; font-weight:700; font-size:12px;">
                     ↗️ Ouvrir Console Firebase (Domaines autorisés)
                   </a>
-                  <button type="button" onclick="window.bypassGateForPreview()" style="margin-top:4px; padding:7px 10px; border-radius:8px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); color:#cbd5e1; font-size:11.5px; font-weight:600; cursor:pointer;">
-                    🔓 Déverrouiller temporairement pour tester l'interface
-                  </button>
                 </div>
               </div>
             `;
@@ -1750,7 +1749,6 @@
             updateAuthUI();
             listenToUserSchedule();
           } else {
-            // Aucun compte Google connecté : verrouillage strict
             userId = null;
             isStorageReady = false;
             if (unsubscribeFirestore) {
@@ -2560,7 +2558,18 @@
       persistSchedule();
     }
 
+    function saveCustomGeminiKey() {
+      const input = document.getElementById("customGeminiKeyInput");
+      if (!input) return;
+      const keyVal = input.value.trim();
+      if (!currentSchedule.preferences) currentSchedule.preferences = {};
+      currentSchedule.preferences.geminiApiKey = keyVal || DEFAULT_GEMINI_API_KEY;
+      persistSchedule();
+      showToast("Clé API Gemini mise à jour !", "✨");
+    }
+
     function openSettingsModal() {
+      const currentKey = getGeminiApiKey();
       const modalHtml = `
         <div style="display:flex; flex-direction:column; gap:20px;">
           <div>
@@ -2579,6 +2588,27 @@
                 <input type="checkbox" id="darkThemeSwitch" ${isDarkMode ? 'checked' : ''} onchange="window.setDarkMode(this.checked)">
                 <span class="slider"></span>
               </label>
+            </div>
+          </div>
+
+          <!-- Configuration Clé API Gemini -->
+          <div>
+            <h4 style="font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; color:#818cf8; margin-bottom:10px;">
+              Intelligence Artificielle Gemini
+            </h4>
+            <div style="background:rgba(30,41,59,0.55); border:1px solid rgba(129,140,248,0.25); border-radius:12px; padding:14px 16px;">
+              <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+                <span style="font-size:20px;">🤖</span>
+                <strong style="font-size:14px;">Clé d'API Gemini (Génération de fiches)</strong>
+              </div>
+              <p style="font-size:12px; opacity:0.85; margin-bottom:10px;">
+                Collez votre clé API ici. Elle sera enregistrée dans votre espace privé Firestore sans jamais apparaître sur GitHub.
+              </p>
+              <div style="display:flex; gap:8px;">
+                <input type="password" id="customGeminiKeyInput" value="${currentKey}" placeholder="Collez votre clé AIzaSy... ou AQ..." style="flex:1; padding:8px 12px; border-radius:8px; border:1px solid rgba(129,140,248,0.3); background:rgba(15,23,42,0.8); color:inherit; font-size:12.5px; font-family:monospace;">
+                <button type="button" class="btn-ai-secondary" onclick="const f=document.getElementById('customGeminiKeyInput'); f.type = f.type==='password'?'text':'password';" title="Afficher/Masquer">👁️</button>
+                <button type="button" class="btn-ai-magic" onclick="window.saveCustomGeminiKey()">Enregistrer</button>
+              </div>
             </div>
           </div>
 
@@ -2660,7 +2690,7 @@
         </div>
       `;
 
-      openModal("Paramètres", "Affichage, Thème & Sauvegardes", modalHtml);
+      openModal("Paramètres", "Affichage, IA & Sauvegardes", modalHtml);
     }
 
     function showFirebaseDiagnostic() {
@@ -2849,6 +2879,50 @@
       });
     }
 
+    async function callGeminiApi(payload, apiKey) {
+      const candidateModels = ["gemini-2.5-flash", "gemini-1.5-flash", "gemini-3-flash-preview"];
+      let lastError = null;
+
+      for (const model of candidateModels) {
+        try {
+          const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(apiKey)}`;
+          const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'x-goog-api-key': apiKey
+            },
+            body: JSON.stringify(payload)
+          });
+
+          const data = await response.json();
+
+          if (!response.ok) {
+            const apiMsg = data?.error?.message || `Erreur HTTP ${response.status}`;
+            lastError = new Error(apiMsg);
+            if (response.status === 404) {
+              // Si le modèle n'est pas trouvé, on teste le modèle suivant
+              continue;
+            }
+            throw lastError;
+          }
+
+          const generatedText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (!generatedText) {
+            throw new Error("L'IA n'a retourné aucun contenu dans sa réponse.");
+          }
+
+          return generatedText;
+        } catch (err) {
+          lastError = err;
+          if (err.message && err.message.includes("404")) continue;
+          throw err;
+        }
+      }
+
+      throw lastError || new Error("Échec de la communication avec l'API Gemini.");
+    }
+
     async function generateDocumentCourse(subjectName, dayName, slotTime) {
       const customInstruction = document.getElementById("tutorPromptInput")?.value?.trim() || "";
       const statusEl = document.getElementById("tutorGeneratingStatus");
@@ -2858,13 +2932,33 @@
 
       if (pdfBtn) pdfBtn.style.display = "none";
 
+      const currentKey = getGeminiApiKey();
+      if (!currentKey) {
+        if (resultEl) {
+          resultEl.innerHTML = `
+            <div style="background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.4); border-radius:10px; padding:14px; color:#fca5a5;">
+              <strong style="display:block; margin-bottom:4px; font-size:14px;">⚠️ Clé API Gemini non configurée</strong>
+              <p style="font-size:13px; margin:0 0 10px 0;">
+                Pour protéger votre sécurité, la clé n'est pas stockée dans le code public. Rendez-vous dans les <strong>Paramètres</strong> (roue crantée) pour coller votre clé en 1 clic.
+              </p>
+              <button class="btn-ai-magic" onclick="window.openSettingsModal()" style="font-size:12.5px; padding:6px 12px;">
+                ⚙️ Ouvrir les Paramètres
+              </button>
+            </div>
+          `;
+          resultEl.style.display = "block";
+        }
+        showToast("Configurez votre clé dans les Paramètres", "⚙️");
+        return;
+      }
+
       if (!attachedFile) {
         if (resultEl) {
           resultEl.innerHTML = `
             <div style="background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.4); border-radius:10px; padding:14px; color:#fca5a5;">
               <strong style="display:block; margin-bottom:4px; font-size:14px;">⚠️ Aucun document n'a été sélectionné</strong>
               <p style="font-size:13px; margin:0;">
-                Veuillez cliquer sur <strong>« 📂 Choisir mon document »</strong> pour charger votre support réel.
+                Veuillez cliquer sur <strong>« 📂 Choisir mon document »</strong> pour charger votre support réel (PDF, images, etc.).
               </p>
             </div>
           `;
@@ -2921,14 +3015,7 @@ RÈGLES STRICTES :
           }
         };
 
-        const response = await fetch(GEMINI_TEXT_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-
-        const data = await response.json();
-        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || "Impossible d'extraire le contenu.";
+        const text = await callGeminiApi(payload, currentKey);
 
         if (statusEl) statusEl.style.display = "none";
         if (resultEl) {
@@ -2939,7 +3026,12 @@ RÈGLES STRICTES :
       } catch (err) {
         if (statusEl) statusEl.style.display = "none";
         if (resultEl) {
-          resultEl.innerHTML = `<div style="color:#ef4444; padding:10px;">Erreur lors de l'analyse : ${err.message}</div>`;
+          resultEl.innerHTML = `
+            <div style="background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.4); border-radius:10px; padding:14px; color:#fca5a5;">
+              <strong style="display:block; margin-bottom:4px; font-size:14px;">⚠️ Erreur lors de l'appel à Gemini</strong>
+              <p style="font-size:13px; margin:0; line-height:1.5;">${err.message}</p>
+            </div>
+          `;
           resultEl.style.display = "block";
         }
       }
@@ -3143,6 +3235,7 @@ RÈGLES STRICTES :
     window.setSelectedEventIcon = setSelectedEventIcon;
     window.addAgendaEvent = addAgendaEvent;
     window.deleteAgendaEvent = deleteAgendaEvent;
+    window.saveCustomGeminiKey = saveCustomGeminiKey;
 
     window.addEventListener("DOMContentLoaded", async () => {
       document.body.classList.toggle("dark-theme", isDarkMode);
