@@ -1231,11 +1231,11 @@
       lundi: {
         label: "LUNDI",
         slots: [
-          { time: "9h - 9h30", title: "Quartier libre", theme: "quartier-libre" },
-          { time: "9h30 - 12h", title: "Bloc 1", theme: "bloc1", subjectKey: "bloc1" },
-          { time: "12h - 13h", title: "Pause repas", theme: "pause" },
-          { time: "13h - 14h", title: "Anglais", theme: "anglais", subjectKey: "anglais" },
-          { time: "14h - X", title: "Quartier libre", theme: "quartier-libre" },
+          { time: "", title: "", theme: "empty" },
+          { time: "", title: "", theme: "empty" },
+          { time: "", title: "", theme: "empty" },
+          { time: "", title: "", theme: "empty" },
+          { time: "", title: "", theme: "empty" },
           { time: "", title: "", theme: "empty" },
           { time: "", title: "", theme: "empty" }
         ]
@@ -1243,33 +1243,33 @@
       mardi: {
         label: "MARDI",
         slots: [
-          { time: "X - 12h", title: "Quartier libre", theme: "quartier-libre" },
-          { time: "12h - 13h", title: "Pause repas", theme: "pause" },
-          { time: "13h - 16h", title: "Culture générale", theme: "culture", subjectKey: "culture" },
-          { time: "16h - 17h", title: "Pause goûter / jeux", theme: "pause" },
-          { time: "17h - 19h", title: "Mathématiques", theme: "maths", subjectKey: "maths" },
-          { time: "19h - 21h", title: "Bloc 2", theme: "bloc2", subjectKey: "bloc2" },
-          { time: "21h - X", title: "Quartier libre", theme: "quartier-libre" }
+          { time: "", title: "", theme: "empty" },
+          { time: "", title: "", theme: "empty" },
+          { time: "", title: "", theme: "empty" },
+          { time: "", title: "", theme: "empty" },
+          { time: "", title: "", theme: "empty" },
+          { time: "", title: "", theme: "empty" },
+          { time: "", title: "", theme: "empty" }
         ]
       },
       mercredi: {
         label: "MERCREDI",
         slots: [
-          { time: "7h - 7h30", title: "Quartier libre", theme: "quartier-libre" },
-          { time: "7h30 - 12h", title: "Physique", theme: "physique", subjectKey: "physique" },
-          { time: "12h - 13h", title: "Pause repas", theme: "pause" },
-          { time: "13h - 16h", title: "Physique", theme: "physique", subjectKey: "physique" },
-          { time: "16h - 17h", title: "Pause goûter / jeux", theme: "pause" },
-          { time: "17h - 20h", title: "Mathématiques", theme: "maths", subjectKey: "maths" },
-          { time: "20h - X", title: "Quartier libre", theme: "quartier-libre" }
+          { time: "", title: "", theme: "empty" },
+          { time: "", title: "", theme: "empty" },
+          { time: "", title: "", theme: "empty" },
+          { time: "", title: "", theme: "empty" },
+          { time: "", title: "", theme: "empty" },
+          { time: "", title: "", theme: "empty" },
+          { time: "", title: "", theme: "empty" }
         ]
       },
       jeudi: {
         label: "JEUDI",
         slots: [
-          { time: "X - 16h30", title: "Quartier libre", theme: "quartier-libre" },
-          { time: "16h30 - 20h", title: "Bloc 1", theme: "bloc1", subjectKey: "bloc1" },
-          { time: "20h - X", title: "Quartier libre", theme: "quartier-libre" },
+          { time: "", title: "", theme: "empty" },
+          { time: "", title: "", theme: "empty" },
+          { time: "", title: "", theme: "empty" },
           { time: "", title: "", theme: "empty" },
           { time: "", title: "", theme: "empty" },
           { time: "", title: "", theme: "empty" },
@@ -1279,9 +1279,9 @@
       vendredi: {
         label: "VENDREDI",
         slots: [
-          { time: "X - 14h30", title: "Quartier libre", theme: "quartier-libre" },
-          { time: "14h30 - 18h", title: "Bloc 1", theme: "bloc1", subjectKey: "bloc1" },
-          { time: "18h - X", title: "Quartier libre", theme: "quartier-libre" },
+          { time: "", title: "", theme: "empty" },
+          { time: "", title: "", theme: "empty" },
+          { time: "", title: "", theme: "empty" },
           { time: "", title: "", theme: "empty" },
           { time: "", title: "", theme: "empty" },
           { time: "", title: "", theme: "empty" },
@@ -2027,7 +2027,7 @@
     function clearOrDeleteSlot(dayKey, index) {
       const slot = currentSchedule[dayKey].slots[index];
       if (!slot.title && slot.theme === "empty") {
-        if (currentSchedule[dayKey].slots.length > 5) {
+        if (currentSchedule[dayKey].slots.length > 7) {
           currentSchedule[dayKey].slots.splice(index, 1);
         }
       } else {
@@ -2420,6 +2420,17 @@
                 </div>
               </div>
               <button class="btn-ai-secondary" onclick="window.triggerImportFile()">Charger JSON</button>
+            </div>
+
+            <div class="settings-action-card" style="border-color:rgba(239,68,68,0.3);">
+              <div style="display:flex; align-items:center; gap:12px;">
+                <span style="font-size:22px;">🧹</span>
+                <div>
+                  <div style="font-weight:700; font-size:14px; color:#f87171;">Vider toutes les cases</div>
+                  <div style="font-size:12px; opacity:0.8;">Efface les cours actuels pour repartir sur une grille 100% vierge</div>
+                </div>
+              </div>
+              <button class="btn-ai-secondary" style="color:#f87171; border-color:rgba(239,68,68,0.4);" onclick="window.clearAllSlots()">Vider la grille</button>
             </div>
 
             <div class="settings-action-card" style="border-color:rgba(239,68,68,0.3);">
@@ -2859,13 +2870,32 @@ RÈGLES STRICTES :
       showToast("Fichier HTML autonome téléchargé !", "💻");
     }
 
+    function clearAllSlots() {
+      const days = ["lundi", "mardi", "mercredi", "jeudi", "vendredi"];
+      days.forEach(dayKey => {
+        currentSchedule[dayKey].slots = [
+          { time: "", title: "", theme: "empty" },
+          { time: "", title: "", theme: "empty" },
+          { time: "", title: "", theme: "empty" },
+          { time: "", title: "", theme: "empty" },
+          { time: "", title: "", theme: "empty" },
+          { time: "", title: "", theme: "empty" },
+          { time: "", title: "", theme: "empty" }
+        ];
+      });
+      renderSchedule();
+      persistSchedule();
+      closeAiModal();
+      showToast("Grille vidée : planning vierge (7 créneaux) !", "🧹");
+    }
+
     function resetToDefaultSchedule() {
       currentSchedule = JSON.parse(JSON.stringify(defaultScheduleData));
       renderSchedule();
       updateAgendaBadge();
       persistSchedule();
       closeAiModal();
-      showToast("Planning réinitialisé", "🔄");
+      showToast("Planning réinitialisé (grille vierge 7 créneaux)", "🔄");
     }
 
     window.toggleEditMode = toggleEditMode;
@@ -2896,6 +2926,7 @@ RÈGLES STRICTES :
     window.handleFileImport = handleFileImport;
     window.exportStandaloneHtml = exportStandaloneHtml;
     window.resetToDefaultSchedule = resetToDefaultSchedule;
+    window.clearAllSlots = clearAllSlots;
     window.loginWithGoogle = loginWithGoogle;
     window.logoutGoogle = logoutGoogle;
     window.showFirebaseDiagnostic = showFirebaseDiagnostic;
