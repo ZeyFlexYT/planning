@@ -1046,7 +1046,7 @@
         </svg>
       </button>
 
-      <div id="syncBadge" class="sync-badge saved" title="Statut de sauvegarde">
+      <div id="syncBadge" class="sync-badge saved" style="cursor:pointer;" onclick="window.showFirebaseDiagnostic()" title="Cliquez pour voir le diagnostic Firebase">
         <span id="syncDot">●</span>
         <span id="syncText">Synchronisé en ligne</span>
       </div>
@@ -1135,6 +1135,7 @@
     let attachedFile = null;
     let isCustomColorActive = false;
     let selectedEventIcon = '🎓';
+    let lastCloudError = null;
 
     const EVENT_ICONS = ['🎓', '📝', '💻', '🗣️', '⚠️', '📌', '📚', '🎯', '🏆', '⚡'];
 
@@ -1337,12 +1338,80 @@
           schedule: stripUndefined(currentSchedule),
           lastUpdated: Date.now()
         });
+        lastCloudError = null;
         updateSyncIndicator("saved", "Synchronisé en ligne (Firestore)");
       } catch (err) {
         console.error("Erreur sauvegarde Cloud Firestore :", err);
-        updateSyncIndicator("error", "Erreur Cloud");
-        showToast("Erreur de synchronisation Cloud", "⚠️");
+        lastCloudError = err;
+        const msg = parseFirebaseError(err);
+        updateSyncIndicator("error", msg);
+        showToast(msg, "⚠️");
       }
+    }
+
+    function parseFirebaseError(err) {
+      if (!err) return "Erreur inconnue";
+      const code = err.code || err.message || String(err);
+      if (code.includes("operation-not-allowed")) {
+        return "Auth Anonyme désactivée";
+      }
+      if (code.includes("permission-denied")) {
+        return "Règles Firestore refusées";
+      }
+      if (code.includes("unauthorized-domain")) {
+        return "Domaine non autorisé";
+      }
+      if (code.includes("not-found")) {
+        return "Base Firestore introuvable";
+      }
+      return code.slice(0, 28);
+    }
+
+    function showFirebaseDiagnostic() {
+      const errDetail = lastCloudError ? (lastCloudError.code || lastCloudError.message || JSON.stringify(lastCloudError)) : "Aucune erreur enregistrée";
+      const modalHtml = `
+        <div style="display:flex; flex-direction:column; gap:16px;">
+          <div style="background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.3); border-radius:12px; padding:14px;">
+            <strong style="color:#fca5a5; font-size:14px; display:block; margin-bottom:4px;">Code d'erreur retourné :</strong>
+            <code style="background:rgba(0,0,0,0.4); padding:4px 8px; border-radius:6px; font-size:12.5px; color:#f87171; display:block; word-break:break-all;">
+              ${errDetail}
+            </code>
+          </div>
+
+          <div>
+            <h4 style="font-size:13.5px; font-weight:700; color:#818cf8; margin-bottom:8px;">💡 Les 3 vérifications à faire dans votre console Firebase :</h4>
+            <ol style="padding-left:18px; display:flex; flex-direction:column; gap:10px; font-size:13px; line-height:1.6;">
+              <li>
+                <strong>1. Activer l'Authentification Anonyme :</strong><br>
+                Allez dans <a href="https://console.firebase.google.com/project/privateplanning/authentication/providers" target="_blank" style="color:#38bdf8;">Authentication > Sign-in method</a> > cliquez sur <strong>Anonyme</strong> > cochez <strong>Activer</strong> > <strong>Enregistrer</strong>.
+              </li>
+              <li>
+                <strong>2. Créer la base Cloud Firestore :</strong><br>
+                Allez dans <a href="https://console.firebase.google.com/project/privateplanning/firestore" target="_blank" style="color:#38bdf8;">Firestore Database</a>. Si le bouton <em>« Créer une base de données »</em> est visible, cliquez dessus et validez l'emplacement.
+              </li>
+              <li>
+                <strong>3. Régler les règles de sécurité Firestore :</strong><br>
+                Dans l'onglet <strong>Règles (Rules)</strong> de Firestore, collez :<br>
+                <code style="background:rgba(15,23,42,0.8); padding:4px 8px; border-radius:6px; display:block; margin-top:4px;">
+                  rules_version = '2';<br>
+                  service cloud.firestore {<br>
+                  &nbsp;&nbsp;match /databases/{database}/documents {<br>
+                  &nbsp;&nbsp;&nbsp;&nbsp;match /{document=**} {<br>
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;allow read, write: if request.auth != null;<br>
+                  &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                  &nbsp;&nbsp;}<br>
+                  }
+                </code>
+              </li>
+            </ol>
+          </div>
+
+          <div style="display:flex; justify-content:flex-end; border-top:1px solid rgba(255,255,255,0.08); padding-top:12px;">
+            <button onclick="window.closeAiModal()" class="btn-ai-secondary">Fermer</button>
+          </div>
+        </div>
+      `;
+      openModal("Diagnostic Connexion Firestore", "Projet privateplanning", modalHtml);
     }
 
     async function resolveFirebaseConfig() {
@@ -1409,6 +1478,7 @@
               updateHeaderTitles();
               renderSchedule();
               updateAgendaBadge();
+              lastCloudError = null;
               updateSyncIndicator("saved", "Synchronisé en ligne (Firestore)");
             }
           } else {
@@ -1417,11 +1487,13 @@
           }
         }, (error) => {
           console.error("Erreur écoute Cloud :", error);
-          updateSyncIndicator("error", "Erreur synchronisation");
+          lastCloudError = error;
+          updateSyncIndicator("error", parseFirebaseError(error));
         });
       } catch (err) {
         console.error("Échec Cloud Firestore :", err);
-        updateSyncIndicator("error", "Échec connexion");
+        lastCloudError = err;
+        updateSyncIndicator("error", parseFirebaseError(err));
       }
     }
 
@@ -2848,6 +2920,7 @@ RÈGLES D'EXTRACTION ABSOLUES ET STRICTES :
     window.selectEventIcon = selectEventIcon;
     window.saveNewAgendaEvent = saveNewAgendaEvent;
     window.deleteAgendaEvent = deleteAgendaEvent;
+    window.showFirebaseDiagnostic = showFirebaseDiagnostic;
 
     window.addEventListener("DOMContentLoaded", async () => {
       document.body.classList.toggle("dark-theme", isDarkMode);
